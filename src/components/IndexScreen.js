@@ -2,10 +2,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
+
 import Navbar from "./indexComponents/Navbar";
+import Tabbar from "./indexComponents/Tabbar";
+
 import HomeScreen from "./screens/HomeScreen";
 import MovieScreen from "./screens/MovieScreen";
-import Tabbar from "./indexComponents/Tabbar";
+import PokemonScreen from "./screens/PokemonScreen";
+import HomeAddress from "./screens/Address/HomeAddress";
+
+
+
 
 const Stack = createStackNavigator();
 
@@ -29,28 +36,56 @@ const IndexScreen = () => {
   }, [orientation]);
 
   return (
-    <Stack.Navigator
-      initialRouteName="Tabbar"
-      screenOptions={{
-        headerStyle:
-          orientation === "portrait"
-            ? styles.headerStylePortrait
-            : styles.headerStyleLandscape,
-      }}
-    >
-      <Stack.Screen
-        name="Tabbar"
-        component={Tabbar} // Render the Tabbar component as a screen
-        options={{
-          header: () => (
-            <>
-              <Navbar />
-            </>
-          ),
+    <>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle:
+            orientation === "portrait"
+              ? styles.headerStylePortrait
+              : styles.headerStyleLandscape,
         }}
-      />
-      <Stack.Screen name="Movie" component={MovieScreen} />
-    </Stack.Navigator>
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            header: () => (
+              <>
+                <Navbar />
+              </>
+            ),
+          }}
+        />
+
+        <Stack.Screen
+          name="Movie"
+          component={MovieScreen}
+          options={{
+            header: () => (
+              <>
+                <Navbar />
+              </>
+            ),
+          }}
+        />
+
+        <Stack.Screen
+          name="Pokemon"
+          component={PokemonScreen}
+          options={{ header: () => <Navbar /> }}
+        />
+
+        <Stack.Screen
+          name="HomeAddress"
+          component={HomeAddress}
+          options={{ header: () => <Navbar /> }}
+        />
+
+
+      </Stack.Navigator>
+      <Tabbar />
+    </>
   );
 };
 

@@ -1,65 +1,97 @@
-import React from "react";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import {
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  StyleSheet,
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import HomeScreen from "../screens/HomeScreen";
-import MovieScreen from "../screens/MovieScreen";
-import PokemonScreen from "../screens/PokemonScreen";
-
-const Tab = createMaterialBottomTabNavigator();
 
 const Tabbar = () => {
+  const navigation = useNavigation();
+
+  const [activeTab, setActiveTab] = useState("Home");
+
+  const handleTabPress = (tabName) => {
+    setActiveTab(tabName);
+  };
+
+
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      activeColor="#c39df8"
-      inactiveColor="#e6f6e6"
-      barStyle={{ backgroundColor: "#6200ee" }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name="home" // Change the icon based on focus
-              color={focused ? "#c39df8" : "#e6f6e6"} // Change the color based on focus
-              size={26}
-            />
-          ),
+    <View style={styles.tabContainer}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          handleTabPress("Address");
+          navigation.navigate("HomeAddress");
         }}
-      />
-      <Tab.Screen
-        name="Movie"
-        component={MovieScreen}
-        options={{
-          tabBarLabel: "Movie",
-          tabBarColor: "#009387",
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name= "movie"  // Change the icon based on focus
-              color={focused ? "#c39df8" : "#e6f6e6"} // Change the color based on focus
-              size={26}
-            />
-          ),
+        style={styles.tabIconWrapper}
+      >
+        <View style={styles.tabIconInnerWrapper}>
+          <MaterialCommunityIcons
+            name="city-variant-outline"
+            color={activeTab === "Address" ? "#c39df8" : "#e6f6e6"}
+            size={30}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+
+      <TouchableWithoutFeedback
+        onPress={() => {
+          handleTabPress("Movie");
+          navigation.navigate("Movie");
         }}
-      />
-      <Tab.Screen
-        name="Pokemon"
-        component={PokemonScreen}
-        options={{
-          tabBarLabel: "Pokemon",
-          tabBarIcon: ({ focused }) => (
-            <MaterialCommunityIcons
-              name= "pokeball" // Change the icon based on focus
-              color={focused ? "#c39df8" : "#e6f6e6"} // Change the color based on focus
-              size={26}
-            />
-          ),
+        style={styles.tabIconWrapper}
+      >
+        <View style={styles.tabIconInnerWrapper}>
+          <MaterialCommunityIcons
+            name="movie"
+            color={activeTab === "Movie" ? "#c39df8" : "#e6f6e6"}
+            size={30}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+
+      <TouchableWithoutFeedback
+        onPress={() => {
+          handleTabPress("Pokemon");
+          navigation.navigate("Pokemon");
         }}
-      />
-    </Tab.Navigator>
+        style={styles.tabIconWrapper}
+      >
+        <View style={styles.tabIconInnerWrapper}>
+          <MaterialCommunityIcons
+            name="pokeball"
+            color={activeTab === "Pokemon" ? "#c39df8" : "#e6f6e6"}
+            size={30}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  tabContainer: {
+    flexDirection: "row",
+    height: 80, // Aumentamos la altura de la barra
+    backgroundColor: "#6200ee",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingHorizontal: 16, // Añadimos espaciado horizontal
+  },
+  tabIconWrapper: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tabIconInnerWrapper: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default Tabbar;

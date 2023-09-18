@@ -6,8 +6,11 @@ import {
   Avatar,
 } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const navBar = () => {
+
+    const navigation = useNavigation();
   return (
     <AppBar
       title="Welcome to PokeMovies"
@@ -15,6 +18,7 @@ const navBar = () => {
         <IconButton
           icon={(props) => <Icon name="menu" {...props} />}
           {...props}
+          onPress={() => navigation.navigate("Home")}
         />
       )}
     />
