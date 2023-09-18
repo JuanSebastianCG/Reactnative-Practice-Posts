@@ -1,0 +1,76 @@
+diff --git a/node_modules/native-base/src/core/NativeBaseProvider.tsx b/node_modules/native-base/src/core/NativeBaseProvider.tsx
+index 43b4bd1..866c855 100644
+--- a/node_modules/native-base/src/core/NativeBaseProvider.tsx
++++ b/node_modules/native-base/src/core/NativeBaseProvider.tsx
+@@ -4,7 +4,7 @@ import {
+   Metrics,
+   initialWindowMetrics as defaultInitialWindowMetrics,
+ } from 'react-native-safe-area-context';
+-import { SSRProvider } from '@react-native-aria/utils';
++//import { SSRProvider } from '@react-native-aria/utils';
+ import { theme as defaultTheme, ITheme } from './../theme';
+ import type { IColorModeProviderProps } from './color-mode';
+ import HybridProvider from './hybrid-overlay/HybridProvider';
+@@ -47,62 +47,6 @@ export interface NativeBaseProviderProps {
+   // Refer https://github.com/th3rdwave/react-native-safe-area-context#testing
+ }
+ 
+-const NativeBaseProvider = (props: NativeBaseProviderProps) => {
+-  const {
+-    colorModeManager,
+-    config = defaultConfig,
+-    children,
+-    theme: propsTheme = defaultTheme,
+-    initialWindowMetrics,
+-    isSSR,
+-    disableContrastText,
+-  } = props;
+-  const theme = config.theme ?? propsTheme;
+-
+-  const newTheme = React.useMemo(() => {
+-    if (config.enableRem) {
+-      return platformSpecificSpaceUnits(theme);
+-    }
+-    return theme;
+-  }, [config.enableRem, theme]);
+-
+-  const windowWidth = useWindowDimensions()?.width;
+-
+-  const currentBreakpoint = React.useMemo(
+-    () => getClosestBreakpoint(newTheme.breakpoints, windowWidth),
+-    [windowWidth, newTheme.breakpoints]
+-  );
+-
+-  return (
+-    <NativeBaseConfigProvider
+-      theme={newTheme}
+-      config={config}
+-      currentBreakpoint={currentBreakpoint}
+-      isSSR={isSSR}
+-      disableContrastText={disableContrastText}
+-    >
+-      <SafeAreaProvider
+-        initialMetrics={
+-          initialWindowMetrics ?? defaultInitialWindowMetricsBasedOnPlatform
+-        }
+-      >
+-        <ResponsiveQueryProvider disableCSSMediaQueries={!isSSR}>
+-          <HybridProvider
+-            colorModeManager={colorModeManager}
+-            options={theme.config}
+-          >
+-            <OverlayProvider isSSR>
+-              <ToastProvider>
+-                <InitializeToastRef />
+-                <SSRProvider>{children}</SSRProvider>
+-              </ToastProvider>
+-            </OverlayProvider>
+-          </HybridProvider>
+-        </ResponsiveQueryProvider>
+-      </SafeAreaProvider>
+-    </NativeBaseConfigProvider>
+-  );
+-};
+ 
+ const InitializeToastRef = () => {
+   const toast = useToast();
