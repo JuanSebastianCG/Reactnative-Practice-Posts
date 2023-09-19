@@ -8,8 +8,23 @@ function HomeScreen() {
   const navigation = useNavigation();
   const goToMovies = () => navigation.navigate("Movie");
   const goToPokemons = () => navigation.navigate("Pokemon");
+  const goToProducts = () => navigation.navigate("Products");
   return (
   <Stack fill center spacing={4}>
+    <Surface
+      elevation={2}
+      category="medium"
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        width: 200,
+        height: 100,
+      }}
+    >
+      <Button title="Ver Productos" onPress={goToProducts} />
+    </Surface>
+
+
     <Surface
       elevation={2}
       category="medium"

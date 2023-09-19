@@ -4,6 +4,7 @@ import {
   View,
   ActivityIndicator,
   FlatList,
+  Image
 } from "react-native";
 import { NativeBaseProvider, Box, Badge, Text } from "native-base";
 import { useAxios } from "../../utils/useAxios";
@@ -90,6 +91,10 @@ const MovieScreen = () => {
               <Text fontSize="sm" mt={1}>
                 {item.release_date}
               </Text>
+              <Image
+                source={{ uri: item.poster_path }} style={{ width: 100, height:100 }} 
+              >
+              </Image>
             </Box>
           </Box>
         )}

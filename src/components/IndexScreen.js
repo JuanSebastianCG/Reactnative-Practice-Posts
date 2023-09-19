@@ -10,6 +10,7 @@ import HomeScreen from "./screens/HomeScreen";
 import MovieScreen from "./screens/MovieScreen";
 import PokemonScreen from "./screens/PokemonScreen";
 import HomeAddress from "./screens/Address/HomeAddress";
+import ProductScreen from "./screens/ProductScreen";
 
 
 
@@ -73,6 +74,12 @@ const IndexScreen = () => {
         <Stack.Screen
           name="Pokemon"
           component={PokemonScreen}
+          options={{ header: () => <Navbar /> }}
+        />
+
+        <Stack.Screen
+          name="Products"
+          component={ProductScreen}
           options={{ header: () => <Navbar /> }}
         />
 
