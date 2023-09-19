@@ -78,7 +78,7 @@ const IndexScreen = () => {
         />
 
         <Stack.Screen
-          name="Products"
+          name="Product"
           component={ProductScreen}
           options={{ header: () => <Navbar /> }}
         />

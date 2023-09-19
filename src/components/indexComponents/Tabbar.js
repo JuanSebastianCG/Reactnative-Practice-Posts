@@ -22,15 +22,15 @@ const Tabbar = () => {
     <View style={styles.tabContainer}>
       <TouchableWithoutFeedback
         onPress={() => {
-          handleTabPress("Address");
-          navigation.navigate("HomeAddress");
+          handleTabPress("Product");
+          navigation.navigate("Product");
         }}
         style={styles.tabIconWrapper}
       >
         <View style={styles.tabIconInnerWrapper}>
           <MaterialCommunityIcons
-            name="city-variant-outline"
-            color={activeTab === "Address" ? "#c39df8" : "#e6f6e6"}
+            name="tshirt-v"
+            color={activeTab === "Product" ? "#c39df8" : "#e6f6e6"}
             size={30}
           />
         </View>
@@ -74,7 +74,7 @@ const Tabbar = () => {
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
-    height: 80, // Aumentamos la altura de la barra
+    height:65, // Aumentamos la altura de la barra
     backgroundColor: "#6200ee",
     justifyContent: "space-around",
     alignItems: "center",
