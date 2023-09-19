@@ -1,26 +1,33 @@
-import React, { useState }  from 'react'
-import {  
+import React, { useState } from 'react';
+import {
   StyleSheet,
   View,
-  ActivityIndicator,Image,
-  FlatList, Button } from 'react-native'
-  import { NativeBaseProvider, Box, Badge } from "native-base";
-import { useAxios } from "../../utils/useAxios";
-import axios from 'axios';
+  ActivityIndicator,
+  Image,
+  FlatList,
+} from 'react-native';
+import { NativeBaseProvider, Box, Badge, Text } from 'native-base';
+import { useAxios } from '../../utils/useAxios';
 
-import { Stack, TextInput, IconButton,Text } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-
-
+import { Stack, TextInput } from '@react-native-material/core';
 
 function PokemonScreen() {
-
-  const [searchQuery, setSearchQuery] = useState(""); // Estado para almacenar la consulta de búsqueda
+  const [searchQuery, setSearchQuery] = useState("");
+  const [singlePokemon, setSinglePokemon] = useState(null);
 
   const { data, loading, error, handleCancelRequest } = useAxios(
-    `  https://apis-backend-dm.up.railway.app/api/v1/pokemon/${searchQuery}` // Usar la consulta como parte de la URL
-    
+    `https://apis-backend-dm.up.railway.app/api/v1/pokemon/${searchQuery}`,
+    () => {
+      //console.log(data.length == undefined);
+      if (data.length === undefined) {
+        setSinglePokemon(data);
+      } else {
+        setSinglePokemon(null);
+      }
+    }
   );
+
+  
 
   if (loading) {
     return (
@@ -32,7 +39,7 @@ function PokemonScreen() {
     );
   }
 
-  if (error) {
+ /*  if (error) {
     return (
       <NativeBaseProvider>
         <View style={styles.errorContainer}>
@@ -41,21 +48,7 @@ function PokemonScreen() {
         </View>
       </NativeBaseProvider>
     );
-  }
-
-  /* data.forEach(item => {
-    console.log(item.url)
-  }); */
-
-
-  /* function getSprite(url){
-    console.log(url)
-    const { pokemon} = useAxios(
-      url // Usar la consulta como parte de la URL    
-    );
-    return pokemon.sprites.front_default
   } */
-
 
   return (
     <NativeBaseProvider>
@@ -66,40 +59,52 @@ function PokemonScreen() {
           placeholder="Buscar pokemon..."
           value={searchQuery}
           style={styles.input}
-          onChangeText={(text) => setSearchQuery(text)} // Actualizar el estado
+          onChangeText={(text) => {
+            setSearchQuery(text);
+          }}
         />
       </View>
 
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.url.toString()}
-        renderItem={({ item }) => (
-          /* card */
-          <View>
-            <Box
-              bg="white"
-              shadow={2}
-              rounded="lg"
-              maxWidth="90%"
-              width="90%"
-              mx="auto"
-              mt={5}
-            >
-            {/* popularity */}
-            
-            <Box px={4} py={2} style={styles.textContainer}>
-              <Text fontWeight="bold" color="#6200ee">
-                {item.name}
-              </Text>
-              <Image
-                source={{ uri: /* getSprite(item.url) */ item.url }} style={{ width: 100, height:100 }} 
-              >
-              </Image>
-            </Box>
-            </Box>
-          </View>
-        )}
-      />
+      {singlePokemon ? (
+        <Text>{singlePokemon}</Text>
+      ) : (
+        <>
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.name.toString()}
+            renderItem={({ item }) => (
+              <View>
+                <Box
+                  bg="white"
+                  shadow={2}
+                  rounded="lg"
+                  maxWidth="90%"
+                  width="90%"
+                  mx="auto"
+                  mt={5}
+                >
+                  <Image
+                    source={{ uri: item.image }}
+                    style={styles.cardImage}
+                  />
+
+                  <Box px={4} py={2} style={styles.textContainer}>
+                    <Text fontWeight="bold" color="#6200ee" fontSize="lg">
+                      {item.name}
+                    </Text>
+                    <Text fontSize="sm" color="#333">
+                      Weight: {item.weight}
+                    </Text>
+                    <Text fontSize="sm" color="#333">
+                      Types: {item.types.join(", ")}
+                    </Text>
+                  </Box>
+                </Box>
+              </View>
+            )}
+          />
+        </>
+      )}
     </NativeBaseProvider>
   );
 }
@@ -115,19 +120,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  types: {
-    position: "absolute",
-    top: 2,
-    right: 2,
-    marginTop: 8,
-    marginRight: 5,
-    backgroundColor: "#6200ee",
-    color: "#fff",
-    padding: 2,
-    borderRadius: 999, // Un valor alto para hacer que el Badge sea circular
+  cardImage: {
+    width: "100%",
+    height: 250,
+    resizeMode: "cover",
   },
   textContainer: {
-    color: "#fff",
+    padding: 10,
+    backgroundColor: "#fff",
   },
   searchContainer: {
     flexDirection: "row",
@@ -145,10 +145,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
   },
-  searchButton: {
-    marginLeft: 10,
-    marginRight: 20,
-  },
 });
 
-export default PokemonScreen
+export default PokemonScreen;

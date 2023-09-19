@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export function useAxios(url) {
+export function useAxios(url, onComplete = () => {}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,6 +23,9 @@ export function useAxios(url) {
           setError(err);
           setLoading(false);
         }
+      } finally {
+        // Llama a la función onComplete sin importar si la solicitud tuvo éxito o falló.
+        onComplete();
       }
     };
 
@@ -31,7 +34,7 @@ export function useAxios(url) {
     return () => {
       source.cancel("Request canceled by user");
     };
-  }, [url]);
+  }, [url, onComplete]);
 
   const handleCancelRequest = () => {
     source.cancel("Request canceled by user");

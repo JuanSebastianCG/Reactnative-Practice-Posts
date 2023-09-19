@@ -17,8 +17,13 @@ const MovieScreen = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Estado para almacenar la consulta de búsqueda
 
   const { data, loading, error, handleCancelRequest } = useAxios(
-    `https://apis-backend-dm.up.railway.app/api/v1/peliculas/${searchQuery}` // Usar la consulta como parte de la URL
+    `https://apis-backend-dm.up.railway.app/api/v1/peliculas/${searchQuery}` ,
+    () => {
+      //console.log("Solicitud completada");
+    }
   );
+
+
 
   /* const handleSearch = () => {
     // Llamar a la API con el valor de búsqueda
@@ -78,6 +83,11 @@ const MovieScreen = () => {
             mx="auto"
             mt={5}
           >
+            <Image
+              source={{ uri: item.poster_path }}
+              style={styles.cardImage}
+            />
+
             {/* popularity */}
             <Badge style={styles.popularityBadge}>
               <Text color="#fff" fontSize="xs">
@@ -85,16 +95,12 @@ const MovieScreen = () => {
               </Text>
             </Badge>
             <Box px={4} py={2} style={styles.textContainer}>
-              <Text fontWeight="bold" color="#6200ee">
+              <Text fontWeight="bold" color="#6200ee" fontSize="lg">
                 {item.original_title}
               </Text>
               <Text fontSize="sm" mt={1}>
                 {item.release_date}
               </Text>
-              <Image
-                source={{ uri: item.poster_path }} style={{ width: 100, height:100 }} 
-              >
-              </Image>
             </Box>
           </Box>
         )}
@@ -125,9 +131,7 @@ const styles = StyleSheet.create({
     padding: 2,
     borderRadius: 999, // Un valor alto para hacer que el Badge sea circular
   },
-  textContainer: {
-    color: "#fff",
-  },
+
   searchContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -147,6 +151,16 @@ const styles = StyleSheet.create({
   searchButton: {
     marginLeft: 10,
     marginRight: 20,
+  },
+
+  cardImage: {
+    width: "100%",
+    height: 250, // Ajusta la altura de la imagen según tus preferencias
+    resizeMode: "cover", // Asegura que la imagen cubra toda la tarjeta
+  },
+  textContainer: {
+    padding: 10,
+    backgroundColor: "#fff", // Agrega un fondo blanco detrás del texto
   },
 });
 
