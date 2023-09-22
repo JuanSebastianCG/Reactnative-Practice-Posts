@@ -20,50 +20,35 @@ const Tabbar = () => {
 
   return (
     <View style={styles.tabContainer}>
+
       <TouchableWithoutFeedback
         onPress={() => {
-          handleTabPress("Product");
-          navigation.navigate("Product");
+          handleTabPress("Home");
+          navigation.navigate("Home");
         }}
         style={styles.tabIconWrapper}
       >
         <View style={styles.tabIconInnerWrapper}>
           <MaterialCommunityIcons
-            name="tshirt-v"
-            color={activeTab === "Product" ? "#c39df8" : "#e6f6e6"}
-            size={30}
+            name="home-circle"
+            color={activeTab === "home-circle" ? "#c39df8" : "#e6f6e6"}
+            size={50}
           />
         </View>
       </TouchableWithoutFeedback>
 
       <TouchableWithoutFeedback
         onPress={() => {
-          handleTabPress("Movie");
-          navigation.navigate("Movie");
+          handleTabPress("Camera");
+          navigation.navigate("Camera");
         }}
         style={styles.tabIconWrapper}
       >
         <View style={styles.tabIconInnerWrapper}>
           <MaterialCommunityIcons
-            name="movie"
-            color={activeTab === "Movie" ? "#c39df8" : "#e6f6e6"}
-            size={30}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-
-      <TouchableWithoutFeedback
-        onPress={() => {
-          handleTabPress("Pokemon");
-          navigation.navigate("Pokemon");
-        }}
-        style={styles.tabIconWrapper}
-      >
-        <View style={styles.tabIconInnerWrapper}>
-          <MaterialCommunityIcons
-            name="pokeball"
-            color={activeTab === "Pokemon" ? "#c39df8" : "#e6f6e6"}
-            size={30}
+            name="camera-enhance"
+            color={activeTab === "camera-enhance" ? "#c39df8" : "#e6f6e6"}
+            size={45}
           />
         </View>
       </TouchableWithoutFeedback>
