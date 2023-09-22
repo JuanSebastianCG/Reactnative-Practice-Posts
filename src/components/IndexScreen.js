@@ -7,7 +7,7 @@ import Navbar from "./indexComponents/Navbar";
 import Tabbar from "./indexComponents/Tabbar";
 
 import HomeScreen from "./screens/HomeScreen";
-
+import RegisterSwitchScreen from "./screens/RegisterSwitchScreen";
 
 const Stack = createStackNavigator();
 
@@ -32,6 +32,7 @@ const IndexScreen = () => {
 
   return (
     <>
+      <Navbar />
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -39,17 +40,20 @@ const IndexScreen = () => {
             orientation === "portrait"
               ? styles.headerStylePortrait
               : styles.headerStyleLandscape,
-        }}
-      >
+        }}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{
-            header: () => (
-              <>
-                <Navbar />
-              </>
-            ),
+            header: () => <></>,
+          }}
+        />
+
+        <Stack.Screen
+          name="Register"
+          component={RegisterSwitchScreen}
+          options={{
+            header: () => <></>,
           }}
         />
 
