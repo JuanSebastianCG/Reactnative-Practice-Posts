@@ -7,7 +7,7 @@ import Navbar from "./indexComponents/Navbar";
 import Tabbar from "./indexComponents/Tabbar";
 
 import HomeScreen from "./screens/HomeScreen";
-import CategoriaServicios from "./screens/categoriesScreen";
+import CategoriaServicios from "./screens/CategoriesScreen";
 
 
 
