@@ -7,12 +7,6 @@ import Navbar from "./indexComponents/Navbar";
 import Tabbar from "./indexComponents/Tabbar";
 
 import HomeScreen from "./screens/HomeScreen";
-import MovieScreen from "./screens/MovieScreen";
-import PokemonScreen from "./screens/PokemonScreen";
-import HomeAddress from "./screens/Address/HomeAddress";
-import ProductScreen from "./screens/ProductScreen";
-
-
 
 
 const Stack = createStackNavigator();
