@@ -59,37 +59,6 @@ const IndexScreen = () => {
           }}
         />
 
-        <Stack.Screen
-          name="Movie"
-          component={MovieScreen}
-          options={{
-            header: () => (
-              <>
-                <Navbar />
-              </>
-            ),
-          }}
-        />
-
-        <Stack.Screen
-          name="Pokemon"
-          component={PokemonScreen}
-          options={{ header: () => <Navbar /> }}
-        />
-
-        <Stack.Screen
-          name="Product"
-          component={ProductScreen}
-          options={{ header: () => <Navbar /> }}
-        />
-
-        <Stack.Screen
-          name="HomeAddress"
-          component={HomeAddress}
-          options={{ header: () => <Navbar /> }}
-        />
-
-
       </Stack.Navigator>
       <Tabbar />
     </>

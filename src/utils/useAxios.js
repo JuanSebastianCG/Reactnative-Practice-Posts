@@ -18,7 +18,7 @@ export function useAxios(url, onComplete = () => {}) {
         setLoading(false);
       } catch (err) {
         if (axios.isCancel(err)) {
-          console.log("Cancelled request");
+          //console.log("Cancelled request");
         } else {
           setError(err);
           setLoading(false);
