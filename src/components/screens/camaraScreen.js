@@ -1,10 +1,15 @@
 import { Camera, CameraType } from 'expo-camera';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import IconButton from 'native-base/src/theme/components/icon-button';
+import { useState, useRef  } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'; 
+
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [isTakingPicture, setIsTakingPicture] = useState(false);
+  const cameraRef = useRef(null);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -25,8 +30,22 @@ export default function App() {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
   }
 
+  async function takePicture() {
+    if (cameraRef.current && !isTakingPicture) {
+      try {
+        setIsTakingPicture(true);
+        const { uri } = await cameraRef.current.takePictureAsync();
+        console.log(uri)
+      } catch (error) {
+        console.error('Error al tomar la foto:', error);
+      } finally {
+        setIsTakingPicture(false);
+      }
+    }
+  }
+
   return (
-    <View style={styles.container}>
+/*     <View style={styles.container}>
       <Camera style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
@@ -34,7 +53,23 @@ export default function App() {
           </TouchableOpacity>
         </View>
       </Camera>
-    </View>
+    </View> */
+
+    
+    <View style={styles.container}>
+    <Camera style={styles.camera} type={type} ref={cameraRef}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+          {/* <Text style={styles.text}>Flip Camera</Text> */}
+           <Icon name="camera-flip" /* style={width: 30px } *//> 
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={takePicture}>
+          {<Text style={styles.text}>Take Picture</Text>}
+          {/* <Icon name="camera" />  */}
+        </TouchableOpacity>
+      </View>
+    </Camera>
+  </View>
   );
 }
 
