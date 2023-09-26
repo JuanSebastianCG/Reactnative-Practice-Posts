@@ -30,13 +30,17 @@ function RegisterSwitchScreen() {
       <Stack spacing={16} style={styles.form}>
         <TextInput
           label="Nombre"
-          leading={(props) => <Icon name="account" {...props} />}
-          onChangeText={(text) => setNombre(text)}
+          leading={props => <Icon name="account" {...props} />}
+          value={nombre}
+          onChangeText={setNombre}
+          renderFloatingLabel={() => <Text style={styles.floatingLabel}>Nombre</Text>}
         />
         <TextInput
-          label="Correo"
-          leading={(props) => <Icon name="account" {...props} />}
-          onChangeText={(text) => setEmail(text)}
+          label="Email"
+          leading={props => <Icon name="email" {...props} />}
+          value={email}
+          onChangeText={setEmail}
+          renderFloatingLabel={() => <Text style={styles.floatingLabel}>Email</Text>}
         />
         <View style={styles.switchContainer}>
           <Switch value={estaActivo} onValueChange={handleSwitchChange} />
@@ -44,13 +48,17 @@ function RegisterSwitchScreen() {
         </View>
 
         <View style={styles.checkboxContainer}>
-          <Checkbox value={isChecked} onValueChange={handleCheckboxChange} />
-          <Text style={styles.checkboxText}>CheckBox</Text>
+          <Checkbox.Item
+            label="CheckBox"
+            status={isChecked ? "checked" : "unchecked"}
+            onPress={handleCheckboxChange}
+            color="#007AFF" // Puedes ajustar el color a tu preferencia
+          />
         </View>
 
         <Button
           title="Enviar"
-          trailing={(props) => <Icon name="send" {...props} />}
+          trailing={props => <Icon name="send" {...props} />}
           onPress={handleSubmit}
           style={styles.button}
         />
@@ -82,12 +90,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  checkboxText: {
-    marginLeft: 8,
-    fontSize: 18,
-  },
   button: {
     marginTop: 16,
+  },
+  floatingLabel: {
+    position: "absolute",
+    left: 12,
+    top: -6,
+    backgroundColor: "white",
+    paddingHorizontal: 4,
+    fontSize: 12,
   },
 });
 

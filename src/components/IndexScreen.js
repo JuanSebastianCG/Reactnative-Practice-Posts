@@ -1,7 +1,6 @@
-// IndexScreen.js
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
 import Navbar from "./indexComponents/Navbar";
 import Tabbar from "./indexComponents/Tabbar";
@@ -26,12 +25,8 @@ const IndexScreen = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log("Orientation:", orientation);
-  }, [orientation]);
-
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <Navbar />
       <Stack.Navigator
         initialRouteName="Home"
@@ -56,10 +51,9 @@ const IndexScreen = () => {
             header: () => <></>,
           }}
         />
-
       </Stack.Navigator>
-      <Tabbar />
-    </>
+      <Tabbar style={{ height: "10%" }} />
+    </SafeAreaView>
   );
 };
 
