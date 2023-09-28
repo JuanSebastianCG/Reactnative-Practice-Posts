@@ -13,7 +13,7 @@ const navBar = () => {
     const navigation = useNavigation();
   return (
     <AppBar
-      title="Welcome to PokeMovies"
+      title="Welcome"
       leading={(props) => (
         <IconButton
           icon={(props) => <Icon name="menu" {...props} />}

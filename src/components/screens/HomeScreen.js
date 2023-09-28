@@ -6,7 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 function HomeScreen() {
 
   const navigation = useNavigation();
+
   const goToCategories = () => navigation.navigate("Categories");
+  const goToRegister = () => navigation.navigate("Register");
 
   return (
     <Stack fill center spacing={4}>
@@ -23,6 +25,19 @@ function HomeScreen() {
         }}
       >
         <Button title="Ver categorias" onPress={goToCategories} />
+      </Surface>
+
+      <Surface
+        elevation={2}
+        category="medium"
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          width: 200,
+          height: 100,
+        }}
+      >
+        <Button title="Registrarte" onPress={goToRegister} />
       </Surface>
     </Stack>
   );
