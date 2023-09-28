@@ -1,14 +1,13 @@
-// IndexScreen.js
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
 import Navbar from "./indexComponents/Navbar";
 import Tabbar from "./indexComponents/Tabbar";
 
 import HomeScreen from "./screens/HomeScreen";
 import CamaraScreen from "./screens/camaraScreen"
-
+import RegisterSwitchScreen from "./screens/RegisterSwitchScreen";
 
 const Stack = createStackNavigator();
 
@@ -27,12 +26,9 @@ const IndexScreen = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log("Orientation:", orientation);
-  }, [orientation]);
-
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Navbar />
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -40,17 +36,12 @@ const IndexScreen = () => {
             orientation === "portrait"
               ? styles.headerStylePortrait
               : styles.headerStyleLandscape,
-        }}
-      >
+        }}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{
-            header: () => (
-              <>
-                <Navbar />
-              </>
-            ),
+            header: () => <></>,
           }}
         />
         <Stack.Screen
@@ -65,9 +56,16 @@ const IndexScreen = () => {
           }}
         />
 
+        <Stack.Screen
+          name="Register"
+          component={RegisterSwitchScreen}
+          options={{
+            header: () => <></>,
+          }}
+        />
       </Stack.Navigator>
-      <Tabbar />
-    </>
+      <Tabbar style={{ height: "10%" }} />
+    </SafeAreaView>
   );
 };
 
