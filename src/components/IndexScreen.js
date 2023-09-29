@@ -7,10 +7,11 @@ import Tabbar from "./indexComponents/Tabbar";
 
 import HomeScreen from "./screens/HomeScreen";
 
-import CategoriaServicios from "./screens/CategoriesScreen";
+/* import CategoriaServicios from "./screens/categoriesScreen"; */
 
 import CamaraScreen from "./screens/camaraScreen"
-import RegisterSwitchScreen from "./screens/RegisterSwitchScreen";
+
+import RegisterScreen from "./screens/RegisterScreen";
 
 
 const Stack = createStackNavigator();
@@ -59,8 +60,18 @@ const IndexScreen = () => {
             ),
           }}
         />
-
         <Stack.Screen
+                  name="Register"
+                  component={RegisterScreen}
+                  options={{
+                    header: () => (
+                      <>
+
+                      </>
+                    ),
+                  }}
+                />
+        {/* <Stack.Screen
 
           name="Categories"
           component={CategoriaServicios}
@@ -71,15 +82,8 @@ const IndexScreen = () => {
               </>
             ),
           }}
-        />
-       <Stack.Screen
+        /> */}
 
-          name="Register"
-          component={RegisterSwitchScreen}
-          options={{
-            header: () => <></>,
-          }}
-        />
 
       </Stack.Navigator>
       <Tabbar style={{ height: "10%" }} />

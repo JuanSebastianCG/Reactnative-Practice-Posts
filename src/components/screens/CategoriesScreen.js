@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 
 
- function CategoriaServicios() {
+    function CategoriaServicios() {
     const [categoria, setCategoria] = useState('');
     const [categoriasActivas, setCategoriasActivas] = useState([]);
     const [categoriasInactivas, setCategoriasInactivas] = useState([]);
@@ -19,12 +20,28 @@ import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-nativ
         }
     };
 
-    const handleCambiarEstado = (id) => {
+    const desactivar = (id) => {
         const categoriasActualizadas = categoriasActivas.map((cat) =>
             cat.id === id ? { ...cat, activa: !cat.activa } : cat
         );
-        setCategoriasActivas(categoriasActualizadas);
+
+          setCategoriasInactivas(categoriasActualizadas.filter(
+            (item)=> item.activa==false
+          ));
+
     };
+
+    const activar = (id) => {
+        const categoriasActualizadas = categoriasInactivas.map((cat) =>
+            cat.id === id ? { ...cat, activa: !cat.activa } : cat
+        );
+          setCategoriasActivas(categoriasActualizadas.filter(
+            (item)=> item.activa==true
+          ));
+
+    }
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.textContainer}>Crear Categoría de Servicio:</Text>
@@ -46,7 +63,7 @@ import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-nativ
                 <Text  style={styles.textContainer} >{item.nombre}</Text>
                 <Button
                 title={item.activa ? 'Desactivar' : 'Activar'}
-                onPress={() => handleCambiarEstado(item.id)}
+                onPress={() => desactivar(item.id)}
                 />
                 </View>
             )}
@@ -55,7 +72,15 @@ import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-nativ
             <FlatList
             data={categoriasInactivas}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <Text>{item.nombre}</Text>}
+            renderItem={({ item }) => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' ,color:"#ccc"}}>
+                <Text  style={styles.textContainer} >{item.nombre}</Text>
+                <Button
+                title={item.activa ? 'Desactivar' : 'Activar'}
+                onPress={() => activar(item.id)}
+                />
+                </View>
+            )}
             />
         </View>
     );
@@ -63,23 +88,23 @@ import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-nativ
 
 const styles = StyleSheet.create({
     container: {
-      justifyContent: "center",
-          alignItems: "center",
-          marginVertical: 20,
-          width: 400 ,
-          height: 300,
+        justifyContent: "center",
+            alignItems: "center",
+            marginVertical: 20,
+            width: 400 ,
+            height: 500,
     },
     textContainer: {
         padding: 10,
 
-      },
-      searchContainer: {
+        },
+        searchContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: 10,
-      },
-      input: {
+        },
+        input: {
         width:250,
         height:10,
         marginVertical: 15,
@@ -90,8 +115,7 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius: 5,
         padding: 10,
-        color: "#ffffff"
-      },
-  });
+        },
+    });
 
-  export default CategoriaServicios
+    export default CategoriaServicios
