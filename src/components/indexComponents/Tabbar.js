@@ -17,21 +17,24 @@ const Tabbar = () => {
     setActiveTab(tabName);
   };
 
-
   return (
     <View style={styles.tabContainer}>
-
       <TouchableWithoutFeedback
         onPress={() => {
           handleTabPress("Home");
-          navigation.navigate("Home");
+          navigation.navigate("WelcomeScreen");
         }}
         style={styles.tabIconWrapper}
       >
-        <View style={styles.tabIconInnerWrapper}>
+        <View
+          style={[
+            styles.tabIconInnerWrapper,
+            activeTab === "Home" && styles.activeTab,
+          ]}
+        >
           <MaterialCommunityIcons
             name="home-circle"
-            color={activeTab === "home-circle" ? "#c39df8" : "#e6f6e6"}
+            color={activeTab === "Home" ? "#FFDBDB" : "#FFDBDB"}
             size={50}
           />
         </View>
@@ -40,14 +43,19 @@ const Tabbar = () => {
       <TouchableWithoutFeedback
         onPress={() => {
           handleTabPress("Camera");
-          navigation.navigate("Camera");
+          navigation.navigate("CamaraScreen");
         }}
         style={styles.tabIconWrapper}
       >
-        <View style={styles.tabIconInnerWrapper}>
+        <View
+          style={[
+            styles.tabIconInnerWrapper,
+            activeTab === "Camera" && styles.activeTab,
+          ]}
+        >
           <MaterialCommunityIcons
             name="camera-enhance"
-            color={activeTab === "camera-enhance" ? "#c39df8" : "#e6f6e6"}
+            color={activeTab === "Camera" ? "#FFDBDB" : "#FFDBDB"}
             size={45}
           />
         </View>
@@ -59,11 +67,12 @@ const Tabbar = () => {
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
-    height:65, // Aumentamos la altura de la barra
-    backgroundColor: "#6200ee",
+    height: 65,
+    backgroundColor: "#7A1B1B", // Cambiamos el color de fondo
     justifyContent: "space-around",
     alignItems: "center",
-    paddingHorizontal: 16, // Añadimos espaciado horizontal
+    paddingHorizontal: 16,
+    borderRadius: 25, // Agregamos el borde redondeado
   },
   tabIconWrapper: {
     width: 50,
@@ -76,6 +85,10 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
+  },
+  activeTab: {
+    backgroundColor: "#ffffff", // Cambiamos el color de fondo al activo
+    borderRadius: 25, // Agregamos el borde redondeado al activo
   },
 });
 

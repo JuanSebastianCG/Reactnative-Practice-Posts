@@ -2,14 +2,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
-import Navbar from "./indexComponents/Navbar";
-import Tabbar from "./indexComponents/Tabbar";
-
-import HomeScreen from "./screens/HomeScreen";
-import CategoriaServicios from "./screens/CategoriesScreen";
-import CamaraScreen from "./screens/camaraScreen";
-import RegisterSwitchScreen from "./screens/RegisterSwitchScreen";
-import LoginScreen from "./screens/LoginScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
+import IndexTabbar from "./IndexTabbar";
 
 const Stack = createStackNavigator();
 
@@ -29,56 +23,18 @@ const IndexScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Navbar />
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle:
-            orientation === "portrait"
-              ? styles.headerStylePortrait
-              : styles.headerStyleLandscape,
-        }}>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            header: () => <></>,
-          }}
-        />
-        <Stack.Screen
-          name="Camera"
-          component={CamaraScreen}
-          options={{
-            header: () => <></>,
-          }}
-        />
-
-        <Stack.Screen
-          name="Categories"
-          component={CategoriaServicios}
-          options={{
-            header: () => <></>,
-          }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterSwitchScreen}
-          options={{
-            header: () => <></>,
-          }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            header: () => <></>,
-          }}
-        />
-        
-      </Stack.Navigator>
-      <Tabbar style={{ height: "10%" }} />
-    </SafeAreaView>
+    <Stack.Navigator
+      initialRouteName="WelcomeScreen"
+      screenOptions={{
+        headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
+        headerStyle:
+          orientation === "portrait"
+            ? styles.headerStylePortrait
+            : styles.headerStyleLandscape,
+      }}>
+      <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+      <Stack.Screen name="IndexTabbar" component={IndexTabbar} />
+    </Stack.Navigator>
   );
 };
 
