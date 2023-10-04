@@ -42,12 +42,11 @@ function RegisterSwitchScreen() {
     };
 
     postData(url, headers, body, (data) => {
-      if (error) {
+      if (error || !data  ) {
+        console.log("Error:", error);
         setLoginError(true);
-        console.log(error);
       }else{
         navigation.navigate("Home");
-        
       }
     });
   };

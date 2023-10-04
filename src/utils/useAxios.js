@@ -14,7 +14,8 @@ export function usePostData() {
       onComplete(response.data); // Llama a la funFción onComplete con los datos de respuesta.
     } catch (err) {
       setError(err);
-      onComplete(err);
+      onComplete(null);
+
     } finally {
       setLoading(false);
     }
