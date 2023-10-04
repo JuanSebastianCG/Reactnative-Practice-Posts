@@ -9,6 +9,7 @@ function HomeScreen() {
 
   const goToCategories = () => navigation.navigate("Categories");
   const goToRegister = () => navigation.navigate("Register");
+  const goToLogin = () => navigation.navigate("Login");
 
   return (
     <Stack fill center spacing={4}>
@@ -38,6 +39,19 @@ function HomeScreen() {
         }}
       >
         <Button title="Registrarte" onPress={goToRegister} />
+      </Surface>
+
+      <Surface
+        elevation={2}
+        category="medium"
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          width: 200,
+          height: 100,
+        }}
+      >
+        <Button title="login" onPress={goToLogin} />
       </Surface>
     </Stack>
   );

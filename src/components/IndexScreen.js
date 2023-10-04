@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import CategoriaServicios from "./screens/CategoriesScreen";
 import CamaraScreen from "./screens/camaraScreen";
 import RegisterSwitchScreen from "./screens/RegisterSwitchScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +68,14 @@ const IndexScreen = () => {
             header: () => <></>,
           }}
         />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            header: () => <></>,
+          }}
+        />
+        
       </Stack.Navigator>
       <Tabbar style={{ height: "10%" }} />
     </SafeAreaView>
