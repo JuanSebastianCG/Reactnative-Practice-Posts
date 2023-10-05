@@ -22,7 +22,7 @@ const Tabbar = () => {
       <TouchableWithoutFeedback
         onPress={() => {
           handleTabPress("Home");
-          navigation.navigate("WelcomeScreen");
+          navigation.navigate("HomeScreen");
         }}
         style={styles.tabIconWrapper}
       >
@@ -68,11 +68,12 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     height: 65,
-    backgroundColor: "#7A1B1B", // Cambiamos el color de fondo
+    backgroundColor: "#7A1B1B",
     justifyContent: "space-around",
     alignItems: "center",
     paddingHorizontal: 16,
-    borderRadius: 25, // Agregamos el borde redondeado
+    borderRadius: 25,
+    position: "relative", // Agrega position:relative para superponer elementos
   },
   tabIconWrapper: {
     width: 50,
@@ -87,8 +88,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   activeTab: {
-    backgroundColor: "#ffffff", // Cambiamos el color de fondo al activo
-    borderRadius: 25, // Agregamos el borde redondeado al activo
+    backgroundColor: "#ffffff",
+    borderRadius: 25,
+    position: "relative", // Agrega position:relative al activo
+    zIndex: 1, // Asegura que el activo esté por encima de otros elementos
   },
 });
 

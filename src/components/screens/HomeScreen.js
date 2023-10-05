@@ -14,7 +14,7 @@ function HomeScreen() {
   return (
     <Stack spacing={4} style={styles.container}>
       <Image source={require("../../img/logo.png")} style={styles.Image} />
-      <Text style={styles.text_tittle}>Que quieres hacer?    ... </Text>
+      <Text style={styles.text_tittle}>Que Quieres Hacer?    ... </Text>
 
       {/* <Divider style={styles.divider } /> */}
       <TouchableOpacity style={styles.button} onPress={goToLogin}>
@@ -29,11 +29,11 @@ function HomeScreen() {
         <Text style={styles.buttonText}>Ver api</Text>
       </TouchableOpacity>
 
-      <Svg height="200" width="300" style={styles.footer}>
-        <Polygon points="0,20 250,200 0,250" fill="#890000" />
+      <Svg height="230" width="400" style={styles.footer}>
+        <Polygon points="0,0 400,200 0,250" fill="#890000" />
       </Svg>
-      <Svg height="200" width="300" style={styles.footer}>
-        <Polygon points="0,70 190,200 0,200" fill="#FFDBDB" />
+      <Svg height="230" width="400" style={styles.footer}>
+        <Polygon points="0,60 190,200 0,200" fill="#FFDBDB" />
       </Svg>
 
       {/* <Svg
