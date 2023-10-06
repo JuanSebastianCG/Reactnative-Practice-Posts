@@ -86,9 +86,13 @@ function RegisterSwitchScreen() {
                 onChangeText={(text) => handleChange("password", text)}
               />
 
-              {loginError && (
+
+            </Stack>
+            {loginError && (
                 <ErrorBanner
                   text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
+                  styleBanner={styles.errorBanner}
+                  onChange={() => setLoginError(false)}
                 />
               )}
               <CustomButton
@@ -96,7 +100,6 @@ function RegisterSwitchScreen() {
                 onPress={handleSubmit}
                 buttonStyle={styles.button}
               />
-            </Stack>
           </View>
         </View>
       </ScrollView>
@@ -107,6 +110,12 @@ function RegisterSwitchScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
+  },
+  errorBanner: {
+    marginLeft: '10%',
+    marginRight: '10%',
+    
+
   },
   footer: {
     position: "absolute",

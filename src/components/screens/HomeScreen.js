@@ -17,7 +17,7 @@ function HomeScreen() {
   return (
     <Stack spacing={4} style={styles.container}>
       <Logo/>
-      <Text style={styles.text_tittle}>Que Quieres Hacer?   ... </Text>
+      <Text style={styles.text_tittle}>Que Quieres Hacer?    ... </Text>
 
       <CustomButton
         text="Registrarse"
@@ -58,16 +58,18 @@ const styles = StyleSheet.create({
 
   text_tittle: {
     color: BasicStylesPage.color1,
-    fontSize: 52,
+    fontSize: 53,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: "5%",
-    marginLeft: "25%",
+    marginLeft: "28%",
     marginRight: "18%",
   },
 
+
+
   buttonContainer: {
-    marginBottom: "3%",
+    marginTop: "3%",
   },
 
 });
