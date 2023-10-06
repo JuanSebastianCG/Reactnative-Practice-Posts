@@ -2,23 +2,24 @@ import React from "react";
 import {
   View,
   StyleSheet,
-  Image,
   Platform,
   TouchableWithoutFeedback,
 } from "react-native";
 import Svg, { Polygon } from "react-native-svg";
-import { Text, Stack, Divider } from "@react-native-material/core";
+import { Text, Stack } from "@react-native-material/core";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
+import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { Logo } from "../../public_styles/component_public_Styles/Basic_Coponents_F";
 
 function WelcomeScreen() {
   const navigation = useNavigation();
   return (
     <Stack spacing={4} style={styles.container}>
-      <Image source={require("../../img/logo.png")} style={styles.Image} />
+      <Logo styleLogo = {styles.logoContainer}/>
       <Text style={styles.text_tittle}>Welcome to Apis </Text>
 
-      {/* <Divider style={styles.divider } /> */}
       <TouchableWithoutFeedback
         onPress={() => {
           navigation.navigate("IndexTabbar");
@@ -26,14 +27,14 @@ function WelcomeScreen() {
         <View style={styles.buttonContainer}>
           <MaterialCommunityIcons
             name="arrow-right-circle"
-            color="#890000"
+            color={BasicStylesPage.color1}
             size={150}
           />
         </View>
       </TouchableWithoutFeedback>
 
       <Svg height="200" width="300" style={styles.footer}>
-        <Polygon points="0,0 300,200 0,200" fill="#890000" />
+        <Polygon points="0,0 300,200 0,200" fill={BasicStylesPage.color1} />
       </Svg>
     </Stack>
   );
@@ -53,16 +54,17 @@ const styles = StyleSheet.create({
   },
 
   text_tittle: {
-    color: "#7A1B1B",
+    color: BasicStylesPage.color1,
+    fontWeight: BasicStylesPage.fontWeightTitle,
+    fontFamily: BasicStylesPage.fontText,
     fontSize: 52,
-    fontWeight: "bold",
     textAlign: "center",
     marginTop: "5%",
     marginLeft: "10%",
     marginRight: "10%",
   },
 
-  Image: {
+  logoContainer: {
     width: 200,
     height: 200,
     marginLeft: "25%",
@@ -73,13 +75,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
     marginTop: "13%",
-  },
-  divider: {
-    marginTop: "5%",
-    marginLeft: "25%",
-    marginRight: "25%",
-    height: 10,
-    backgroundColor: "#890000",
   },
 });
 

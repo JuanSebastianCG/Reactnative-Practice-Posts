@@ -2,51 +2,44 @@ import React from "react";
 import { Stack, Text } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import { Polygon, Svg } from "react-native-svg";
-import { StyleSheet, Image, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
+import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { CustomButton, Logo } from "../../public_styles/component_public_Styles/Basic_Coponents_F";
+
 
 function HomeScreen() {
   const navigation = useNavigation();
 
-  //const goToCategories = () => navigation.navigate("Categories");
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
+  const goToWelcome = () => navigation.navigate("LoginScreen");
 
   return (
     <Stack spacing={4} style={styles.container}>
-      <Image source={require("../../img/logo.png")} style={styles.Image} />
-      <Text style={styles.text_tittle}>Que Quieres Hacer?    ... </Text>
+      <Logo/>
+      <Text style={styles.text_tittle}>Que Quieres Hacer?   ... </Text>
 
-      {/* <Divider style={styles.divider } /> */}
-      <TouchableOpacity style={styles.button} onPress={goToLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={goToRegister}>
-        <Text style={styles.buttonText}>Registrate</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} >
-        <Text style={styles.buttonText}>Ver api</Text>
-      </TouchableOpacity>
+      <CustomButton
+        text="Registrarse"
+        onPress={goToRegister}
+        buttonStyle={styles.buttonContainer}
+      />
+      <CustomButton
+        text="Login"
+        onPress={goToLogin}
+        buttonStyle={[styles.buttonContainer, { paddingLeft: 32,paddingRight: 32, }]}       
+      />
+      <CustomButton
+        text="Ver api"
+        buttonStyle={[styles.buttonContainer, { paddingLeft: 26,paddingRight: 26, }]}
+      />
 
       <Svg height="230" width="400" style={styles.footer}>
-        <Polygon points="0,0 400,200 0,250" fill="#890000" />
+        <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
       </Svg>
       <Svg height="230" width="400" style={styles.footer}>
-        <Polygon points="0,60 190,200 0,200" fill="#FFDBDB" />
+        <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
       </Svg>
-
-      {/* <Svg
-        height="150"
-        width="150"
-        style={{
-          position: "absolute",
-          marginTop: "120%",
-          marginLeft: "62%",
-        }}>
-        <Polygon points="" fill="#890000" />
-      </Svg> */}
-      {/* FFDBDB */}
     </Stack>
   );
 }
@@ -55,7 +48,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   footer: {
     position: Platform.OS === "android" ? "absolute" : "relative",
     bottom: 0,
@@ -65,41 +57,19 @@ const styles = StyleSheet.create({
   },
 
   text_tittle: {
-    color: "#7A1B1B",
+    color: BasicStylesPage.color1,
     fontSize: 52,
-    fontWeight: "bold",
+    fontWeight: BasicStylesPage.fontWeightTitle,
+    fontFamily: BasicStylesPage.fontText,
     marginTop: "5%",
     marginLeft: "25%",
     marginRight: "18%",
   },
 
-  Image: {
-    width: 80,
-    height: 80,
-    marginRight: "25%",
-    marginLeft: "2%",
-    marginTop: "5%",
+  buttonContainer: {
+    marginBottom: "3%",
   },
 
-  buttonContainer: {
-    alignItems: "center",
-    marginTop: "13%",
-  },
-  button: {
-    backgroundColor: "#FFDBDB",
-    borderRadius: 25,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    marginVertical: 10,
-    marginHorizontal: 100,
-  },
-  buttonText: {
-    color: "#7A1B1B",
-    fontSize: 18,
-    textAlign: "center",
-    textTransform: "uppercase",
-    fontWeight: "bold",
-  },
 });
 
 export default HomeScreen;

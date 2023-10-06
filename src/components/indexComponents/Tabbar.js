@@ -8,14 +8,13 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+
 const Tabbar = () => {
   const navigation = useNavigation();
 
   const [activeTab, setActiveTab] = useState("Home");
-
-  const handleTabPress = (tabName) => {
-    setActiveTab(tabName);
-  };
+  const handleTabPress = (tabName) => setActiveTab(tabName);
 
   return (
     <View style={styles.tabContainer}>
@@ -24,17 +23,19 @@ const Tabbar = () => {
           handleTabPress("Home");
           navigation.navigate("HomeScreen");
         }}
-        style={styles.tabIconWrapper}
-      >
+        style={styles.tabIconWrapper}>
         <View
           style={[
             styles.tabIconInnerWrapper,
             activeTab === "Home" && styles.activeTab,
-          ]}
-        >
+          ]}>
           <MaterialCommunityIcons
             name="home-circle"
-            color={activeTab === "Home" ? "#FFDBDB" : "#FFDBDB"}
+            color={
+              activeTab === "Home"
+                ? BasicStylesPage.color2
+                : BasicStylesPage.color2
+            }
             size={50}
           />
         </View>
@@ -45,17 +46,19 @@ const Tabbar = () => {
           handleTabPress("Camera");
           navigation.navigate("CamaraScreen");
         }}
-        style={styles.tabIconWrapper}
-      >
+        style={styles.tabIconWrapper}>
         <View
           style={[
             styles.tabIconInnerWrapper,
             activeTab === "Camera" && styles.activeTab,
-          ]}
-        >
+          ]}>
           <MaterialCommunityIcons
             name="camera-enhance"
-            color={activeTab === "Camera" ? "#FFDBDB" : "#FFDBDB"}
+            color={
+              activeTab === "Camera"
+                ? BasicStylesPage.color2
+                : BasicStylesPage.color2
+            }
             size={45}
           />
         </View>
@@ -67,8 +70,8 @@ const Tabbar = () => {
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
-    height: 65,
-    backgroundColor: "#7A1B1B",
+    height: 70,
+    backgroundColor: BasicStylesPage.color1,
     justifyContent: "space-around",
     alignItems: "center",
     paddingHorizontal: 16,
@@ -88,10 +91,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   activeTab: {
-    backgroundColor: "#ffffff",
-    borderRadius: 25,
-    position: "relative", // Agrega position:relative al activo
-    zIndex: 1, // Asegura que el activo esté por encima de otros elementos
+    backgroundColor: BasicStylesPage.color3,
+    borderRadius: 60,
+    position: "relative", 
+    zIndex: 1, 
+    height: 60,
+    width: 60,
   },
 });
 

@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet } from "react-native";
-import {
-  Stack,
-  TextInput,
-  Button,
-  Banner,
-  HStack,
-} from "@react-native-material/core";
+import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+import { Stack, TextInput } from "@react-native-material/core";
 
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
+import {
+  CustomButton,
+  ErrorBanner,
+  Logo,
+} from "../../public_styles/component_public_Styles/Basic_Coponents_F";
+import CustomInTextField from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 
 function RegisterSwitchScreen() {
   const navigation = useNavigation();
@@ -20,14 +21,14 @@ function RegisterSwitchScreen() {
     email: "",
     password: "",
   });
-  const [loginError, setLoginError] = useState(false);
-
   const handleChange = (name, value) => {
     setUserData({
       ...userData,
       [name]: value,
     });
   };
+
+  const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
     const url = "https://apis-backend-dm.up.railway.app/api/v1/users/login";
@@ -38,7 +39,6 @@ function RegisterSwitchScreen() {
       email: userData.email,
       password: userData.password,
     };
-
     postData(url, headers, body, (data) => {
       if (error || !data) {
         console.log("Error:", error);
@@ -51,83 +51,63 @@ function RegisterSwitchScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Svg height="580" width="400" style={styles.footer}>
-        <Polygon points="0,0 600,450 0,250" fill="#FFDBDB" />
-      </Svg>
-      <Svg height="340" width="400" style={styles.footer}>
-        <Polygon points="0,0 800,280 0,500" fill="#890000" />
-      </Svg>
-
-
-      <View style={styles.formContainer}>
-        <View style={styles.logoContainer}>
-          <Icon name="account" size={60} color="#890000" />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Svg height="580" width="700" style={styles.footer}>
+          <Polygon points="0,0 600,450 0,250" fill={BasicStylesPage.color2} />
+        </Svg>
+        <Svg height="340" width="700" style={styles.footer}>
+          <Polygon points="0,0 800,280 0,500" fill={BasicStylesPage.color0} />
+        </Svg>
+        <View>
+          <Logo styleLogo={styles.logoContainer} />
         </View>
-        <View style={styles.fieldContainer}>
-          <Stack spacing={16} >
-            <TextInput
-              label="Email"
-              color="#FFDBDB"
-              variant="outlined"
-              style={styles.input}
-              placeholder="Email"
-              value={userData.email}
-              onChangeText={(text) => handleChange("email", text)}
-            />
 
-            <TextInput
-              label="Password"
-              color="#FFDBDB"
-              variant="outlined"
-              style={styles.input}
-              placeholder="Password"
-              value={userData.password}
-              secureTextEntry
-              onChangeText={(text) => handleChange("password", text)}
-            />
+        <View style={styles.formContainer}>
+          {/* Contenedor para el logotipo */}
+          <View style={styles.loginLogo}>
+            <Icon name="account" size={60} color={BasicStylesPage.color0} />
+          </View>
 
-            {loginError && (
-              <Banner
-                text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
-                textStyle={{ color: "#ff8282", fontSize: 16, fontWeight: "bold" }}
-                // Fondo rojizo tenue
-                buttons={
-                  <HStack
-                    spacing={2}
-                    justifyContent="center"
-                    style={{ marginBottom: 20 }}
-                  >
-                    <Button
-                      style={{
-                        color: "#FF0000", // Cambia el color del botón a rojo
-                        position: "absolute",
-                        marginTop: 10,
-                      }}
-                      key="fix-it"
-                      variant="text"
-                      title="OK"
-                      compact
-                      titleStyle={{ color: "#ff8282" }}
-                      onPress={() => setLoginError(false)}
-                    />
-                  </HStack>
-                }
+          <View style={styles.fieldContainer}>
+            <Stack spacing={16}>
+              <CustomInTextField
+                label="Email"
+                style={styles.input}
+                placeholder="Email"
+                value={userData.email}
+                onChangeText={(text) => handleChange("email", text)}
               />
-            )}
 
-            <Button
-              title="Iniciar Sesión"
-              onPress={handleSubmit}
-              style={styles.button}
-            />
-          </Stack>
+              <CustomInTextField
+                label="Password"
+                style={styles.input}
+                placeholder="Password"
+                value={userData.password}
+                onChangeText={(text) => handleChange("password", text)}
+              />
+
+              {loginError && (
+                <ErrorBanner
+                  text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
+                />
+              )}
+              <CustomButton
+                text="Login"
+                onPress={handleSubmit}
+                buttonStyle={styles.button}
+              />
+            </Stack>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   footer: {
     position: "absolute",
     bottom: 0,
@@ -135,46 +115,53 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: "center",
   },
-
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: BasicStylesPage.color3,
+  },
+  formContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  formContainer: {
-    width: "80%",
-    alignItems: "center",
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
   fieldContainer: {
-    backgroundColor: "#FFFF", // Color de fondo del campo
-    borderRadius: 60, // Redondear las esquinas del campo
-    paddingTop: 70,
-    paddingLeft: 130,
-    paddingRight: 130,
-    paddingBottom: 70, 
-    zIndex: 1, // Hacer que el formulario esté en la parte superior
+    backgroundColor: BasicStylesPage.color3,
+    borderRadius: 60,
+    width: "85%",
+    height: "55%",
+    marginBottom: "30%",
+    marginTop: 20,
+    paddingTop: 40,
+    alignItems: "center",
   },
-
   input: {
     marginBottom: 16,
-    width: "300%",
-    marginLeft: "-90%",
-
+    width: 190,
   },
   button: {
-    borderColor : "#FFDBDB",
-    backgroundColor: "#830000",
     padding: 10,
-    marginTop: "101%",
-    width: "190%",
-    marginLeft: "-35%",
-    
+    marginTop: 8,
   },
+
+  logoContainer: {
+    position: 'absolute',
+    top: 0,      // Alinea el componente en la parte superior
+    right: 0,    // Alinea el componente en la esquina derecha
+    width: 120,
+    height: 120,
+  },
+
+  loginLogo: {
+    marginTop: 90,
+    width: 120,
+    height: 120,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: BasicStylesPage.color0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
 });
 
 export default RegisterSwitchScreen;
