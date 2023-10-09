@@ -7,6 +7,8 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterSwitchScreen";
 import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
+import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
+
 const Stack = createStackNavigator();
 
 function IndexTabbar() {
@@ -21,6 +23,7 @@ function IndexTabbar() {
         <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
       </Stack.Navigator>
       {/* Superponer el Tabbar de manera absoluta */}
       <View style={styles.tabbarOverlay}>

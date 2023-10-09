@@ -14,7 +14,7 @@ import {
 import CustomInTextField from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 
-function RegisterSwitchScreen() {
+function LoginScreen() {
   const navigation = useNavigation();
   const { postData, loading, error } = usePostData();
   const [userData, setUserData] = useState({
@@ -173,4 +173,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default RegisterSwitchScreen;
+export default LoginScreen;
