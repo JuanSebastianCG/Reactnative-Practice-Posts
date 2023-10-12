@@ -4,7 +4,7 @@ import Tabbar from "./indexComponents/Tabbar";
 import HomeScreen from "./screens/HomeScreen";
 import CamaraScreen from "./screens/CamaraScreen";
 import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterSwitchScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
 const Stack = createStackNavigator();
