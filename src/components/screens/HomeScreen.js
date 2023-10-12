@@ -11,9 +11,9 @@ function HomeScreen() {
   const navigation = useNavigation();
 
   const goToRegister = () => navigation.navigate("RegisterScreen");
-  const goToLogin = () => navigation.navigate("ShowPostsScreen");
-  const goToShowPosts= () => navigation.navigate("ShowPostsScreen");
-
+  const goToLogin = () => navigation.navigate("CreatePost");
+  const goToShowPosts= () => navigation.navigate("CreatePost");
+  const goToCreatePost= () => navigation.navigate("CreatePost");
   return (
     <Stack spacing={4} style={styles.container}>
       <Logo/>
@@ -32,6 +32,12 @@ function HomeScreen() {
       <CustomButton
         text="Ver api"
         onPress={goToShowPosts}
+        buttonStyle={[styles.buttonContainer, { paddingLeft: 26,paddingRight: 26, }]}
+      />
+      
+      <CustomButton
+        text="crear post"
+        onPress={goToCreatePost}
         buttonStyle={[styles.buttonContainer, { paddingLeft: 26,paddingRight: 26, }]}
       />
 

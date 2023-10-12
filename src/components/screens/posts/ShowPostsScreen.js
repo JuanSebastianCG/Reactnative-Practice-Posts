@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator, Text } from "react-native";
 import { useGetData } from "../../../utils/useAxios";
-
 import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 
@@ -14,6 +13,8 @@ function ShowPostsScreen() {
       console.log("Data from hook:", data);
       });
 }, []);
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -36,7 +37,10 @@ function ShowPostsScreen() {
             </View>
           ))}
       </ScrollView>
+ 
+      
     </SafeAreaView>
+    
   );
 }
 

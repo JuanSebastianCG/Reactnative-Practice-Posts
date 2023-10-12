@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from "react";
-import { StyleSheet } from "react-native";
+import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator, Text, Button,TextInput, Modal } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { Modal } from "react-native-paper";
-import modelPost from "../models/Post"
 
-export const Posts=()=>{
-    const [postList, setPostList] = usestate([]);
-    const [modalVisible, setModalVisible] = usestate([]);
-    const [newPost, setNewPost] = usestate({
+import modelPost from "../../../models/Post"
+import { useGetData } from "../../../utils/useAxios";
+
+
+function Posts(){
+    const [postList, setPostList] = useState([]);
+    const [modalVisible, setModalVisible] = useState([]);
+    const [newPost, setNewPost] = useState({
         title:"",
         subtitle:"",
         description:"",
@@ -26,24 +28,18 @@ export const Posts=()=>{
 
     }
 
-
-    const listPost=()=>{
-        axios.get("http://localhost:3000/api/v1/admin/posts").then((response=>{setPostList(response.data)})).catch((error)=>{console.error(error)})
-    
-    }
-
-    useEffect(()=>{
-        listPost();
-    }, [postList])
-
     const handleCreatePost=()=>{
-        axios.post("http://localhost:3000/api/v1/admin/posts/new-post").then((response=>{setNewPost()})).catch((error)=>{console.error(error)})
+        useGetData.post("http://localhost:3000/api/v1/admin/posts/new-post").then((response=>{
+            setNewPost(response.data)
+            createPost()
+            console.log("hola creando post")
+        })).catch((error)=>{console.error(error)})
     }
 
     const handleDeletePost=(postId)=>{
         const updatePosts= postList.filter((post)=>post._id !== postId);
         setPostList(updatePosts)
-        axios.delete(`http://localhost:3000/api/v1/admin/posts/${postId}`).then((response=>{setNewPost(response.data)})).catch((error)=>{console.error(error)})
+        useGetData.delete(`http://localhost:3000/api/v1/admin/posts/${postId}`).then((response=>{removePost(response.data)})).catch((error)=>{console.error(error)})
     }
 
     const createPost = async (req,res)=>{
@@ -51,13 +47,14 @@ export const Posts=()=>{
             const{title, subtitle,avatar,description}=req.body
             const newPost = new modelPost(posts);
             console.log(newPost);
-            console.log(newPost);
             await newPost.save();
             res.status(201).json({message:"post created"})
         } catch (error) {
             res.status(401).json({error:"error"})
         }
     }
+
+    
 
     return (<View>
         <FlatList 
@@ -74,43 +71,44 @@ export const Posts=()=>{
             </View>
         )}>
         </FlatList>
-        <Button title="new post" onPress={()=>setModalVisible(true)}></Button>
+        <Button title="Crear nuevo post" onPress={()=>setModalVisible(true)}></Button>
         <Modal visible={modalVisible} 
         onrequestClose={()=>setModalVisible(false)}
         animation="slide"
         >
             <View style={styles.modalContainer}>
                 <TextInput 
-                palceholder="title post" 
+                label="title post" 
                 style={styles.input} 
                 onChangeText={(title_text)=>{
                     console.log("subtitulo publicacion", title_text)
                     setNewPost({...newPost, title: title_text})}}></TextInput>
                     <TextInput 
-                palceholder="subtitle post" 
+                label="subtitle post" 
                 style={styles.input} 
                 onChangeText={(subtitle_item)=>{
                     console.log("subtitulo publicacion", subtitle_item)
-                    setNewPost({...newPost, title: subtitle_item})}}></TextInput>
+                    setNewPost({...newPost, subtitle: subtitle_item})}}></TextInput>
 
                     <TextInput 
-                palceholder="description post" 
+                label="description post" 
                 style={styles.input} 
                 onChangeText={(description_item)=>{
                     console.log("subtitulo publicacion", description_item)
-                    setNewPost({...newPost, title: description_item})}}></TextInput>
+                    setNewPost({...newPost, description: description_item})}}></TextInput>
 
                 <TextInput 
-                palceholder="avatar post" 
+                label="avatar post" 
                 style={styles.input} 
                 onChangeText={(avatar_item)=>{
                     console.log("subtitulo publicacion", avatar_item)
-                    setNewPost({...newPost, title: avatar_item})}}></TextInput>
+                    setNewPost({...newPost, avatar: avatar_item})}}></TextInput>
 
-                <Button title="creacion de un post" onpress={handleCreatePost}></Button>
-                
+                <Button title="crear post" onPress={handleCreatePost}></Button>  
             </View>
+            
         </Modal>
+        
     </View>)
 }
 
@@ -118,6 +116,12 @@ export const Posts=()=>{
 const styles= StyleSheet.create({
     input:{
         marginBottom:10,
+        paddingVertical:5,
+        paddingHorizontal:10,
+        borderWidth:1,
+        borderColor: "#ccc",
+        borderRadius:3,
+        color:'#ccc'
     },
     modalContainer:{
         flex:1,
@@ -128,3 +132,5 @@ const styles= StyleSheet.create({
 })
 
 
+
+export default Posts;
