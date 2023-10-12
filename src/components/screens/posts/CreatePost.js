@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator, Text, Button,TextInput, Modal } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-
+import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import modelPost from "../../../models/Post"
 import { useGetData } from "../../../utils/useAxios";
 
 
 function Posts(){
+    const { getData, loading, error, data } = useGetData();
     const [postList, setPostList] = useState([]);
     const [modalVisible, setModalVisible] = useState([]);
     const [newPost, setNewPost] = useState({
@@ -16,6 +17,15 @@ function Posts(){
         avatar:"",
         active:false,
     });
+
+    useEffect(() => {
+        const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
+        getData(url, (data) => {
+          console.log("Data from hook:", data);
+          setPostList(data)
+          });
+          
+    }, []);
 
     const removePost = async (req,res) => {
         const {id} = req.params
@@ -29,7 +39,7 @@ function Posts(){
     }
 
     const handleCreatePost=()=>{
-        useGetData.post("http://localhost:3000/api/v1/admin/posts/new-post").then((response=>{
+        useGetData.post("https://apis-backend-dm.up.railway.app/api/v1/posts").then((response=>{
             setNewPost(response.data)
             createPost()
             console.log("hola creando post")
@@ -39,7 +49,7 @@ function Posts(){
     const handleDeletePost=(postId)=>{
         const updatePosts= postList.filter((post)=>post._id !== postId);
         setPostList(updatePosts)
-        useGetData.delete(`http://localhost:3000/api/v1/admin/posts/${postId}`).then((response=>{removePost(response.data)})).catch((error)=>{console.error(error)})
+        useGetData.delete(`https://apis-backend-dm.up.railway.app/api/v1/posts/${postId}`).then((response=>{removePost(response.data)})).catch((error)=>{console.error(error)})
     }
 
     const createPost = async (req,res)=>{
@@ -77,32 +87,32 @@ function Posts(){
         animation="slide"
         >
             <View style={styles.modalContainer}>
-                <TextInput 
+                <CustomInTextField 
                 label="title post" 
                 style={styles.input} 
                 onChangeText={(title_text)=>{
                     console.log("subtitulo publicacion", title_text)
-                    setNewPost({...newPost, title: title_text})}}></TextInput>
-                    <TextInput 
+                    setNewPost({...newPost, title: title_text})}}></CustomInTextField>
+                    <CustomInTextField 
                 label="subtitle post" 
                 style={styles.input} 
                 onChangeText={(subtitle_item)=>{
                     console.log("subtitulo publicacion", subtitle_item)
-                    setNewPost({...newPost, subtitle: subtitle_item})}}></TextInput>
+                    setNewPost({...newPost, subtitle: subtitle_item})}}></CustomInTextField>
 
-                    <TextInput 
+                    <CustomInTextField 
                 label="description post" 
                 style={styles.input} 
                 onChangeText={(description_item)=>{
                     console.log("subtitulo publicacion", description_item)
-                    setNewPost({...newPost, description: description_item})}}></TextInput>
+                    setNewPost({...newPost, description: description_item})}}></CustomInTextField>
 
-                <TextInput 
+                <CustomInTextField 
                 label="avatar post" 
                 style={styles.input} 
                 onChangeText={(avatar_item)=>{
                     console.log("subtitulo publicacion", avatar_item)
-                    setNewPost({...newPost, avatar: avatar_item})}}></TextInput>
+                    setNewPost({...newPost, avatar: avatar_item})}}></CustomInTextField>
 
                 <Button title="crear post" onPress={handleCreatePost}></Button>  
             </View>
