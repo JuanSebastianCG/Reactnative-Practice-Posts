@@ -34,12 +34,16 @@ const Logo = (styleLogo) => {
   );
 };
 
-const ErrorBanner = ({ text, StyleBaner, buttons, onChange }) => {
+const ErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
+
   return (
-    <View style={[styles.errorBanner,StyleBaner]}>
+    <View style={[styles.errorBanner,styleBanner]}>
       <Text style={[styles.errorText]}>{text}</Text>
       {buttons}
-      <Button title="OK"  onPress={onChange} style={styles.errorButton} />
+      <Button title="OK"  onPress={onChange} style={styles.errorButton} >
+        <Text style={[styles.errorText]}>OK</Text>
+      </Button>
+
     </View>
   );
 };
@@ -102,9 +106,17 @@ const styles = StyleSheet.create({
 
   },
   errorButton: {
-    backgroundColor: BasicStylesPage.colorWarning1,
-    padding: 10,
-    borderRadius: 10,
+    backgroundColor: '#FF000000',
+    
+    paddingLeft: -10,
+    alignContent: "flex-end",
+    borderBottomWidth: 1,
+    borderBottomColor: BasicStylesPage.colorWarning1,
+    borderBottomLeftRadius: 80,
+
+
+    height: 45,
+    borderRadius: 60,
     marginTop: 10,
   },
 });

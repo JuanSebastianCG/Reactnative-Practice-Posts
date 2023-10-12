@@ -11,13 +11,13 @@ function HomeScreen() {
   const navigation = useNavigation();
 
   const goToRegister = () => navigation.navigate("RegisterScreen");
-  const goToLogin = () => navigation.navigate("LoginScreen");
-  const goToWelcome = () => navigation.navigate("LoginScreen");
+  const goToLogin = () => navigation.navigate("ShowPostsScreen");
+  const goToShowPosts= () => navigation.navigate("ShowPostsScreen");
 
   return (
     <Stack spacing={4} style={styles.container}>
       <Logo/>
-      <Text style={styles.text_tittle}>Que Quieres Hacer?   ... </Text>
+      <Text style={styles.text_tittle}>Que Quieres Hacer?    ... </Text>
 
       <CustomButton
         text="Registrarse"
@@ -31,6 +31,7 @@ function HomeScreen() {
       />
       <CustomButton
         text="Ver api"
+        onPress={goToShowPosts}
         buttonStyle={[styles.buttonContainer, { paddingLeft: 26,paddingRight: 26, }]}
       />
 
@@ -58,16 +59,18 @@ const styles = StyleSheet.create({
 
   text_tittle: {
     color: BasicStylesPage.color1,
-    fontSize: 52,
+    fontSize: 53,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: "5%",
-    marginLeft: "25%",
+    marginLeft: "28%",
     marginRight: "18%",
   },
 
+
+
   buttonContainer: {
-    marginBottom: "3%",
+    marginTop: "3%",
   },
 
 });
