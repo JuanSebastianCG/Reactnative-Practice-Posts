@@ -3,11 +3,16 @@ import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator, Text, Bu
 import { FlatList } from "react-native-gesture-handler";
 import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import modelPost from "../../../models/Post"
-import { useGetData } from "../../../utils/useAxios";
+import { useGetData,usePostData,useDeleteData } from "../../../utils/useAxios";
+
+import axios from "axios";
 
 
 function Posts(){
     const { getData, loading, error, data } = useGetData();
+    const { postData, loadingPost, errorPost,dataPost } = usePostData();
+    const { deleteData, loadingDelete, errorDelete, dataDelete } = useDeleteData();
+
     const [postList, setPostList] = useState([]);
     const [modalVisible, setModalVisible] = useState([]);
     const [newPost, setNewPost] = useState({
@@ -27,7 +32,8 @@ function Posts(){
           
     }, []);
 
-    const removePost = async (req,res) => {
+
+    /* const removePost = async (req,res) => {
         const {id} = req.params
         try {
             const postdelete=await modelPost.findById(id);
@@ -36,20 +42,6 @@ function Posts(){
             res.status(401).json({error:"error"})
         }
 
-    }
-
-    const handleCreatePost=()=>{
-        useGetData.post("https://apis-backend-dm.up.railway.app/api/v1/posts").then((response=>{
-            setNewPost(response.data)
-            createPost()
-            console.log("hola creando post")
-        })).catch((error)=>{console.error(error)})
-    }
-
-    const handleDeletePost=(postId)=>{
-        const updatePosts= postList.filter((post)=>post._id !== postId);
-        setPostList(updatePosts)
-        useGetData.delete(`https://apis-backend-dm.up.railway.app/api/v1/posts/${postId}`).then((response=>{removePost(response.data)})).catch((error)=>{console.error(error)})
     }
 
     const createPost = async (req,res)=>{
@@ -62,27 +54,81 @@ function Posts(){
         } catch (error) {
             res.status(401).json({error:"error"})
         }
-    }
+    } */
+
+    const handleCreatePost =  () => {
+        const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        const body = {
+          title: newPost.title,
+          subtitle: newPost.subtitle,
+          description: newPost.description,
+          avatar: newPost.avatar,
+        };
+    
+        postData(url, headers, body, (data) => {
+          if (error || !data) {
+            console.log("Error:", error);
+          } else {
+            console.log("Data:", data);
+            
+            navigation.navigate("HomeScreen");
+          }
+        });
+
+        setPostList([...postList, body]);
+
+        setModalVisible(false)
+
+
+      };
+
+      const handleGetData = async () => {
+        const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
+        getData(url, (data) => {
+          setPostList(data);
+          console.log(data)
+        });
+      };
 
     
+      const handleDeletePost = (id) => {
+        try {
+            const url = `https://apis-backend-dm.up.railway.app/api/v1/posts/${id}`;
+            console.log("id:", id);
+            deleteData(url, (data) => {
+                console.log("data:", data);
+            });
+            setPostList(postList.filter((item) => item._id !== id));
+            console.log("eliminacion exitosa")
+        } catch (error) {
+            console.log(error)
+            console.log("no se pudo eliminar")
+        }
+      }
 
     return (<View>
         <FlatList 
+        style={styles.flatlistContainer}
         data={postList} 
         keyExtractor={(item)=>item.id}
         renderItem={({item})=>(
-            <View>
-                <Image source={{ uri:item.avatar }} style={{width:50  }}></Image>
-                <Text>{item.title}</Text>
-                <Text>{item.subtitle}</Text>
-                <Text>{item.description}</Text>
-                <Text>{item.active? "y" : "n"}</Text>
-                <Button title="eliminar un post" onpress={()=>handleDeletePost(item.id)}></Button>
+            <View style={styles.postListContainer}>
+                {/* <Image source={{ uri:item.avatar }} style={{width:50  }}></Image> */}
+                <Text> {item.title}</Text>
+                <Text> {item.subtitle}</Text>
+                <Text> {item.description}</Text>
+                {/* <Text> {item.active? "y" : "n"}</Text> */}
+                <Text> {item.avatar}</Text>
+                <Button title="eliminar post" onPress={()=>handleDeletePost(item._id)}></Button>
             </View>
         )}>
         </FlatList>
         <Button title="Crear nuevo post" onPress={()=>setModalVisible(true)}></Button>
         <Modal visible={modalVisible} 
+        
         onrequestClose={()=>setModalVisible(false)}
         animation="slide"
         >
@@ -137,6 +183,18 @@ const styles= StyleSheet.create({
         flex:1,
         justifyContent:"center",
         alignContent:"center",
+        alignItems:"center",
+        width:200,
+        height:150,
+        marginLeft:100
+    },
+    flatlistContainer:{
+        margin:30,
+        alignContent:"center",
+        textAlign:"center"
+
+    },
+    postListContainer:{
         alignItems:"center"
     }
 })
