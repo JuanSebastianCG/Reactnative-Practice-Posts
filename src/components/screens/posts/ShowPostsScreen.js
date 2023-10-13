@@ -58,11 +58,10 @@ function ShowPostsScreen() {
     });
   }
   
-
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.mainContainer}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}  scrollIndicatorInsets={{ bottom: 300 }} >
           {loading && <ActivityIndicator size="large" color="#FF5733" />}
           {error && <Text>Error: {error.message}</Text>}
           {posts.map((post, index) => (
@@ -71,10 +70,10 @@ function ShowPostsScreen() {
             </View>
           ))}
         </ScrollView>
-
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("CreatePostScreen")}>
+          onPress={() => navigation.navigate("CreatePostScreen")}
+        >
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>
@@ -179,18 +178,26 @@ const styleCard = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    position: "relative",
+    
+    
+  },
   addButton: {
     position: "absolute",
     bottom: 20,
     right: 20,
-    width: 100,
+    width: 60,
     height: 60,
     backgroundColor: "#FF5733",
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 60,
+    zIndex: 1, // Asegura que el botón esté en la parte superior
+    marginBottom: 70,
   },
+  // Otros estilos que puedas tener
   container: {
     flex: 1,
   },
@@ -200,6 +207,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     marginTop: 50,
+    paddingBottom: 100,
+
+    
+
   },
   cards: {
     marginBottom: 20,
