@@ -15,10 +15,15 @@ import CustomInTextField from "../../../public_styles/component_public_Styles/Ba
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import { Image } from "react-native";
+
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
-  const { deleteData, loadingDelete, errorDelete, dataDelete } = useDeleteData();
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const { deleteData, loadingDelete, errorDelete, dataDelete } =
+    useDeleteData();
 
   const navigation = useNavigation();
 
@@ -27,8 +32,9 @@ function ShowPostsScreen() {
 
   useEffect(() => {
     handleGetData();
-
-  }, []);
+    setIsDeleted(false); // Reinicia isDeleted
+  }, [isDeleted]);
+  
 
   const handleGetData = async () => {
     const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
@@ -43,11 +49,15 @@ function ShowPostsScreen() {
     console.log("id:", id);
     deleteData(url, (data) => {
       // Si la eliminación es exitosa, actualiza el estado excluyendo el post eliminado
-      if (data && data.success) {
+      console.log("data:", data);
+
+      if (data) {
         setPosts(posts.filter((post) => post._id !== id));
+        setIsDeleted(true); // Marca que se ha eliminado un elemento
       }
     });
   }
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,8 +66,8 @@ function ShowPostsScreen() {
           {loading && <ActivityIndicator size="large" color="#FF5733" />}
           {error && <Text>Error: {error.message}</Text>}
           {posts.map((post, index) => (
-            <View style={styles.cards}>
-              <Card key={index} post={post} handleDelete={handleDelete} />
+            <View style={styles.cards} key={index}>
+              <Card post={post} handleDelete={handleDelete} />
             </View>
           ))}
         </ScrollView>
@@ -72,13 +82,18 @@ function ShowPostsScreen() {
   );
 }
 
-function Card({ post , handleDelete}) {
+function Card({ post, handleDelete }) {
   return (
     <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
         <Circle cx="200" cy="160" r="140" fill="rgba(255, 136, 136, 0.1)" />
       </Svg>
       <View style={styleCard.cardHeader}>
+        <Image
+          source={{ uri: post.avatar }}
+          style={styleCard.avatarImage} // Establece el estilo de la imagen
+          resizeMode="cover" // Hace que la imagen se estire y cubra el espacio
+        />
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
         </View>
@@ -87,18 +102,16 @@ function Card({ post , handleDelete}) {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => handleDelete(post._id)}>
-          <Icon name="plus" size={60} />
+          <Icon name="trash-can" size={40} />
         </TouchableOpacity>
-
         <Text style={styleCard.subtitle}>{post.subtitle}</Text>
         <Text style={styleCard.description}>{post.description}</Text>
       </View>
-      {/* <View style={styleCard.cardFooter}>
-        <Text style={styleCard.description}>{post.avatar}</Text>
-      </View> */}
     </View>
   );
 }
+
+
 
 const styleCard = StyleSheet.create({
   card: {
@@ -107,6 +120,11 @@ const styleCard = StyleSheet.create({
     marginLeft: "2%",
     width: "96%",
     borderRadius: 10,
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+  
   },
   cardHeader: {
     padding: 10,
