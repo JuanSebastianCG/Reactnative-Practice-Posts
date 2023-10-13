@@ -56,3 +56,34 @@ export function useGetData() {
 
   return { getData, loading, error,data};
 }
+
+
+export function useDeleteData ()
+{
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null); 
+
+  const deleteData = useCallback(async (url,  onComplete = () => {}, headers = {}, body = null) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const config = {
+        headers,
+        data: body, 
+      };
+      const response = await axios.delete(url, config);
+      setData(response.data);
+
+      onComplete(response.data); 
+    } catch (err) {
+      console.error("Error making GET request:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { deleteData, loading, error,data};
+}
