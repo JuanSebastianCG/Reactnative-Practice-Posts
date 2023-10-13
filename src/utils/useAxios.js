@@ -1,45 +1,89 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 
-export function useAxios(url, onComplete = () => {}) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+export function usePostData() {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const source = axios.CancelToken.source();
+  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(url, {
-          cancelToken: source.token,
-        });
+  const postData = useCallback(async (url, headers = {}, body = null, onComplete = () => {}) => {
 
-        setData(response.data);
-        setLoading(false);
-      } catch (err) {
-        if (axios.isCancel(err)) {
-          //console.log("Cancelled request");
-        } else {
-          setError(err);
-          setLoading(false);
-        }
-      } finally {
-        // Llama a la función onComplete sin importar si la solicitud tuvo éxito o falló.
-        onComplete();
-      }
-    };
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.post(url, body, { headers });
+      setData(response.data);
+      onComplete(response.data); 
+    } catch (err) {
+      setError(err);
+      onComplete(null);
 
-    fetchData();
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    return () => {
-      source.cancel("Request canceled by user");
-    };
-  }, [url, onComplete]);
+  return { postData, loading, error,data};
+}
 
-  const handleCancelRequest = () => {
-    source.cancel("Request canceled by user");
-    setError("Cancelled Request");
-  };
 
-  return { data, loading, error, handleCancelRequest };
+export function useGetData() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null); 
+
+  const getData = useCallback(async (url,  onComplete = () => {}, headers = {}, body = null) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const config = {
+        headers,
+        data: body, 
+      };
+
+      const response = await axios.get(url, config);
+      setData(response.data);
+
+      onComplete(response.data); 
+    } catch (err) {
+      console.error("Error making GET request:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { getData, loading, error,data};
+}
+
+
+export function useDeleteData ()
+{
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null); 
+
+  const deleteData = useCallback(async (url,  onComplete = () => {}, headers = {}, body = null) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const config = {
+        headers,
+        data: body, 
+      };
+      const response = await axios.delete(url, config);
+      setData(response.data);
+
+      onComplete(response.data); 
+    } catch (err) {
+      console.error("Error making GET request:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { deleteData, loading, error,data};
 }
