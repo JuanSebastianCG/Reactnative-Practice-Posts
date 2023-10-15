@@ -1,41 +1,52 @@
-import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+} from "react-native";
 import { Stack } from "@react-native-material/core";
 
 import { useNavigation } from "@react-navigation/native";
-import { usePostData, usePostDataDB } from "../../../utils/useAxios";
+import { usePostData } from "../../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 
 import {
   CustomButton,
-  ErrorBanner,
-  Logo,
-} from "../../../public_styles/component_public_Styles/Basic_Coponents_F";
+  CustomErrorBanner,
+  CustomLogo,
+} from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import ImagePickerComponent from "../../../public_styles/component_public_Styles/Basic_ImageComponent";
+import { CustomSuccessAlert,CustomAlertConfirmation} from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
 function CreatePostScreen() {
   const navigation = useNavigation();
-  const { postData, loading, error,data } = usePostData();
+  //api
+  const { postData, loading, error, data } = usePostData();
+  
+  //imagepiker
+  const { BasicViewPicker, imageUri } = ImagePickerComponent();
 
-  {
-    /*        
-        "title": "prueba2",
-        "subtitle": "tremenda2",
-        "description": "esta funcionando bine 2.0",
-        "avatar": "tremendo x2" */
-  }
+  //modal and alert
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [successPost, setSuccess] = useState(false);
+  const [errorPost, setError] = useState(false);
+
   const handleChange = (name, value) => {
     setPostDataDB({ ...PostDataDB, [name]: value });
   };
+  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+
   const [PostDataDB, setPostDataDB] = useState({
     title: "",
     subtitle: "",
     description: "",
-    avatar: "",
   });
 
-  const handleSubmit = async () => {
+  const handleConfirm = () => {
     const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
     const headers = {
       "Content-Type": "application/json",
@@ -44,18 +55,17 @@ function CreatePostScreen() {
       title: PostDataDB.title,
       subtitle: PostDataDB.subtitle,
       description: PostDataDB.description,
-      avatar: PostDataDB.avatar,
+      avatar: imageUri,
     };
-
     postData(url, headers, body, (data) => {
+      console.log(data);
       if (error || !data) {
-        console.log("Error:", error);
-        setLoginError(true);
+        setError(true);
       } else {
-        console.log("Data:", data);
-        navigation.navigate("HomeScreen");
+        setSuccess(true);
       }
     });
+    setShowConfirmationModal(false);
   };
 
   return (
@@ -68,17 +78,13 @@ function CreatePostScreen() {
           <Polygon points="0,0 800,280 0,500" fill={BasicStylesPage.color0} />
         </Svg>
         <View>
-          <Logo styleLogo={styles.logoContainer} />
+          <CustomLogo styleLogo={styles.logoContainer} />
         </View>
+        {/* image from piker imageUri*/}
 
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <Stack spacing={16}>
-              {/*     title: "",
-                        subtitle: "",
-                        description: "",
-                        avatar: "", */}
-
               <CustomInTextField
                 label="Titulo"
                 style={styles.input}
@@ -102,21 +108,40 @@ function CreatePostScreen() {
                 value={PostDataDB.description}
                 onChangeText={(text) => handleChange("description", text)}
               />
-
-              <CustomInTextField
-                label="Avatar"
-                style={styles.input}
-                placeholder="Avatar"
-                value={PostDataDB.avatar}
-                onChangeText={(text) => handleChange("avatar", text)}
-              />
             </Stack>
+            <BasicViewPicker />
+
+            <View style={styles.imageContainer}>
+              {imageUri && (
+                <Image source={{ uri: imageUri }} style={styles.image} />
+              )}
+            </View>
+            {errorPost && (
+              <CustomErrorBanner
+                text="No se pudo crear el post. Por favor, verifique sus credenciales."
+                styleBanner={styles.errorBanner}
+                onChange={() => setError(false)}
+              />
+            )}
 
             <CustomButton
               text="Enviar"
-              onPress={handleSubmit}
+              onPress={() => setShowConfirmationModal(true)}
               buttonStyle={styles.button}
             />
+
+            <CustomAlertConfirmation
+              isVisible={showConfirmationModal}
+              message="¿Está seguro de realizar esta acción? 0_0"
+              onConfirm={handleConfirm}
+              onCancel={() => setShowConfirmationModal(false)}
+            />
+            <CustomSuccessAlert
+              isVisible={successPost}
+              message="Post creado con éxito!!"
+              onConfirm={goToShowPosts}
+            />
+            
           </View>
         </View>
       </ScrollView>
@@ -127,10 +152,6 @@ function CreatePostScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-  },
-  errorBanner: {
-    marginLeft: "10%",
-    marginRight: "10%",
   },
   footer: {
     position: "absolute",
@@ -152,9 +173,9 @@ const styles = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
     borderRadius: 60,
     width: "85%",
-    height: "60%",
+    height: "80%",
     marginBottom: "30%",
-    marginTop: 20,
+    marginTop: 80,
     paddingTop: 40,
     alignItems: "center",
   },
@@ -169,21 +190,23 @@ const styles = StyleSheet.create({
 
   logoContainer: {
     position: "absolute",
-    top: 0, // Alinea el componente en la parte superior
-    right: 0, // Alinea el componente en la esquina derecha
     width: 120,
     height: 120,
   },
 
-  loginLogo: {
-    marginTop: 90,
-    width: 120,
-    height: 120,
-    borderRadius: 40,
-    borderWidth: 2,
+  imageContainer: {
+    width: 240,
+    height: 160,
+    marginTop: 20,
+    marginBottom: 20,
+    overflow: "hidden",
     borderColor: BasicStylesPage.color0,
-    alignItems: "center",
-    justifyContent: "center",
+    borderWidth: 4,
+    borderRadius: 10,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });
 

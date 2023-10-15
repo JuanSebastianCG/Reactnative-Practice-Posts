@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 
+
+/* ============= POST ========= */
 export function usePostData() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,6 +29,7 @@ export function usePostData() {
 }
 
 
+/*  ============= GET ========= */
 export function useGetData() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -57,7 +60,7 @@ export function useGetData() {
   return { getData, loading, error,data};
 }
 
-
+/*  ============= DELETE ========= */
 export function useDeleteData ()
 {
   const [loading, setLoading] = useState(false);

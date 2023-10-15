@@ -1,5 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import Tabbar from "./indexComponents/Tabbar";
 import HomeScreen from "./screens/HomeScreen";
 import CamaraScreen from "./screens/CamaraScreen";

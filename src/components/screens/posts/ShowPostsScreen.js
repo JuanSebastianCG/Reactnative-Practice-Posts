@@ -26,20 +26,17 @@ function ShowPostsScreen() {
     useDeleteData();
 
   const navigation = useNavigation();
-
-  // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     handleGetData();
-    setIsDeleted(false); // Reinicia isDeleted
+    setIsDeleted(false); 
   }, [isDeleted]);
   
 
   const handleGetData = async () => {
     const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
     getData(url, (data) => {
-      // Actualiza el estado con la lista de posts
       setPosts(data);
     });
   };
@@ -48,12 +45,11 @@ function ShowPostsScreen() {
     const url = `https://apis-backend-dm.up.railway.app/api/v1/posts/${id}`;
     console.log("id:", id);
     deleteData(url, (data) => {
-      // Si la eliminación es exitosa, actualiza el estado excluyendo el post eliminado
       console.log("data:", data);
 
       if (data) {
         setPosts(posts.filter((post) => post._id !== id));
-        setIsDeleted(true); // Marca que se ha eliminado un elemento
+        setIsDeleted(true); 
       }
     });
   }
@@ -90,8 +86,8 @@ function Card({ post, handleDelete }) {
       <View style={styleCard.cardHeader}>
         <Image
           source={{ uri: post.avatar }}
-          style={styleCard.avatarImage} // Establece el estilo de la imagen
-          resizeMode="cover" // Hace que la imagen se estire y cubra el espacio
+          style={styleCard.avatarImage}
+          resizeMode="cover" 
         />
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
@@ -99,10 +95,17 @@ function Card({ post, handleDelete }) {
       </View>
       <View style={styleCard.cardBody}>
         <TouchableOpacity
-          style={styles.addButton}
+          style={styleCard.deleteButton}
           onPress={() => handleDelete(post._id)}>
           <Icon name="trash-can" size={40} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styleCard.editButton}
+          onPress={() => handleDelete(post._id)}>
+          <Icon name="pencil" size={40} />
+        </TouchableOpacity>
+
         <Text style={styleCard.subtitle}>{post.subtitle}</Text>
         <Text style={styleCard.description}>{post.description}</Text>
       </View>
@@ -114,11 +117,11 @@ function Card({ post, handleDelete }) {
 
 const styleCard = StyleSheet.create({
   card: {
-    /* backgroundColor: "#FF5733", */
     marginBottom: 10,
     marginLeft: "2%",
     width: "96%",
     borderRadius: 10,
+    backgroundColor: BasicStylesPage.color3+60,
   },
   avatarImage: {
     width: "100%",
@@ -127,10 +130,10 @@ const styleCard = StyleSheet.create({
   },
   cardHeader: {
     padding: 10,
-    flexDirection: "row", // Alinear elementos en fila
-    borderTopColor: "red",
+    flexDirection: "row", 
+    borderTopColor: BasicStylesPage.color4+90,
     borderTopWidth: 4,
-    borderBottomColor: "red",
+    borderBottomColor: BasicStylesPage.color4+90,
     borderBottomWidth: 4,
     height: 200,
   },
@@ -139,65 +142,90 @@ const styleCard = StyleSheet.create({
     alignSelf: "center",
   },
   titleHeader: {
-    backgroundColor: "#FF5733",
+    backgroundColor: BasicStylesPage.color6,
     position: "absolute",
     marginTop: 20,
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 15,
     paddingRight: 15,
-    alignItems: "flex-start", // Alinear el contenido del titleHeader al principio vertical
+    alignItems: "flex-start", 
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#FFF",
+    color: BasicStylesPage.color3,
   },
   subtitle: {
     fontSize: 14,
-    color: "red",
+    color: BasicStylesPage.color1,
     fontStyle: "italic",
   },
   description: {
     fontSize: 14,
-    color: "#999",
+    color: BasicStylesPage.color5,
   },
   cardBody: {
     padding: 10,
     marginTop: 10,
-    /* backgroundColor: "#FF5733", */
     height: 100,
-    borderBottomColor: "red",
+    borderBottomColor: BasicStylesPage.color2,
     borderBottomWidth: 4,
-    borderLeftColor: "red",
+    borderLeftColor: BasicStylesPage.color2,
     borderLeftWidth: 4,
-    borderRightColor: "red",
+    borderRightColor: BasicStylesPage.color2,
     borderRightWidth: 4,
     borderRadius: 10,
   },
+  deleteButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 80,
+    width: 50,
+    height: 50,
+    backgroundColor: BasicStylesPage.color4+95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1, 
+    marginBottom: 70,
+  },
+  editButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 15,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4+95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1, 
+    marginBottom: 70,
+  },
 });
+
+
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     position: "relative",
     
-    
   },
   addButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
-    width: 60,
-    height: 60,
-    backgroundColor: "#FF5733",
-    borderRadius: 30,
+    bottom: 10,
+    right: 15,
+    width: 80,
+    height: 80,
+    backgroundColor: BasicStylesPage.color4+80,
+    borderRadius: 60,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1, // Asegura que el botón esté en la parte superior
+    zIndex: 1, 
     marginBottom: 70,
   },
-  // Otros estilos que puedas tener
   container: {
     flex: 1,
   },
@@ -207,9 +235,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     marginTop: 50,
-    paddingBottom: 100,
-
-    
+    paddingBottom: 150,
 
   },
   cards: {

@@ -1,6 +1,5 @@
 import { Camera, CameraType } from 'expo-camera';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import IconButton from 'native-base/src/theme/components/icon-button';
 import { useState, useRef  } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'; 
 

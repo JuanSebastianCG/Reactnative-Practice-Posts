@@ -4,20 +4,29 @@ import { useNavigation } from "@react-navigation/native";
 import { Polygon, Svg } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
-import { CustomButton, Logo } from "../../public_styles/component_public_Styles/Basic_Coponents_F";
-
+import {
+  CustomButton,
+  CustomLogo,
+} from "../../public_styles/component_public_Styles/Basic_Components_F";
 
 function HomeScreen() {
   const navigation = useNavigation();
 
   const goToRegister = () => navigation.navigate("RegisterScreen");
-  const goToLogin = () => navigation.navigate("ShowPostsScreen");
-  const goToShowPosts= () => navigation.navigate("ShowPostsScreen");
+  const goToLogin = () => navigation.navigate("LoginScreen");
+  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
 
   return (
     <Stack spacing={4} style={styles.container}>
-      <Logo/>
-      <Text style={styles.text_tittle}>Que Quieres Hacer?    ... </Text>
+      <Svg height="230" width="400" style={styles.footer}>
+        <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
+      </Svg>
+      <Svg height="230" width="400" style={styles.footer}>
+        <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
+      </Svg>
+      <CustomLogo />
+      <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
+      <Text style={styles.text_tittlePoint}>...</Text>
 
       <CustomButton
         text="Registrarse"
@@ -27,20 +36,19 @@ function HomeScreen() {
       <CustomButton
         text="Login"
         onPress={goToLogin}
-        buttonStyle={[styles.buttonContainer, { paddingLeft: 32,paddingRight: 32, }]}       
+        buttonStyle={[
+          styles.buttonContainer,
+          { paddingLeft: 32, paddingRight: 32 },
+        ]}
       />
       <CustomButton
         text="Ver api"
         onPress={goToShowPosts}
-        buttonStyle={[styles.buttonContainer, { paddingLeft: 26,paddingRight: 26, }]}
+        buttonStyle={[
+          styles.buttonContainer,
+          { paddingLeft: 26, paddingRight: 26 },
+        ]}
       />
-
-      <Svg height="230" width="400" style={styles.footer}>
-        <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
-      </Svg>
-      <Svg height="230" width="400" style={styles.footer}>
-        <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
-      </Svg>
     </Stack>
   );
 }
@@ -66,13 +74,18 @@ const styles = StyleSheet.create({
     marginLeft: "28%",
     marginRight: "18%",
   },
-
-
-
+  text_tittlePoint: {
+    color: BasicStylesPage.color1,
+    fontSize: 53,
+    fontWeight: BasicStylesPage.fontWeightTitle,
+    fontFamily: BasicStylesPage.fontText,
+    marginTop: -20,
+    marginLeft: "28%",
+    marginRight: "18%",
+  },
   buttonContainer: {
     marginTop: "3%",
   },
-
 });
 
 export default HomeScreen;
