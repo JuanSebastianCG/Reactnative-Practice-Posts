@@ -11,13 +11,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
-import { Logo } from "../../public_styles/component_public_Styles/Basic_Coponents_F";
+import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_Components_F";
 
 function WelcomeScreen() {
   const navigation = useNavigation();
   return (
     <Stack spacing={4} style={styles.container}>
-      <Logo styleLogo = {styles.logoContainer}/>
+      <CustomLogo styleLogo = {styles.logoContainer}/>
       <Text style={styles.text_tittle}>Welcome to Apis </Text>
 
       <TouchableWithoutFeedback

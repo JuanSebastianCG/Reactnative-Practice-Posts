@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
-import { Stack, TextInput } from "@react-native-material/core";
+import { Stack } from "@react-native-material/core";
 
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -8,9 +8,9 @@ import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 import {
   CustomButton,
-  ErrorBanner,
-  Logo,
-} from "../../public_styles/component_public_Styles/Basic_Coponents_F";
+  CustomErrorBanner,
+  CustomLogo,
+} from "../../public_styles/component_public_Styles/Basic_Components_F";
 import CustomInTextField from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 
@@ -59,7 +59,7 @@ function LoginScreen() {
           <Polygon points="0,0 800,280 0,500" fill={BasicStylesPage.color0} />
         </Svg>
         <View>
-          <Logo styleLogo={styles.logoContainer} />
+          <CustomLogo styleLogo={styles.logoContainer} />
         </View>
 
         <View style={styles.formContainer}>
@@ -89,7 +89,7 @@ function LoginScreen() {
 
             </Stack>
             {loginError && (
-                <ErrorBanner
+                <CustomErrorBanner
                   text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
                   styleBanner={styles.errorBanner}
                   onChange={() => setLoginError(false)}

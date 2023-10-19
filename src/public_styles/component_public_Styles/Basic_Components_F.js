@@ -22,7 +22,7 @@ const CustomButton = ({ onPress, text, textStyle, buttonStyle }) => {
 };
 
 
-const Logo = (styleLogo) => {
+const CustomLogo = (styleLogo) => {
   const navigation = useNavigation();
   
   const primaryStyle = ( styleLogo["styleLogo"] != undefined) ? styleLogo["styleLogo"] : styles.logoContainer;
@@ -34,7 +34,7 @@ const Logo = (styleLogo) => {
   );
 };
 
-const ErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
+const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
 
   return (
     <View style={[styles.errorBanner,styleBanner]}>
@@ -123,4 +123,4 @@ const styles = StyleSheet.create({
 
 
 
-export { CustomButton, Logo , ErrorBanner};
+export { CustomButton, CustomLogo , CustomErrorBanner};

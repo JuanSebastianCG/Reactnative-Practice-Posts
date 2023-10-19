@@ -1,94 +1,246 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator, Text } from "react-native";
-import { useGetData } from "../../../utils/useAxios";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { Circle, Svg } from "react-native-svg";
+import { useGetData, useDeleteData } from "../../../utils/useAxios";
+
 import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
+import { Image } from "react-native";
+
 
 function ShowPostsScreen() {
-  const { getData, loading, error, data } = useGetData(); // Update to use the data from the hook
+  const { getData, loading, error, data } = useGetData();
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const { deleteData, loadingDelete, errorDelete, dataDelete } =
+    useDeleteData();
+
+  const navigation = useNavigation();
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    handleGetData();
+    setIsDeleted(false); 
+  }, [isDeleted]);
+  
+
+  const handleGetData = async () => {
     const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
     getData(url, (data) => {
-      console.log("Data from hook:", data);
-      });
-}, []);
+      setPosts(data);
+    });
+  };
 
+  const handleDelete = async (id) => {
+    const url = `https://apis-backend-dm.up.railway.app/api/v1/posts/${id}`;
+    console.log("id:", id);
+    deleteData(url, (data) => {
+      console.log("data:", data);
 
-
+      if (data) {
+        setPosts(posts.filter((post) => post._id !== id));
+        setIsDeleted(true); 
+      }
+    });
+  }
+  
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {loading && <ActivityIndicator size="large" color="#0000ff" />} 
-        {error && <Text>Error: {error.message}</Text>}
-        {data &&
-          data.map((post, index) => (
-            <View style={styles.card} key={index}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.title}>{post.title}</Text>
-              </View>
-              <View style={styles.cardBody}>
-                <Text style={styles.subtitle}>{post.subtitle}</Text>
-                <Text style={styles.description}>{post.description}</Text>
-              </View>
-              <View style={styles.cardFooter}>
-                <Text style={styles.description}>{post.avatar}</Text>
-              </View>
+      <View style={styles.mainContainer}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}  scrollIndicatorInsets={{ bottom: 300 }} >
+          {loading && <ActivityIndicator size="large" color="#FF5733" />}
+          {error && <Text>Error: {error.message}</Text>}
+          {posts.map((post, index) => (
+            <View style={styles.cards} key={index}>
+              <Card post={post} handleDelete={handleDelete} />
             </View>
           ))}
-      </ScrollView>
- 
-      
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate("CreatePostScreen")}
+        >
+          <Icon name="plus" size={60} />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
     
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: "flex-start",
-  },
-  
+function Card({ post, handleDelete }) {
+  return (
+    <View style={styleCard.card} key={post._id}>
+      <Svg width="400" height="500" style={styleCard.cardCircle}>
+        <Circle cx="200" cy="160" r="140" fill="rgba(255, 136, 136, 0.1)" />
+      </Svg>
+      <View style={styleCard.cardHeader}>
+        <Image
+          source={{ uri: post.avatar }}
+          style={styleCard.avatarImage}
+          resizeMode="cover" 
+        />
+        <View style={styleCard.titleHeader}>
+          <Text style={styleCard.title}>{post.title}</Text>
+        </View>
+      </View>
+      <View style={styleCard.cardBody}>
+        <TouchableOpacity
+          style={styleCard.deleteButton}
+          onPress={() => handleDelete(post._id)}>
+          <Icon name="trash-can" size={40} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styleCard.editButton}
+          onPress={() => handleDelete(post._id)}>
+          <Icon name="pencil" size={40} />
+        </TouchableOpacity>
+
+        <Text style={styleCard.subtitle}>{post.subtitle}</Text>
+        <Text style={styleCard.description}>{post.description}</Text>
+      </View>
+    </View>
+  );
+}
+
+
+
+const styleCard = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
     marginBottom: 10,
     marginLeft: "2%",
     width: "96%",
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     borderRadius: 10,
+    backgroundColor: BasicStylesPage.color3+60,
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+  
   },
   cardHeader: {
     padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "row", 
+    borderTopColor: BasicStylesPage.color4+90,
+    borderTopWidth: 4,
+    borderBottomColor: BasicStylesPage.color4+90,
+    borderBottomWidth: 4,
+    height: 200,
   },
-  cardBody: {
-    padding: 10,
+  cardCircle: {
+    position: "absolute",
+    alignSelf: "center",
   },
-  cardFooter: {
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  titleHeader: {
+    backgroundColor: BasicStylesPage.color6,
+    position: "absolute",
+    marginTop: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    alignItems: "flex-start", 
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
+    color: BasicStylesPage.color3,
   },
   subtitle: {
     fontSize: 14,
-    color: "#444",
+    color: BasicStylesPage.color1,
+    fontStyle: "italic",
   },
   description: {
     fontSize: 14,
-    color: "#999",
+    color: BasicStylesPage.color5,
+  },
+  cardBody: {
+    padding: 10,
+    marginTop: 10,
+    height: 100,
+    borderBottomColor: BasicStylesPage.color2,
+    borderBottomWidth: 4,
+    borderLeftColor: BasicStylesPage.color2,
+    borderLeftWidth: 4,
+    borderRightColor: BasicStylesPage.color2,
+    borderRightWidth: 4,
+    borderRadius: 10,
+  },
+  deleteButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 80,
+    width: 50,
+    height: 50,
+    backgroundColor: BasicStylesPage.color4+95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1, 
+    marginBottom: 70,
+  },
+  editButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 15,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4+95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1, 
+    marginBottom: 70,
+  },
+});
+
+
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    position: "relative",
+    
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 15,
+    width: 80,
+    height: 80,
+    backgroundColor: BasicStylesPage.color4+80,
+    borderRadius: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1, 
+    marginBottom: 70,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    marginTop: 50,
+    paddingBottom: 150,
+
+  },
+  cards: {
+    marginBottom: 20,
   },
 });
 

@@ -49,4 +49,8 @@ const styles = StyleSheet.create({
   },
 });
 
+/* 
+nvm install --lts 
+npm cache clean --force
+*/
 export default IndexScreen;
