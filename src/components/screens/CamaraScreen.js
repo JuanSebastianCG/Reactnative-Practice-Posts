@@ -4,12 +4,14 @@ import IconButton from 'native-base/src/theme/components/icon-button'; */
 import { useState, useRef  } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View , Image} from 'react-native'; 
 import { Card } from 'react-native-paper'; 
+import * as MediaLibrary from 'expo-media-library';
 
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [isTakingPicture, setIsTakingPicture] = useState(false);
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const cameraRef = useRef(null);
   const [capturedImageUri, setCapturedImageUri] = useState(null);
 
@@ -68,6 +70,7 @@ export default function App() {
                 </Card>
         </View>
         <Button title="Discard" onPress={() => setCapturedImageUri(undefined)} />
+        <Button title="Save" /* onPress={savePhoto} */ /> 
         </View>
 /*         <View style={styles.cardContainer}>
         <Card>

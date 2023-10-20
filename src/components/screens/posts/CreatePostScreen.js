@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView, View, StyleSheet, ScrollView,Button } from "react-native";
 import { Stack } from "@react-native-material/core";
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData, usePostDataDB } from "../../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
+import ImagePickerExample from "../ImagePickerScreen";
+import Camara from "../CamaraScreen";
 
 import {
   CustomButton,
@@ -16,6 +18,7 @@ import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Styl
 
 function CreatePostScreen() {
   const navigation = useNavigation();
+  const goToCamera = () => navigation.navigate("CamaraScreen")
   const { postData, loading, error,data } = usePostData();
 
   {
@@ -46,15 +49,33 @@ function CreatePostScreen() {
       description: PostDataDB.description,
       avatar: PostDataDB.avatar,
     };
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+  
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result.assets[0].uri);
+      const uri = result.assets[0].uri
+      if (!result.canceled) {
+        setImage({...PostDataDB, avatar:result.assets[0].uri});
+      }
+    };
 
     postData(url, headers, body, (data) => {
-      if (error || !data) {
+/*       if (error || !data) {
         console.log("Error:", error);
         setLoginError(true);
       } else {
         console.log("Data:", data);
         navigation.navigate("HomeScreen");
-      }
+      } */
+      console.log("Data:", data);
+      navigation.navigate("HomeScreen");
     });
   };
 
@@ -103,13 +124,22 @@ function CreatePostScreen() {
                 onChangeText={(text) => handleChange("description", text)}
               />
 
-              <CustomInTextField
+               <ImagePickerExample
+                onChangeImage={(uri) => {
+                  // Cuando el usuario selecciona una imagen, actualiza el estado
+                  setPostDataDB({ ...PostDataDB, avatar: uri });
+                }}
+              />
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Button title="Take a photo" onPress={ goToCamera } />
+              </View>
+              {/* <CustomInTextField
                 label="Avatar"
                 style={styles.input}
                 placeholder="Avatar"
                 value={PostDataDB.avatar}
                 onChangeText={(text) => handleChange("avatar", text)}
-              />
+              /> */}
             </Stack>
 
             <CustomButton
