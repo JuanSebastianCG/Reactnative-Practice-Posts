@@ -39,12 +39,14 @@ function LoginScreen() {
       email: userData.email,
       password: userData.password,
     };
-    postData(url, headers, body, (data) => {
-      if (error || !data) {
+    postData(url, headers, body, (response) => {
+      if (error || !response) {
         console.log("Error:", error);
         setLoginError(true);
       } else {
         navigation.navigate("HomeScreen");
+        const accessToken = response.data.access;
+        AsyncStorage.setItem("accessToken", accessToken);
       }
     });
   };
