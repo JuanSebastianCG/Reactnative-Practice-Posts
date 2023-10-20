@@ -9,14 +9,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
-import { useGetData, useDeleteData } from "../../../utils/useAxios";
+import {
+  useGetData,
+  useDeleteData,
+  basicEndpoint,
+} from "../../../utils/useAxios";
 
 import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
-
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
@@ -30,34 +33,34 @@ function ShowPostsScreen() {
 
   useEffect(() => {
     handleGetData();
-    setIsDeleted(false); 
-  }, [isDeleted]);
-  
+    setIsDeleted(false);
+  }, [isDeleted,data]);
 
   const handleGetData = async () => {
-    const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
+    const url = "/posts";
     getData(url, (data) => {
       setPosts(data);
     });
-  };
 
+    //http://192.168.20.26:3000/api/v1/uploads/post/1697776043933-1fd0c384-43c2-4c48-8818-80ca2a166a9a.jpeg
+  };
   const handleDelete = async (id) => {
-    const url = `https://apis-backend-dm.up.railway.app/api/v1/posts/${id}`;
+    const url = `/posts/${id}`;
     console.log("id:", id);
     deleteData(url, (data) => {
-      console.log("data:", data);
-
       if (data) {
         setPosts(posts.filter((post) => post._id !== id));
-        setIsDeleted(true); 
+        setIsDeleted(true);
       }
     });
-  }
-  
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}  scrollIndicatorInsets={{ bottom: 300 }} >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          scrollIndicatorInsets={{ bottom: 300 }}>
           {loading && <ActivityIndicator size="large" color="#FF5733" />}
           {error && <Text>Error: {error.message}</Text>}
           {posts.map((post, index) => (
@@ -68,8 +71,7 @@ function ShowPostsScreen() {
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("CreatePostScreen")}
-        >
+          onPress={() => navigation.navigate("CreatePostScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>
@@ -86,9 +88,9 @@ function Card({ post, handleDelete }) {
       </Svg>
       <View style={styleCard.cardHeader}>
         <Image
-          source={{ uri: post.avatar }}
+          source={{ uri: `${basicEndpoint}/${post.avatar}` }}
           style={styleCard.avatarImage}
-          resizeMode="cover" 
+          resizeMode="cover"
         />
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
@@ -114,27 +116,24 @@ function Card({ post, handleDelete }) {
   );
 }
 
-
-
 const styleCard = StyleSheet.create({
   card: {
     marginBottom: 10,
     marginLeft: "2%",
     width: "96%",
     borderRadius: 10,
-    backgroundColor: BasicStylesPage.color3+60,
+    backgroundColor: BasicStylesPage.color3 + 60,
   },
   avatarImage: {
     width: "100%",
     height: "100%",
-  
   },
   cardHeader: {
     padding: 10,
-    flexDirection: "row", 
-    borderTopColor: BasicStylesPage.color4+90,
+    flexDirection: "row",
+    borderTopColor: BasicStylesPage.color4 + 90,
     borderTopWidth: 4,
-    borderBottomColor: BasicStylesPage.color4+90,
+    borderBottomColor: BasicStylesPage.color4 + 90,
     borderBottomWidth: 4,
     height: 200,
   },
@@ -150,7 +149,7 @@ const styleCard = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 15,
     paddingRight: 15,
-    alignItems: "flex-start", 
+    alignItems: "flex-start",
   },
   title: {
     fontSize: 18,
@@ -184,11 +183,11 @@ const styleCard = StyleSheet.create({
     right: 80,
     width: 50,
     height: 50,
-    backgroundColor: BasicStylesPage.color4+95,
+    backgroundColor: BasicStylesPage.color4 + 95,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1, 
+    zIndex: 1,
     marginBottom: 70,
   },
   editButton: {
@@ -197,22 +196,19 @@ const styleCard = StyleSheet.create({
     right: 15,
     width: 60,
     height: 60,
-    backgroundColor: BasicStylesPage.color4+95,
+    backgroundColor: BasicStylesPage.color4 + 95,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1, 
+    zIndex: 1,
     marginBottom: 70,
   },
 });
-
-
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     position: "relative",
-    
   },
   addButton: {
     position: "absolute",
@@ -220,11 +216,11 @@ const styles = StyleSheet.create({
     right: 15,
     width: 80,
     height: 80,
-    backgroundColor: BasicStylesPage.color4+80,
+    backgroundColor: BasicStylesPage.color4 + 80,
     borderRadius: 60,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1, 
+    zIndex: 1,
     marginBottom: 70,
   },
   container: {
@@ -237,7 +233,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     marginTop: 50,
     paddingBottom: 150,
-
   },
   cards: {
     marginBottom: 20,

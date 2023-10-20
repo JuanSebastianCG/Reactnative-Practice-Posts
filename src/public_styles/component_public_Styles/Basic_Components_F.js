@@ -51,6 +51,8 @@ const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
 
 
 
+
+
 const styles = StyleSheet.create({
 
   /* button */
