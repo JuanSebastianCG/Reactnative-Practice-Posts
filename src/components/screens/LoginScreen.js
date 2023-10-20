@@ -11,7 +11,7 @@ import {
   CustomErrorBanner,
   CustomLogo,
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
-import CustomInTextField from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 
 function LoginScreen() {
@@ -31,7 +31,7 @@ function LoginScreen() {
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
-    const url = "https://apis-backend-dm.up.railway.app/api/v1/users/login";
+    const url = "/users/login";
     const headers = {
       "Content-Type": "application/json",
     };
