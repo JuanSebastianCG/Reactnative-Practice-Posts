@@ -72,6 +72,7 @@ function CreatePostScreen() {
     };
     if (!actualImage || !PostDataDB.title || !PostDataDB.subtitle || !PostDataDB.description) {
       setError(true);
+      setShowConfirmationModal(false);
       return;
     }
     const formData = new FormData();
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     width: 350,
     height: 200,
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 30,
     overflow: "hidden",
     borderColor: BasicStylesPage.color1,
     borderWidth: 2,
@@ -256,9 +257,9 @@ const styles = StyleSheet.create({
   },
   imgPiker: {
     position: "absolute",
-    bottom: -100,
+    bottom: -90,
     right: 0,
-    backgroundColor: BasicStylesPage.color2,
+    backgroundColor: BasicStylesPage.color2+99,
     padding: 10,
     borderRadius: 38,
     alignItems: "center",
@@ -268,9 +269,9 @@ const styles = StyleSheet.create({
   },
   imgPhoto: {
     position: "absolute",
-    top: -40,
-    right: 0,
-    backgroundColor: BasicStylesPage.color2,
+    bottom: -90,
+    right: 80,
+    backgroundColor: BasicStylesPage.color2+99,
     padding: 10,
     borderRadius: 38,
     alignItems: "center",

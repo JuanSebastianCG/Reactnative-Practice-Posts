@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import AnimatedTriangleRain from "../../public_styles/animations_public/AnimatedTriangleRain";
 
 function WelcomeScreen() {
   const navigation = useNavigation();
@@ -32,6 +33,11 @@ function WelcomeScreen() {
           />
         </View>
       </TouchableWithoutFeedback>
+
+
+      
+     / {/* <AnimatedTriangleRain /> */}
+      
 
       <Svg height="200" width="300" style={styles.footer}>
         <Polygon points="0,0 300,200 0,200" fill={BasicStylesPage.color1} />
