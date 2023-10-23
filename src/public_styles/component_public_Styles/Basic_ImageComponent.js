@@ -18,10 +18,20 @@ export function ImagePickerComponent({ onComplete = () => {} }) {
       aspect: [4, 3],
       quality: 1,
     });
+    data = null;
     if (!result.canceled) {
-      setImageData(result.assets[0]);
+      const localUri = result.assets[0].uri;
+      const filename = localUri.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+      data = {
+        uri: localUri,
+        name: filename,
+        type,
+      };
     }
-    onComplete(result.assets[0]);
+    setImageData(data);
+    onComplete(data);
   };
 
   const BasicViewPicker = ({buttonStyle, positionStyle}) => (

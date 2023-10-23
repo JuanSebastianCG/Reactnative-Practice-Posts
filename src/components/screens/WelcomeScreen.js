@@ -36,7 +36,6 @@ function WelcomeScreen() {
 
 
       
-     / {/* <AnimatedTriangleRain /> */}
       
 
       <Svg height="200" width="300" style={styles.footer}>
