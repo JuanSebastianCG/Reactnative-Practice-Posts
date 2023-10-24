@@ -13,6 +13,7 @@ import {
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
 import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 function LoginScreen() {
   const navigation = useNavigation();
@@ -44,7 +45,15 @@ function LoginScreen() {
         console.log("Error:", error);
         setLoginError(true);
       } else {
+        
+        const accessToken= data.accessToken
+        AsyncStorage.setItem("accessToken", accessToken);
+        Alert.alert(
+          "Inicio de sesión exitoso",
+          "¡Bienvenido! Por favor, inicia sesión para continuar."
+        );
         navigation.navigate("HomeScreen");
+
       }
     });
   };
