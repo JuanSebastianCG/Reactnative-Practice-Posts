@@ -61,7 +61,7 @@ function ShowPostsScreen() {
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
-          {loading && <ActivityIndicator size="large" color="#FF5733" />}
+          {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />}
           {error && <Text>Error: {error.message}</Text>}
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
@@ -84,7 +84,7 @@ function Card({ post, handleDelete }) {
   return (
     <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
-        <Circle cx="200" cy="160" r="140" fill="rgba(255, 136, 136, 0.1)" />
+        <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
         <Image
