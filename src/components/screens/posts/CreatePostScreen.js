@@ -34,14 +34,16 @@ function CreatePostScreen() {
   const { postData, loading, error, data } = usePostData();
 
   //imagepiker
-  const [actualImage, setActualImage] = useState(null);
+  const [images, setImages] = useState([]); 
 
   const { BasicIconImagePicker } = ImagePickerComponent({
-    onComplete: (image) => setActualImage(image),
+    onComplete: (image) => setImages([...images, image])
   });
-  const { BasicViewPhoto, BasicIconImagePhoto } = ImagePhotoPickerComponent({
-    onComplete: (image) => setActualImage(image),
+  
+  const {BasicIconImagePhoto } = ImagePhotoPickerComponent({
+    onComplete: (image) => setImages([...images, image])
   });
+  
 
   //modal and alert
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -54,14 +56,10 @@ function CreatePostScreen() {
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
 
   const [PostDataDB, setPostDataDB] = useState({
-    title: "",
-    subtitle: "",
-    description: "",
-    avatar: {
-      uri: "",
-      name: "",
-      type: "",
-    },
+    title: "None",
+    subtitle: "None",
+    description: "None",
+    avatar: [],
   });
 
   const handleConfirm = () => {
@@ -70,27 +68,26 @@ function CreatePostScreen() {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
     };
-    if (!actualImage || !PostDataDB.title || !PostDataDB.subtitle || !PostDataDB.description) {
+  
+    if (!images.length || !PostDataDB.title || !PostDataDB.subtitle || !PostDataDB.description) {
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
+  
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
+    images.forEach((item, i) => {
+        formData.append("avatars", {
+          uri: item.uri,
+          name: item.name,
+          type: item.type,
+        });
+      });
 
-    const localUri = actualImage.uri;
-    const filename = localUri.split("/").pop();
-    const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : `image`;
-
-    formData.append("avatar", {
-      uri: localUri,
-      name: filename,
-      type,
-    });
-
+    console.log("formData:", formData);
     postData(url, headers, formData, (data) => {
       if (error || !data) {
         console.log("Error:", error);
@@ -101,6 +98,7 @@ function CreatePostScreen() {
     });
     setShowConfirmationModal(false);
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -114,7 +112,7 @@ function CreatePostScreen() {
         <View>
           <CustomLogo styleLogo={styles.logoContainer} />
         </View>
-        {/* image from piker actualImage.uri*/}
+        {/* image from piker images.uri*/}
 
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
@@ -129,12 +127,7 @@ function CreatePostScreen() {
 
             <View>
               <View style={styles.imageContainer}>
-                {actualImage && (
-                  <Image
-                    source={{ uri: actualImage.uri }}
-                    style={styles.image}
-                  />
-                )}
+                
               </View>
             <BasicIconImagePicker buttonStyle={styles.imgPiker} />
             <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />

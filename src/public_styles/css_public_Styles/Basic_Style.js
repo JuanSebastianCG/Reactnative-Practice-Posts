@@ -8,6 +8,14 @@ const color4 = '#ff3a3a';
 const color5 = "#999"
 const color6 = "#e84646"
 
+/* const color0 = 'black';
+const color1 = 'black'; 
+const color2 = '#dddddd';
+const color3 = 'white';
+const color4 = '#dddddd';
+const color5 = "#999"
+const color6 = "black" */
+
 const colorWarning1 = '#FF0000';
 const colorWarning2 = '#bdffc6';
 const colorWarning3 = '#ff9f9f';
