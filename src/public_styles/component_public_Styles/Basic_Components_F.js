@@ -1,9 +1,8 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, View, Image, TextInput } from "react-native"; // Importa View para crear bordes redondeados
+import { TouchableOpacity, Text, StyleSheet, View, Image,  Button } from "react-native"; // Importa View para crear bordes redondeados
 import BasicStylesPage from "../css_public_Styles/Basic_Style";
 
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "native-base";
 
 const tenueColor2Button = BasicStylesPage.color2 + "80";
 
@@ -40,9 +39,9 @@ const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
     <View style={[styles.errorBanner,styleBanner]}>
       <Text style={[styles.errorText]}>{text}</Text>
       {buttons}
-      <Button title="OK"  onPress={onChange} style={styles.errorButton} >
+      <TouchableOpacity onPress={onChange} style={[styles.errorButtonStyle]}>
         <Text style={[styles.errorText]}>OK</Text>
-      </Button>
+      </TouchableOpacity>
 
     </View>
   );
@@ -107,19 +106,22 @@ const styles = StyleSheet.create({
     zIndex : 1,
 
   },
-  errorButton: {
-    backgroundColor: '#FF000000',
+  errorButtonStyle: {
+    
     
     paddingLeft: -10,
-    alignContent: "flex-end",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: BasicStylesPage.colorWarning1,
-    borderBottomLeftRadius: 80,
+    borderRadius: 50,
 
 
     height: 45,
     borderRadius: 60,
     marginTop: 10,
+      
   },
 });
 

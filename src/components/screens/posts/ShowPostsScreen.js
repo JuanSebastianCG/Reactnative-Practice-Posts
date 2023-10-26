@@ -20,6 +20,7 @@ import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Styl
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
+import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
@@ -39,6 +40,12 @@ function ShowPostsScreen() {
   const handleGetData = async () => {
     const url = "/posts";
     getData(url, (data) => {
+      for (let i = 0; i < data.length; i++) {
+        uri = `${basicEndpoint}/${data[i].avatar}`;
+        data[i].avatars = data[i].avatars.map((avatar) => {
+          return { uri: `${basicEndpoint}/${avatar}` };
+        });
+      }
       setPosts(data);
     });
 
@@ -49,6 +56,7 @@ function ShowPostsScreen() {
     console.log("id:", id);
     deleteData(url, (data) => {
       if (data) {
+        
         setPosts(posts.filter((post) => post._id !== id));
         setIsDeleted(true);
       }
@@ -86,11 +94,14 @@ function Card({ post, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <Image
+        {/* <Image
           source={{ uri: `${basicEndpoint}/${post.avatar}` }}
           style={styleCard.avatarImage}
           resizeMode="cover"
         />
+ */}
+        <CustomCarrousel data={post.avatars}  width={360} height={190} />
+
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
         </View>

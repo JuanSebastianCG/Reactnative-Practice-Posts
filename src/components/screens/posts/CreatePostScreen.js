@@ -7,6 +7,7 @@ import {
   Image,
 } from "react-native";
 
+
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
@@ -16,7 +17,10 @@ import {
   CustomErrorBanner,
   CustomLogo,
 } from "../../../public_styles/component_public_Styles/Basic_Components_F";
-import {CustomInTextField,CustomInTextArea} from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import {
+  CustomInTextField,
+  CustomInTextArea,
+} from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import {
   ImagePickerComponent,
@@ -27,67 +31,69 @@ import {
   CustomAlertConfirmation,
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
+import {CustomCarrousel} from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+
 function CreatePostScreen() {
   const navigation = useNavigation();
+  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
 
   //api
   const { postData, loading, error, data } = usePostData();
 
-  //imagepiker
-  const [images, setImages] = useState([]); 
+  const handleChange = (name, value) => {
+    setPostDataDB({ ...PostDataDB, [name]: value });
+  };
+  const [PostDataDB, setPostDataDB] = useState({
+    title: "None",
+    subtitle: "None",
+    description: "None",
+    avatars: [],
+  });
 
+  //image picker and photo
   const { BasicIconImagePicker } = ImagePickerComponent({
-    onComplete: (image) => setImages([...images, image])
+    onComplete: (image) =>
+      setPostDataDB({ ...PostDataDB, avatars: [...PostDataDB.avatars, image] }),
   });
-  
-  const {BasicIconImagePhoto } = ImagePhotoPickerComponent({
-    onComplete: (image) => setImages([...images, image])
+
+  const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
+    onComplete: (image) =>
+      setPostDataDB({ ...PostDataDB, avatars: [...PostDataDB.avatars, image] }),
   });
-  
 
   //modal and alert
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [successPost, setSuccess] = useState(false);
   const [errorPost, setError] = useState(false);
 
-  const handleChange = (name, value) => {
-    setPostDataDB({ ...PostDataDB, [name]: value });
-  };
-  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-
-  const [PostDataDB, setPostDataDB] = useState({
-    title: "None",
-    subtitle: "None",
-    description: "None",
-    avatar: [],
-  });
-
   const handleConfirm = () => {
+    if (
+      !PostDataDB.title ||
+      !PostDataDB.subtitle ||
+      !PostDataDB.description ||
+      !PostDataDB.avatars
+    ) {
+      setError(true);
+      setShowConfirmationModal(false);
+      return;
+    }
     const url = "/posts";
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
     };
-  
-    if (!images.length || !PostDataDB.title || !PostDataDB.subtitle || !PostDataDB.description) {
-      setError(true);
-      setShowConfirmationModal(false);
-      return;
-    }
-  
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
-    images.forEach((item, i) => {
-        formData.append("avatars", {
-          uri: item.uri,
-          name: item.name,
-          type: item.type,
-        });
+    PostDataDB.avatars.forEach((image, index) => {
+      formData.append("avatars", {
+        uri: image.uri,
+        name: image.name,
+        type: image.type,
       });
+    });
 
-    console.log("formData:", formData);
     postData(url, headers, formData, (data) => {
       if (error || !data) {
         console.log("Error:", error);
@@ -98,7 +104,6 @@ function CreatePostScreen() {
     });
     setShowConfirmationModal(false);
   };
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -116,7 +121,6 @@ function CreatePostScreen() {
 
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
-      
             <CustomInTextField
               label="Titulo"
               style={styles.input}
@@ -125,14 +129,16 @@ function CreatePostScreen() {
               onChangeText={(text) => handleChange("title", text)}
             />
 
+
             <View>
               <View style={styles.imageContainer}>
-                
+                {PostDataDB.avatars.length > 0 && (
+                 <CustomCarrousel data={PostDataDB.avatars} />
+                  )}
               </View>
-            <BasicIconImagePicker buttonStyle={styles.imgPiker} />
-            <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
+              <BasicIconImagePicker buttonStyle={styles.imgPiker} />
+              <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
-
 
             <CustomInTextField
               label="Subtitulo"
@@ -220,7 +226,7 @@ const styles = StyleSheet.create({
   inputTextArea: {
     marginBottom: 40,
     width: 240,
-    height:130,
+    height: 130,
     paddingTop: 10,
   },
   button: {
@@ -252,7 +258,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -90,
     right: 0,
-    backgroundColor: BasicStylesPage.color2+99,
+    backgroundColor: BasicStylesPage.color2 + 99,
     padding: 10,
     borderRadius: 38,
     alignItems: "center",
@@ -264,7 +270,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -90,
     right: 80,
-    backgroundColor: BasicStylesPage.color2+99,
+    backgroundColor: BasicStylesPage.color2 + 99,
     padding: 10,
     borderRadius: 38,
     alignItems: "center",
