@@ -7,7 +7,6 @@ import {
   Image,
 } from "react-native";
 
-
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
@@ -31,7 +30,7 @@ import {
   CustomAlertConfirmation,
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
-import {CustomCarrousel} from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
 
 function CreatePostScreen() {
   const navigation = useNavigation();
@@ -52,13 +51,23 @@ function CreatePostScreen() {
 
   //image picker and photo
   const { BasicIconImagePicker } = ImagePickerComponent({
-    onComplete: (image) =>
-      setPostDataDB({ ...PostDataDB, avatars: [...PostDataDB.avatars, image] }),
+    onComplete: (image) => {
+      if (image)
+        setPostDataDB({
+          ...PostDataDB,
+          avatars: [...PostDataDB.avatars, image],
+        });
+    },
   });
 
   const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
-    onComplete: (image) =>
-      setPostDataDB({ ...PostDataDB, avatars: [...PostDataDB.avatars, image] }),
+    onComplete: (image) => {
+      if (image)
+        setPostDataDB({
+          ...PostDataDB,
+          avatars: [...PostDataDB.avatars, image],
+        });
+    },
   });
 
   //modal and alert
@@ -129,12 +138,11 @@ function CreatePostScreen() {
               onChangeText={(text) => handleChange("title", text)}
             />
 
-
             <View>
               <View style={styles.imageContainer}>
                 {PostDataDB.avatars.length > 0 && (
-                 <CustomCarrousel data={PostDataDB.avatars} />
-                  )}
+                  <CustomCarrousel data={PostDataDB.avatars} />
+                )}
               </View>
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />

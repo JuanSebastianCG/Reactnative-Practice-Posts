@@ -8,14 +8,18 @@ function CustomCarrousel({ data = [], width = 350, height = 200 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const calculateIndex = (index) => {
-    if (index > currentIndex - 0.5  || index < currentIndex - 0.5 ) {
-        if( index + 1 > data.length) {
-            setCurrentIndex(0);
-        } else {
-        setCurrentIndex(Math.round(index));    
-        }
-    } 
+    if (index > currentIndex - 0.5 || index < currentIndex - 0.5) {
+      if (index + 1 > data.length) {
+        setCurrentIndex(0);
+      } else if (currentIndex == 0 && index > data.length - 1 ) {
+    
+        setCurrentIndex(data.length - 1);
+       
 
+      } else {
+        setCurrentIndex(Math.round(index));
+      }
+    }
   };
   return (
     <View style={styles.container}>

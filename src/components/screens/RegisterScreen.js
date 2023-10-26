@@ -16,7 +16,7 @@ import {
 import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 
-function LoginScreen() {
+function RegisterScreen() {
   const navigation = useNavigation();
   const { postData, loading, error } = usePostData();
   const [userData, setUserData] = useState({
@@ -47,8 +47,14 @@ function LoginScreen() {
         console.log("Error:", error);
         setLoginError(true);
       } else {
-
+        /* navigation.navigate("HomeScreen");
         const accessToken = response.data.access;
+        AsyncStorage.setItem("accessToken", accessToken); */
+        /* console.log(response.data.access) */
+        const accessToken = response.data.access;
+        /* console.log(accessToken); */
+        AsyncStorage.setItem("accessToken", accessToken)
+        
         AsyncStorage.setItem("accessToken", accessToken)
         .then(() => {
           navigation.navigate("HomeScreen");
@@ -188,4 +194,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default LoginScreen;
+export default RegisterScreen;

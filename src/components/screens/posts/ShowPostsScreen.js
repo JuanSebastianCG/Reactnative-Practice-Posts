@@ -100,7 +100,7 @@ function Card({ post, handleDelete }) {
           resizeMode="cover"
         />
  */}
-        <CustomCarrousel data={post.avatars}  width={360} height={190} />
+        <CustomCarrousel data={post.avatars}  width={330} height={190} />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
