@@ -1,8 +1,8 @@
 import React from "react";
-import { Stack, Text } from "@react-native-material/core";
+import { ScrollView, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Polygon, Svg } from "react-native-svg";
-import { StyleSheet } from "react-native";
+import { Svg, Polygon } from "react-native-svg";
+import { StyleSheet, Platform } from "react-native";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import {
   CustomButton,
@@ -17,14 +17,22 @@ function HomeScreen() {
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
 
   return (
-    <Stack spacing={4} style={styles.container}>
-      <Svg height="230" width="400" style={styles.footer}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      horizontal={false}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
+      <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
       </Svg>
-      <Svg height="230" width="400" style={styles.footer}>
+      <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
       </Svg>
-      <CustomLogo />
+  
+      <CustomLogo styleLogo={styles.logoContainer} />
+  
       <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
       <Text style={styles.text_tittlePoint}>...</Text>
 
@@ -49,13 +57,27 @@ function HomeScreen() {
           { paddingLeft: 26, paddingRight: 26 },
         ]}
       />
-    </Stack>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  logoContainer: {
+    position: "absolute",
+    width: 120,
+    height: 120,
+    right: 0,
+    top:0,
+  },
+  scrollContent: {
+    alignItems: "center",
+    paddingBottom: 0, // Adjust this value based on your content height
+    height: "100%",
+    width: "100%",
   },
   footer: {
     position: Platform.OS === "android" ? "absolute" : "relative",
@@ -64,27 +86,23 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: "center",
   },
-
   text_tittle: {
     color: BasicStylesPage.color1,
-    fontSize: 53,
+    paddingLeft: 60,
+    paddingRight: 20,
+    fontSize: 64,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
-    marginTop: "5%",
-    marginLeft: "28%",
-    marginRight: "18%",
+    marginTop: 80,
   },
   text_tittlePoint: {
     color: BasicStylesPage.color1,
-    fontSize: 53,
+    fontSize: 55,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
-    marginTop: -20,
-    marginLeft: "28%",
-    marginRight: "18%",
   },
   buttonContainer: {
-    marginTop: "3%",
+    marginTop: 20,
   },
 });
 

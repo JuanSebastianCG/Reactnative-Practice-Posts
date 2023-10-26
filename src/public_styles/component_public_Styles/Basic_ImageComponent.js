@@ -59,14 +59,28 @@ export function ImagePhotoPickerComponent({onComplete = () => {}}) {
   const [imageDataPhoto, setImageDataPhoto] = useState(null);
 
   const takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setImageDataPhoto(result.assets[0]);
-      onComplete(result.assets[0]);
+    const { status } = await Camera.getCameraPermissionsAsync();
+    if (status === "granted") {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      data = null;
+      if (!result.canceled) {
+        const localUri = result.assets[0].uri;
+        const filename = localUri.split("/").pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : `image`;
+        data = {
+          uri: localUri,
+          name: filename,
+          type,
+        };
+      }
+      setImageDataPhoto(data);
+      onComplete(data);
     }
   };
 

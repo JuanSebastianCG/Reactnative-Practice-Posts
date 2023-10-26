@@ -21,6 +21,7 @@ function IndexTabbar() {
         screenOptions={{
           headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
         }}>
+          
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />

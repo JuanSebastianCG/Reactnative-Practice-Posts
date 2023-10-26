@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+/* import React, { useRef, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import * as Animatable from "react-native-animatable";
 import Svg, { Polygon } from "react-native-svg";
@@ -7,7 +7,7 @@ const AnimatedRain = () => {
   const triangleRef = useRef(null);
 
   const animateTriangle = () => {
-    /* 2000 to 4000 */
+  
     const delay = Math.floor(Math.random() * 2000) + 5000;
     triangleRef.current.transitionTo({ translateY: 1000 }, delay, "linear");
     console.log("delay:",triangleRef.current.props.onAnimationEnd);
@@ -48,3 +48,4 @@ const styles = StyleSheet.create({
 });
 
 export default AnimatedRain;
+ */

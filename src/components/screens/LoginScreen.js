@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+
+
 import { Stack } from "@react-native-material/core";
 
 import { useNavigation } from "@react-navigation/native";
@@ -40,20 +42,25 @@ function LoginScreen() {
       email: userData.email,
       password: userData.password,
     };
-    postData(url, headers, body, (data) => {
-      if (error || !data) {
+    postData(url, headers, body, (response) => {
+      /* console.log("token",response.data) */
+      if (error || !response) {
         console.log("Error:", error);
         setLoginError(true);
       } else {
-        
-        const accessToken= data.accessToken
-        AsyncStorage.setItem("accessToken", accessToken);
-        Alert.alert(
-          "Inicio de sesión exitoso",
-          "¡Bienvenido! Por favor, inicia sesión para continuar."
-        );
-        navigation.navigate("HomeScreen");
 
+        const accessToken = response.data.access;
+        AsyncStorage.setItem("accessToken", accessToken)
+        .then(() => {
+          navigation.navigate("HomeScreen");
+          return AsyncStorage.getItem("accessToken");
+        })
+        .then((token) => {
+          console.log("Token almacenado en AsyncStorage:", token);
+        })
+        .catch((storageError) => {
+          console.log("Error al guardar el token en AsyncStorage:", storageError);
+        });
       }
     });
   };
