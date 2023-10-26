@@ -8,10 +8,11 @@ import {
   CustomButton,
   CustomLogo,
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function HomeScreen() {
   const navigation = useNavigation();
-
+  const token = AsyncStorage.getItem('tuClaveDeToken'); 
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
@@ -49,7 +50,7 @@ function HomeScreen() {
           { paddingLeft: 32, paddingRight: 32 },
         ]}
       />
-      <CustomButton
+      <CustomButton 
         text="Ver api"
         onPress={goToShowPosts}
         buttonStyle={[
