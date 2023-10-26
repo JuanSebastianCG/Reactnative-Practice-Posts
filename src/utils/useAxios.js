@@ -3,7 +3,7 @@ import axios from "axios";
 
 //export const basicEndpoint = "https://apis-backend-dm.up.railway.app/api/v1";
 //export const basicEndpoint = "http://192.168.20.27:3001/api/v1"
-export const basicEndpoint = "http://192.168.20.27:3000/api/v1"
+export const basicEndpoint = "http://172.20.10.3:3000/api/v1"
 
 /* ============= POST ========= */
 export function usePostData() {

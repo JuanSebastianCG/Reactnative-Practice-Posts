@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Svg, Polygon } from "react-native-svg";
@@ -8,6 +8,7 @@ import {
   CustomButton,
   CustomLogo,
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -15,6 +16,19 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+
+/*   useEffect(() => {
+    // Obten el token de acceso de AsyncStorage y actualiza el estado
+    AsyncStorage.getItem("accessToken")
+      .then((token) => {
+        if (token) {
+          setAccessToken(token);
+        }
+      })
+      .catch((error) => {
+        console.log("Error al obtener el token de acceso:", error);
+      });
+  }, []); */
 
   return (
     <ScrollView
@@ -55,6 +69,7 @@ function HomeScreen() {
         buttonStyle={[
           styles.buttonContainer,
           { paddingLeft: 26, paddingRight: 26 },
+         /*  !accessToken && { display: "none" }, */
         ]}
       />
     </ScrollView>
@@ -90,7 +105,7 @@ const styles = StyleSheet.create({
     color: BasicStylesPage.color1,
     paddingLeft: 60,
     paddingRight: 20,
-    fontSize: 64,
+    fontSize: 4,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: 80,

@@ -51,7 +51,7 @@ function LoginScreen() {
         const accessToken = response.data.access;
         AsyncStorage.setItem("accessToken", accessToken)
         .then(() => {
-          navigation.navigate("HomeScreen");
+          navigation.navigate("ShowPostsScreen");
           return AsyncStorage.getItem("accessToken");
         })
         .then((token) => {
