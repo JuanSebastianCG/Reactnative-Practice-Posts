@@ -55,8 +55,13 @@ function LoginScreen() {
         /* console.log(accessToken); */
         AsyncStorage.setItem("accessToken", accessToken)
         
+        AsyncStorage.setItem("accessToken", accessToken)
         .then(() => {
-         navigation.navigate("HomeScreen");
+          navigation.navigate("HomeScreen");
+          return AsyncStorage.getItem("accessToken");
+        })
+        .then((token) => {
+          console.log("Token almacenado en AsyncStorage:", token);
         })
         .catch((storageError) => {
           console.log("Error al guardar el token en AsyncStorage:", storageError);
