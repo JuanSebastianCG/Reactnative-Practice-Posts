@@ -56,9 +56,11 @@ function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+/*     justifyContent: 'center',
+    alignItems: 'center', */
   },
   footer: {
-    position: Platform.OS === "android" ? "absolute" : "relative",
+    position: "relative"/* Platform.OS === "android" ? "relative" : "relative" */,
     bottom: 0,
     left: 0,
     right: 0,
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
 
   text_tittle: {
     color: BasicStylesPage.color1,
-    fontSize: 53,
+    fontSize: 3,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: "5%",

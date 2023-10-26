@@ -18,9 +18,11 @@ export function usePostData() {
         setLoading(true);
         setError(null);
         const response = await axios.post(url, body, { headers });
-        setData(response.data);
-        onComplete(response.data);
+        /* console.log("respuesta", response.data) */
+        setData(response); 
+        onComplete(response); 
       } catch (err) {
+        console.log("error desde axios:",err)
         setError(err);
         onComplete(null);
       } finally {

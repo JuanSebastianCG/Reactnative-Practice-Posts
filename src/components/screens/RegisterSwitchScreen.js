@@ -7,6 +7,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 function RegisterSwitchScreen() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [estaActivo, setEstaActivo] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -42,7 +43,14 @@ function RegisterSwitchScreen() {
           onChangeText={setEmail}
           renderFloatingLabel={() => <Text style={styles.floatingLabel}>Email</Text>}
         />
-        <View style={styles.switchContainer}>
+        <TextInput
+          label="Contraseña"
+          leading={props => <Icon name="contraseña" {...props} />}
+          value={password}
+          onChangeText={setPassword}
+          renderFloatingLabel={() => <Text style={styles.floatingLabel}>Email</Text>}
+        />
+{/*         <View style={styles.switchContainer}>
           <Switch value={estaActivo} onValueChange={handleSwitchChange} />
           <Text style={styles.switchText}>Activo</Text>
         </View>
@@ -54,7 +62,7 @@ function RegisterSwitchScreen() {
             onPress={handleCheckboxChange}
             color="#007AFF" // Puedes ajustar el color a tu preferencia
           />
-        </View>
+        </View> */}
 
         <Button
           title="Enviar"
