@@ -108,6 +108,7 @@ function CreatePostScreen() {
         console.log("Error:", error);
         setError(true);
       } else {
+        navigation.navigate("ShowPostsScreen")
         setSuccess(true);
       }
     });

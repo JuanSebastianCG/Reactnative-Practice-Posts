@@ -48,7 +48,7 @@ function LoginScreen() {
       if (error || !response) {
         console.log("Error:", error);
         setLoginError(true);
-        
+
       } else {
         const accessToken = response.data.access;
         saveToken(accessToken);

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     color: BasicStylesPage.color1,
     paddingLeft: 60,
     paddingRight: 20,
-    fontSize: 64,
+    fontSize: 4,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: 80,
