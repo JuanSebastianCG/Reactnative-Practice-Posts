@@ -1,45 +1,104 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 
-export function useAxios(url, onComplete = () => {}) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+//export const basicEndpoint = "http://192.168.20.27:3001/api/v1"
+//export const basicEndpoint = "http://192.168.120.52:3000/api/v1"
+export const basicEndpoint = "https://apis-backend-dm.up.railway.app/api/v1";
+
+/* ============= POST ========= */
+export function usePostData() {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const source = axios.CancelToken.source();
+  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const postData = useCallback(
+    async (especificUrl, headers = {}, body = null, onComplete = () => {}) => {
+      const url = `${basicEndpoint}${especificUrl}`;
       try {
-        const response = await axios.get(url, {
-          cancelToken: source.token,
-        });
-
-        setData(response.data);
-        setLoading(false);
+        setLoading(true);
+        setError(null);
+        const response = await axios.post(url, body, { headers });
+        setData(response); 
+        onComplete(response); 
       } catch (err) {
-        if (axios.isCancel(err)) {
-          //console.log("Cancelled request");
-        } else {
-          setError(err);
-          setLoading(false);
-        }
+        setError(err);
+        onComplete(null);
       } finally {
-        // Llama a la función onComplete sin importar si la solicitud tuvo éxito o falló.
-        onComplete();
+        setLoading(false);
       }
-    };
+    },
+    []
+  );
 
-    fetchData();
+  return { postData, loading, error, data };
+}
 
-    return () => {
-      source.cancel("Request canceled by user");
-    };
-  }, [url, onComplete]);
+/*  ============= GET ========= */
+export function useGetData() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
 
-  const handleCancelRequest = () => {
-    source.cancel("Request canceled by user");
-    setError("Cancelled Request");
-  };
+  const getData = useCallback(
+    async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
+      const url = `${basicEndpoint}${especificUrl}`;
+      try {
+        setLoading(true);
+        setError(null);
 
-  return { data, loading, error, handleCancelRequest };
+        const config = {
+          headers,
+          data: body,
+        };
+
+        const response = await axios.get(url, config);
+        setData(response.data);
+
+        onComplete(response.data);
+      } catch (err) {
+        console.error("Error making GET request:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  return { getData, loading, error, data };
+}
+
+/*  ============= DELETE ========= */
+export function useDeleteData() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+
+  const deleteData = useCallback(
+    async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
+      const url = `${basicEndpoint}${especificUrl}`;
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const config = {
+          headers,
+          data: body,
+        };
+        const response = await axios.delete(url, config);
+        setData(response.data);
+
+        onComplete(response.data);
+      } catch (err) {
+        console.error("Error making GET request:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  return { deleteData, loading, error, data };
 }

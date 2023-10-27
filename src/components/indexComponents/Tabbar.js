@@ -8,30 +8,34 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+
 const Tabbar = () => {
   const navigation = useNavigation();
 
   const [activeTab, setActiveTab] = useState("Home");
-
-  const handleTabPress = (tabName) => {
-    setActiveTab(tabName);
-  };
-
+  const handleTabPress = (tabName) => setActiveTab(tabName);
 
   return (
     <View style={styles.tabContainer}>
-
       <TouchableWithoutFeedback
         onPress={() => {
           handleTabPress("Home");
-          navigation.navigate("Home");
+          navigation.navigate("HomeScreen");
         }}
-        style={styles.tabIconWrapper}
-      >
-        <View style={styles.tabIconInnerWrapper}>
+        style={styles.tabIconWrapper}>
+        <View
+          style={[
+            styles.tabIconInnerWrapper,
+            activeTab === "Home" && styles.activeTab,
+          ]}>
           <MaterialCommunityIcons
             name="home-circle"
-            color={activeTab === "home-circle" ? "#c39df8" : "#e6f6e6"}
+            color={
+              activeTab === "Home"
+                ? BasicStylesPage.color2
+                : BasicStylesPage.color2
+            }
             size={50}
           />
         </View>
@@ -40,14 +44,21 @@ const Tabbar = () => {
       <TouchableWithoutFeedback
         onPress={() => {
           handleTabPress("Camera");
-          navigation.navigate("Camera");
+          navigation.navigate("CamaraScreen");
         }}
-        style={styles.tabIconWrapper}
-      >
-        <View style={styles.tabIconInnerWrapper}>
+        style={styles.tabIconWrapper}>
+        <View
+          style={[
+            styles.tabIconInnerWrapper,
+            activeTab === "Camera" && styles.activeTab,
+          ]}>
           <MaterialCommunityIcons
             name="camera-enhance"
-            color={activeTab === "camera-enhance" ? "#c39df8" : "#e6f6e6"}
+            color={
+              activeTab === "Camera"
+                ? BasicStylesPage.color2
+                : BasicStylesPage.color2
+            }
             size={45}
           />
         </View>
@@ -59,11 +70,16 @@ const Tabbar = () => {
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
-    height:65, // Aumentamos la altura de la barra
-    backgroundColor: "#6200ee",
+    height: 70,
+    backgroundColor: BasicStylesPage.color6,
     justifyContent: "space-around",
     alignItems: "center",
-    paddingHorizontal: 16, // Añadimos espaciado horizontal
+
+    paddingHorizontal: 16,
+    width: "95%",
+    marginHorizontal: "2.5%",
+    borderRadius: 25,
+    position: "relative", // Agrega position:relative para superponer elementos
   },
   tabIconWrapper: {
     width: 50,
@@ -76,6 +92,14 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
+  },
+  activeTab: {
+    backgroundColor: BasicStylesPage.color3,
+    borderRadius: 60,
+    position: "relative", 
+    zIndex: 1, 
+    height: 60,
+    width: 60,
   },
 });
 
