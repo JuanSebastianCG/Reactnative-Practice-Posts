@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     borderColor: BasicStylesPage.color1,
     borderBottomWidth: 4,
   },
+  
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -189,11 +190,11 @@ export function CustomErrorAlert({ message, onConfirm, isVisible }) {
       backdropColor={BasicStylesPage.color1}>
       <ScrollView contentContainerStyle={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <View style={styles.modalContent2}>
             <Text style={styles.message}>{message}</Text>
+          <View style={styles.modalContent2}>
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={onConfirm}>
-                <Icon name="checkbox-marked-circle-outline" size={80} color={BasicStylesPage.color0} />
+                <Icon name="step-backward-2" size={80} color={BasicStylesPage.color0} />
               </TouchableOpacity>
             </View>
           </View>
@@ -202,3 +203,56 @@ export function CustomErrorAlert({ message, onConfirm, isVisible }) {
     </Modal>
   );
 }
+
+
+export const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
+
+  return (
+    <View style={[stylesErrorBanner.errorBanner,styleBanner]}>
+      <Text style={[stylesErrorBanner.errorText]}>{text}</Text>
+      {buttons}
+      <TouchableOpacity onPress={onChange} style={[stylesErrorBanner.errorButtonStyle]}>
+        <Text style={[stylesErrorBanner.errorText]}>OK</Text>
+      </TouchableOpacity>
+
+    </View>
+  );
+};
+
+
+
+
+const stylesErrorBanner = StyleSheet.create({
+  /* banner */
+  errorBanner: {
+    borderWidth: 1,
+    borderColor: BasicStylesPage.colorWarning1,
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+
+  },
+  errorText: {
+    color: BasicStylesPage.colorWarning1,
+    fontSize: 16,
+    fontWeight: "bold",
+    zIndex : 1,
+
+  },
+  errorButtonStyle: {
+    paddingLeft: -10,
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: BasicStylesPage.colorWarning1,
+    borderRadius: 50,
+
+
+    height: 45,
+    borderRadius: 60,
+    marginTop: 10,
+      
+  },
+});
+

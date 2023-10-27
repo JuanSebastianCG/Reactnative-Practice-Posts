@@ -10,30 +10,32 @@ import { View, StyleSheet } from "react-native"; // Usé react-native en lugar d
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
+import { AuthProvider } from "../utils/authManager";
 
 const Stack = createStackNavigator();
 
 function IndexTabbar() {
   return (
-    <View style={{ flex: 1 }}>
-      <Stack.Navigator
-        initialRouteName="HomeScreen"
-        screenOptions={{
-          headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
-        }}>
-          
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
-        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-      </Stack.Navigator>
-      {/* Superponer el Tabbar de manera absoluta */}
-      <View style={styles.tabbarOverlay}>
-        <Tabbar />
+    <AuthProvider>
+      <View style={{ flex: 1 }}>
+        <Stack.Navigator
+          initialRouteName="HomeScreen"
+          screenOptions={{
+            headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
+          }}>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+          <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
+          <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+        </Stack.Navigator>
+        {/* Superponer el Tabbar de manera absoluta */}
+        <View style={styles.tabbarOverlay}>
+          <Tabbar />
+        </View>
       </View>
-    </View>
+    </AuthProvider>
   );
 }
 

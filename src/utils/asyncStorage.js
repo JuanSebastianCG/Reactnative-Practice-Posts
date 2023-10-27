@@ -23,7 +23,6 @@ const TokenUserManager = () => {
         setToken(storedToken);
         return storedToken;
       } else {
-        console.log("El token no está almacenado en AsyncStorage");
         return null;
       }
     } catch (error) {

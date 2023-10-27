@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Svg, Polygon } from "react-native-svg";
 import { StyleSheet, Platform } from "react-native";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
 import {
-  CustomButton,
   CustomLogo,
-} from "../../public_styles/component_public_Styles/Basic_Components_F";
+  CustomLogoutButton,
+} from "../../public_styles/component_public_Styles/Basic_PageInterface";
+
 import { TokenUserManager } from "../../utils/asyncStorage";
+import { useAuth } from "../../utils/authManager";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -16,26 +19,13 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+  const { logged, handleLoggin } = useAuth();
 
-  const { getToken } = TokenUserManager();
-  const [logged, setLogged] = useState(false);
-
-  const handleLoggin = () => {
-    getToken().then((token) => {
-      if (token) {
-        setLogged(true);
-      } else {
-        setLogged(false);
-      }
-    });
-  };
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+  useFocusEffect(
+    React.useCallback(() => {
       handleLoggin();
-    });
-    return unsubscribe;
-  }, [navigation]);
+    }, [])
+  );
 
   return (
     <ScrollView
@@ -51,6 +41,7 @@ function HomeScreen() {
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
       </Svg>
 
+      <CustomLogoutButton />
       <CustomLogo styleLogo={styles.logoContainer} />
 
       <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>

@@ -11,11 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 
-import {
-  CustomButton,
-  CustomErrorBanner,
-  CustomLogo,
-} from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
 import {
   CustomInTextField,
   CustomInTextArea,
@@ -28,6 +25,7 @@ import {
 import {
   CustomSuccessAlert,
   CustomAlertConfirmation,
+  CustomErrorBanner,
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
@@ -43,9 +41,9 @@ function CreatePostScreen() {
     setPostDataDB({ ...PostDataDB, [name]: value });
   };
   const [PostDataDB, setPostDataDB] = useState({
-    title: "None",
-    subtitle: "None",
-    description: "None",
+    title: "",
+    subtitle: "",
+    description: "",
     avatars: [],
   });
 
@@ -108,7 +106,7 @@ function CreatePostScreen() {
         console.log("Error:", error);
         setError(true);
       } else {
-        navigation.navigate("ShowPostsScreen")
+        navigation.navigate("ShowPostsScreen");
         setSuccess(true);
       }
     });

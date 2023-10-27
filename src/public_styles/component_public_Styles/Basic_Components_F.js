@@ -21,31 +21,8 @@ const CustomButton = ({ onPress, text, textStyle, buttonStyle }) => {
 };
 
 
-const CustomLogo = (styleLogo) => {
-  const navigation = useNavigation();
-  
-  const primaryStyle = ( styleLogo["styleLogo"] != undefined) ? styleLogo["styleLogo"] : styles.logoContainer;
-  return (
-      <TouchableOpacity onPress={() => navigation.navigate("WelcomeScreen")}  style={primaryStyle}>
-        <Image source={require("../../img/logo.png")} style={styles.logo} />
-      </TouchableOpacity>
-    
-  );
-};
 
-const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
 
-  return (
-    <View style={[styles.errorBanner,styleBanner]}>
-      <Text style={[styles.errorText]}>{text}</Text>
-      {buttons}
-      <TouchableOpacity onPress={onChange} style={[styles.errorButtonStyle]}>
-        <Text style={[styles.errorText]}>OK</Text>
-      </TouchableOpacity>
-
-    </View>
-  );
-};
 
 
 
@@ -76,20 +53,7 @@ const styles = StyleSheet.create({
     paddingLeft: 19,
     paddingRight: 19,
   },
-  /* logo */
-  logoContainer: {
-    width: 80,
-    height: 80,
-    marginRight: "30%",
-    marginLeft: "2%",
-    marginTop: "5%",
-    resizeMode: 'contain', // Ajusta el modo de redimensionamiento según tus necesidades
 
-  },
-  logo: {
-    width: "100%",
-    height: "100%",
-  },
   /* banner */
   errorBanner: {
     borderWidth: 1,
@@ -107,8 +71,6 @@ const styles = StyleSheet.create({
 
   },
   errorButtonStyle: {
-    
-    
     paddingLeft: -10,
     alignContent: "center",
     justifyContent: "center",
@@ -125,6 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-export { CustomButton, CustomLogo , CustomErrorBanner};
+export { CustomButton};

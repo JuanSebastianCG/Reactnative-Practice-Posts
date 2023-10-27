@@ -1,27 +1,42 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+/* componentes */
 import { Stack } from "@react-native-material/core";
-
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
-import {
-  CustomButton,
-  CustomErrorBanner,
-  CustomLogo,
-} from "../../public_styles/component_public_Styles/Basic_Components_F";
-import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_PageInterface";
+import { CustomInTextField } from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { CustomErrorBanner } from "../../public_styles/component_public_Styles/Basic_AlertComponent";
+/* utils */
+import { TokenUserManager } from "../../utils/asyncStorage";
+import { usePostData } from "../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
+  const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+
+  /* {
+    "name": "Juan Pérez",
+    "email": "admin",
+    "password": "admin",
+    "isUnderage": false,
+    "acceptTerms": true,
+    "typeOfDocument": "DNI",
+    "documentNumber": "12345678"
+}
+ */
   const [userData, setUserData] = useState({
+    name: "",
     email: "",
     password: "",
+    isUnderage: false,
+    acceptTerms: true,
+    typeOfDocument: [],
+    documentNumber: "",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -38,34 +53,19 @@ function RegisterScreen() {
       "Content-Type": "application/json",
     };
     const body = {
+      name: userData.name,
       email: userData.email,
       password: userData.password,
+      isUnderage: userData.isUnderage,
+      acceptTerms: userData.acceptTerms,
+      typeOfDocument: userData.typeOfDocument,
+      documentNumber: userData.documentNumber,
     };
     postData(url, headers, body, (response) => {
-      /* console.log("token",response.data) */
       if (error || !response) {
-        console.log("Error:", error);
         setLoginError(true);
       } else {
-        /* navigation.navigate("HomeScreen");
-        const accessToken = response.data.access;
-        AsyncStorage.setItem("accessToken", accessToken); */
-        /* console.log(response.data.access) */
-        const accessToken = response.data.access;
-        /* console.log(accessToken); */
-        AsyncStorage.setItem("accessToken", accessToken)
-        
-        AsyncStorage.setItem("accessToken", accessToken)
-        .then(() => {
-          navigation.navigate("HomeScreen");
-          return AsyncStorage.getItem("accessToken");
-        })
-        .then((token) => {
-          console.log("Token almacenado en AsyncStorage:", token);
-        })
-        .catch((storageError) => {
-          console.log("Error al guardar el token en AsyncStorage:", storageError);
-        });
+        navigation.navigate("LoginScreen");
       }
     });
   };
@@ -92,35 +92,38 @@ function RegisterScreen() {
           <View style={styles.fieldContainer}>
             <Stack spacing={16}>
               <CustomInTextField
+                label="Nombre"
+                style={styles.input}
+                value={userData.nombre}
+                onChangeText={(text) => handleChange("nombre", text)}
+              />
+
+              <CustomInTextField
                 label="Email"
                 style={styles.input}
-                placeholder="Email"
-                value={userData.email}
+                value={userData.name}
                 onChangeText={(text) => handleChange("email", text)}
               />
 
               <CustomInTextField
                 label="Password"
                 style={styles.input}
-                placeholder="Password"
                 value={userData.password}
                 onChangeText={(text) => handleChange("password", text)}
               />
-
-
             </Stack>
             {loginError && (
-                <CustomErrorBanner
-                  text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
-                  styleBanner={styles.errorBanner}
-                  onChange={() => setLoginError(false)}
-                />
-              )}
-              <CustomButton
-                text="Login"
-                onPress={handleSubmit}
-                buttonStyle={styles.button}
+              <CustomErrorBanner
+                text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
+                styleBanner={styles.errorBanner}
+                onChange={() => setLoginError(false)}
               />
+            )}
+            <CustomButton
+              text="Login"
+              onPress={handleSubmit}
+              buttonStyle={styles.button}
+            />
           </View>
         </View>
       </ScrollView>
@@ -133,10 +136,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   errorBanner: {
-    marginLeft: '10%',
-    marginRight: '10%',
-    
-
+    marginLeft: "10%",
+    marginRight: "10%",
   },
   footer: {
     position: "absolute",
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
     borderRadius: 60,
     width: "85%",
-    height: "55%",
+    height: "80%",
     marginBottom: "30%",
     marginTop: 20,
     paddingTop: 40,
@@ -174,9 +175,9 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    position: 'absolute',
-    top: 0,      // Alinea el componente en la parte superior
-    right: 0,    // Alinea el componente en la esquina derecha
+    position: "absolute",
+    top: 0, // Alinea el componente en la parte superior
+    right: 0, // Alinea el componente en la esquina derecha
     width: 120,
     height: 120,
   },
@@ -191,7 +192,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
 });
 
 export default RegisterScreen;

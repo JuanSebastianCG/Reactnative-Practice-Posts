@@ -1,27 +1,24 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+/* componentes */
 import { Stack } from "@react-native-material/core";
-
-
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import {
-  CustomButton,
-  CustomErrorBanner,
-  CustomLogo,
-} from "../../public_styles/component_public_Styles/Basic_Components_F";
-import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_PageInterface";
+import { CustomInTextField } from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { CustomErrorBanner } from "../../public_styles/component_public_Styles/Basic_AlertComponent";
+/* utils */
+import { TokenUserManager } from "../../utils/asyncStorage";
 import { usePostData } from "../../utils/useAxios";
-import {TokenUserManager} from "../../utils/asyncStorage"; 
 
 function LoginScreen() {
   const navigation = useNavigation();
-  const { saveToken,getToken,deleteToken } = TokenUserManager();
+  const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -46,22 +43,14 @@ function LoginScreen() {
     };
     postData(url, headers, body, (response) => {
       if (error || !response) {
-        console.log("Error:", error);
         setLoginError(true);
-
       } else {
         const accessToken = response.data.access;
         saveToken(accessToken);
         navigation.navigate("HomeScreen");
-        
-        }
+      }
     });
   };
-
-  const handleLogout = async () => {
-    deleteToken();
-    navigation.navigate("HomeScreen");
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,26 +88,19 @@ function LoginScreen() {
                 value={userData.password}
                 onChangeText={(text) => handleChange("password", text)}
               />
-
-
             </Stack>
             {loginError && (
-                <CustomErrorBanner
-                  text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
-                  styleBanner={styles.errorBanner}
-                  onChange={() => setLoginError(false)}
-                />
-              )}
-              <CustomButton
-                text="Login"
-                onPress={handleSubmit}
-                buttonStyle={styles.button}
+              <CustomErrorBanner
+                text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
+                styleBanner={styles.errorBanner}
+                onChange={() => setLoginError(false)}
               />
-                <CustomButton
-                text="Logout"
-                onPress={handleLogout}
-                buttonStyle={styles.button}
-              />
+            )}
+            <CustomButton
+              text="Login"
+              onPress={handleSubmit}
+              buttonStyle={styles.button}
+            />
           </View>
         </View>
       </ScrollView>
@@ -131,10 +113,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   errorBanner: {
-    marginLeft: '10%',
-    marginRight: '10%',
-    
-
+    marginLeft: "10%",
+    marginRight: "10%",
   },
   footer: {
     position: "absolute",
@@ -172,9 +152,9 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    position: 'absolute',
-    top: 0,      // Alinea el componente en la parte superior
-    right: 0,    // Alinea el componente en la esquina derecha
+    position: "absolute",
+    top: 0, // Alinea el componente en la parte superior
+    right: 0, // Alinea el componente en la esquina derecha
     width: 120,
     height: 120,
   },
@@ -189,7 +169,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
 });
 
 export default LoginScreen;
