@@ -180,3 +180,25 @@ const styles = StyleSheet.create({
   },
 
 });
+
+export function CustomErrorAlert({ message, onConfirm, isVisible }) {
+  return (
+    <Modal
+      isVisible={isVisible}
+      backdropOpacity={0.2}
+      backdropColor={BasicStylesPage.color1}>
+      <ScrollView contentContainerStyle={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalContent2}>
+            <Text style={styles.message}>{message}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={onConfirm}>
+                <Icon name="checkbox-marked-circle-outline" size={80} color={BasicStylesPage.color0} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </Modal>
+  );
+}

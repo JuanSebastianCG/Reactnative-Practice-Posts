@@ -4,9 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Stack } from "@react-native-material/core";
 
+
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 import {
   CustomButton,
@@ -15,9 +15,12 @@ import {
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
 import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { usePostData } from "../../utils/useAxios";
+import {TokenUserManager} from "../../utils/asyncStorage"; 
 
 function LoginScreen() {
   const navigation = useNavigation();
+  const { saveToken,getToken,deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
   const [userData, setUserData] = useState({
     email: "",
@@ -42,27 +45,23 @@ function LoginScreen() {
       password: userData.password,
     };
     postData(url, headers, body, (response) => {
-      /* console.log("token",response.data) */
       if (error || !response) {
         console.log("Error:", error);
         setLoginError(true);
+        
       } else {
-
         const accessToken = response.data.access;
-        AsyncStorage.setItem("accessToken", accessToken)
-        .then(() => {
-          navigation.navigate("HomeScreen");
-          return AsyncStorage.getItem("accessToken");
-        })
-        .then((token) => {
-          console.log("Token almacenado en AsyncStorage:", token);
-        })
-        .catch((storageError) => {
-          console.log("Error al guardar el token en AsyncStorage:", storageError);
-        });
-      }
+        saveToken(accessToken);
+        navigation.navigate("HomeScreen");
+        
+        }
     });
   };
+
+  const handleLogout = async () => {
+    deleteToken();
+    navigation.navigate("HomeScreen");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -113,6 +112,11 @@ function LoginScreen() {
               <CustomButton
                 text="Login"
                 onPress={handleSubmit}
+                buttonStyle={styles.button}
+              />
+                <CustomButton
+                text="Logout"
+                onPress={handleLogout}
                 buttonStyle={styles.button}
               />
           </View>

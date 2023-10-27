@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Svg, Polygon } from "react-native-svg";
@@ -8,6 +8,7 @@ import {
   CustomButton,
   CustomLogo,
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -16,23 +17,42 @@ function HomeScreen() {
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
 
+  const { getToken } = TokenUserManager();
+  const [logged, setLogged] = useState(false);
+
+  const handleLoggin = () => {
+    getToken().then((token) => {
+      if (token) {
+        setLogged(true);
+      } else {
+        setLogged(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      handleLoggin();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.scrollContent}
       horizontal={false}
       showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
+      showsHorizontalScrollIndicator={false}>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
       </Svg>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
       </Svg>
-  
+
       <CustomLogo styleLogo={styles.logoContainer} />
-  
+
       <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
       <Text style={styles.text_tittlePoint}>...</Text>
 
@@ -49,14 +69,16 @@ function HomeScreen() {
           { paddingLeft: 32, paddingRight: 32 },
         ]}
       />
-      <CustomButton
-        text="Ver api"
-        onPress={goToShowPosts}
-        buttonStyle={[
-          styles.buttonContainer,
-          { paddingLeft: 26, paddingRight: 26 },
-        ]}
-      />
+      {logged && (
+        <CustomButton
+          text="Ver api"
+          onPress={goToShowPosts}
+          buttonStyle={[
+            styles.buttonContainer,
+            { paddingLeft: 26, paddingRight: 26 },
+          ]}
+        />
+      )}
     </ScrollView>
   );
 }
@@ -71,7 +93,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     right: 0,
-    top:0,
+    top: 0,
   },
   scrollContent: {
     alignItems: "center",

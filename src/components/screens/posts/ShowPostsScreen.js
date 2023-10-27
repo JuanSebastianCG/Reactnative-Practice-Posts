@@ -14,40 +14,59 @@ import {
   useDeleteData,
   basicEndpoint,
 } from "../../../utils/useAxios";
+import { TokenUserManager } from "../../../utils/asyncStorage";
 
-import CustomInTextField from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import { Image } from "react-native";
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
   const [isDeleted, setIsDeleted] = useState(false);
+  const { getToken } = TokenUserManager();
+  const [errorPost, setErrorPost] = useState(false);
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
 
   const navigation = useNavigation();
+  const gotToLogin = () => navigation.navigate("LoginScreen");
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     handleGetData();
     setIsDeleted(false);
-  }, [isDeleted,data]);
+  }, [isDeleted, data]);
+
+  const handleError = () => {
+    setErrorPost(false);
+    gotToLogin();
+  };
 
   const handleGetData = async () => {
     const url = "/posts";
-    getData(url, (data) => {
-      for (let i = 0; i < data.length; i++) {
-        uri = `${basicEndpoint}/${data[i].avatar}`;
-        data[i].avatars = data[i].avatars.map((avatar) => {
-          return { uri: `${basicEndpoint}/${avatar}` };
-        });
-      }
-      setPosts(data);
-    });
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    getData(
+      url,
+      (data) => {
+        if (error && !data) {
+          setErrorPost(true);
+          return;
+        }
+        for (let i = 0; i < data.length; i++) {
+          uri = `${basicEndpoint}/${data[i].avatar}`;
+          data[i].avatars = data[i].avatars.map((avatar) => {
+            return { uri: `${basicEndpoint}/${avatar}` };
+          });
+        }
+        setPosts(data);
+      },
+      header
+    );
 
     //http://192.168.20.26:3000/api/v1/uploads/post/1697776043933-1fd0c384-43c2-4c48-8818-80ca2a166a9a.jpeg
   };
@@ -56,7 +75,6 @@ function ShowPostsScreen() {
     console.log("id:", id);
     deleteData(url, (data) => {
       if (data) {
-        
         setPosts(posts.filter((post) => post._id !== id));
         setIsDeleted(true);
       }
@@ -69,8 +87,14 @@ function ShowPostsScreen() {
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
-          {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />}
-          {error && <Text>Error: {error.message}</Text>}
+          {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
+          {error && (
+            <CustomErrorAlert
+              isVisible={true}
+              message="¿estas logueado  0.0?  "
+              onConfirm={handleError}
+            />
+          )}
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
               <Card post={post} handleDelete={handleDelete} />
@@ -94,13 +118,7 @@ function Card({ post, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        {/* <Image
-          source={{ uri: `${basicEndpoint}/${post.avatar}` }}
-          style={styleCard.avatarImage}
-          resizeMode="cover"
-        />
- */}
-        <CustomCarrousel data={post.avatars}  width={330} height={190} />
+        <CustomCarrousel data={post.avatars} width={330} height={190} />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
