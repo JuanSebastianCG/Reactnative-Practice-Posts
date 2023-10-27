@@ -60,7 +60,7 @@ function HomeScreen() {
           { paddingLeft: 32, paddingRight: 32 },
         ]}
       />
-      {logged && (
+   
         <CustomButton
           text="Ver api"
           onPress={goToShowPosts}
@@ -69,7 +69,7 @@ function HomeScreen() {
             { paddingLeft: 26, paddingRight: 26 },
           ]}
         />
-      )}
+    
     </ScrollView>
   );
 }

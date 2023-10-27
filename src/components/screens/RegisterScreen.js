@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView, View, StyleSheet, ScrollView, Text } from "react-native";
 /* componentes */
 import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
@@ -10,6 +10,7 @@ import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_Pa
 import { CustomInTextField } from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import { CustomErrorBanner } from "../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { Picker } from "@react-native-picker/picker"; 
 /* utils */
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { usePostData } from "../../utils/useAxios";
@@ -33,7 +34,7 @@ function RegisterScreen() {
     name: "",
     email: "",
     password: "",
-    isUnderage: false,
+    isUnderage: true,
     acceptTerms: true,
     typeOfDocument: [],
     documentNumber: "",
@@ -48,7 +49,7 @@ function RegisterScreen() {
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
-    const url = "/users/login";
+    const url = "/users";
     const headers = {
       "Content-Type": "application/json",
     };
@@ -61,10 +62,12 @@ function RegisterScreen() {
       typeOfDocument: userData.typeOfDocument,
       documentNumber: userData.documentNumber,
     };
+    console.log(body);
     postData(url, headers, body, (response) => {
       if (error || !response) {
         setLoginError(true);
       } else {
+        console.log(response);
         navigation.navigate("LoginScreen");
       }
     });
@@ -94,14 +97,14 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Nombre"
                 style={styles.input}
-                value={userData.nombre}
-                onChangeText={(text) => handleChange("nombre", text)}
+                value={userData.name}
+                onChangeText={(text) => handleChange("name", text)}
               />
 
               <CustomInTextField
                 label="Email"
                 style={styles.input}
-                value={userData.name}
+                value={userData.email}
                 onChangeText={(text) => handleChange("email", text)}
               />
 
@@ -110,6 +113,26 @@ function RegisterScreen() {
                 style={styles.input}
                 value={userData.password}
                 onChangeText={(text) => handleChange("password", text)}
+              />
+
+              <View style={styles.input}>
+                <Text>Tipo de documento</Text>
+                <Picker
+                  selectedValue={userData.typeOfDocument}
+                  onValueChange={(itemValue, itemIndex) =>
+                    handleChange("typeOfDocument", itemValue)
+                  }>
+                  <Picker.Item label="DNI" value="DNI" />
+                  <Picker.Item label="Pasaporte" value="Pasaporte" />
+                  {/* Agrega más tipos de documentos según tus necesidades */}
+                </Picker>
+              </View>
+
+              <CustomInTextField
+                label="Número de documento"
+                style={styles.input}
+                value={userData.documentNumber}
+                onChangeText={(text) => handleChange("documentNumber", text)}
               />
             </Stack>
             {loginError && (
