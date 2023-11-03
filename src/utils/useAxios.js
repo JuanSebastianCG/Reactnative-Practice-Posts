@@ -5,7 +5,8 @@ import axios from "axios";
 //export const basicEndpoint = "https://apis-backend-dm.up.railway.app/api/v1";
 //export const basicEndpoint = "http://192.168.120.52:3000/api/v1"
 
-export const basicEndpoint = "http://mantenimientoandino.co:3000/api/v1";
+export const basicEndpoint = "http://mantenimientoandino.co:3000";
+export const version = "/api/v1";
 
 /* ============= POST ========= */
 export function usePostData() {
@@ -15,7 +16,7 @@ export function usePostData() {
 
   const postData = useCallback(
     async (especificUrl, headers = {}, body = null, onComplete = () => {}) => {
-      const url = `${basicEndpoint}${especificUrl}`;
+      const url = `${basicEndpoint}${version}${especificUrl}`;
       try {
         setLoading(true);
         setError(null);
@@ -43,7 +44,7 @@ export function useGetData() {
 
   const getData = useCallback(
     async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
-      const url = `${basicEndpoint}${especificUrl}`;
+      const url = `${basicEndpoint}${version}${especificUrl}`;
       try {
         setLoading(true);
         setError(null);
@@ -78,7 +79,7 @@ export function useDeleteData() {
 
   const deleteData = useCallback(
     async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
-      const url = `${basicEndpoint}${especificUrl}`;
+      const url = `${basicEndpoint}${version}${especificUrl}`;
 
       try {
         setLoading(true);

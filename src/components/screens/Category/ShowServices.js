@@ -29,11 +29,11 @@ function ShowServicesScreen() {
 
   const navigation = useNavigation();
   const gotToLogin = () => navigation.navigate("LoginScreen");
-  const [data, setData] = useState([]);
+  const [dataPost, setDataPost] = useState([]);
 
   useEffect(() => {
     handleGetData();
-  }, [data]);
+  }, [dataPost]);
 
   const handleError = () => {
     setErrorPost(false);
@@ -42,19 +42,24 @@ function ShowServicesScreen() {
 
   /* [{"_id":"653dbc450368d11e0cf289c6","nameCategoryService":"Construcción y adecuación","descriptionCategoryService":"Construcción y adecuación","active":true,"avatar":"uploads/categoryServices/1698544706791-pexels-james-frid-901941.jpg","__v":0},{"_id":"653dbc790368d11e0cf289cb","nameCategoryService":"Suministro e instalación","descriptionCategoryService":"Suministro e instalación","active":true,"avatar":"uploads/categoryServices/1698544761304-pexels-photo-7568422.jpeg","__v":0},{"_id":"653dbcbd0368d11e0cf289d0","nameCategoryService":"Redes de frio y refrigeración","descriptionCategoryService":"Redes de frio y refrigeración","active":true,"avatar":"uploads/categoryServices/1698544829132-im2.jpg","__v":0},{"_id":"654504020368d11e0cf4c0a7","nameCategoryService":"Gt prueba","descriptionCategoryService":"Mto","active":true,"avatar":"uploads/categoryServices/1699021826089-1b096120-df65-4841-b6a2-bbac10c1842b.jpeg","__v":0}] */
   const handleGetData = async () => {
-    const url = "/admin/category-services";
+    const url = "/admin/services";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
     getData(
       url,
       (data) => {
-        console.log("data", data);
         if (error && !data) {
           setErrorPost(true);
           return;
         }
-        setData(data);
+        for (let i = 0; i < data.length; i++) {
+          uri = `${basicEndpoint}/${data[i].avatar}`;
+          data[i].photos = data[i].photos.map((avatar) => {
+            return { uri: `${basicEndpoint}/${avatar}` };
+          });
+        }
+        setDataPost(data);
       },
       header
     );
@@ -67,9 +72,7 @@ function ShowServicesScreen() {
     deleteData(
       url,
       (data) => {
-        if (data) {
-          setData(data.filter((post) => post._id !== id));
-        }
+        console.log("data", data);
       },
       header
     );
@@ -88,11 +91,14 @@ function ShowServicesScreen() {
               onConfirm={handleError}
             />
           )}
-          {data.map((post, index) => (
-            <View style={styles.cards} key={index}>
-              <Card post={post} handleDelete={handleDelete} />
-            </View>
+          {dataPost.map((Service) => (
+            <Card
+              key={Service._id}
+              Service={Service}
+              handleDelete={handleDelete}
+            />
           ))}
+
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
@@ -104,9 +110,14 @@ function ShowServicesScreen() {
   );
 }
 
-function Card({ Category, handleDelete }) {
+[{"_id":"653dbb290368d11e0cf289ac","name":"Construcción, mantenimiento y reparación de maquinaria industrial y obras civiles.","description":"Construcción, mantenimiento y reparación de maquinaria industrial y obras civiles.","active":true,"categoryService":"Obra civil y mantenimiento","photos":["uploads/services/pqwfCAROdBFeryzNgzYcS4ll.jpeg","uploads/services/JhhMIUvjLYEbBga1ipCf_VTS.jpg"],"createdAt":"2023-10-29T01:53:45.209Z","__v":0}]
+function Card({ Service, handleDelete }) {
+  console.log("Service", Service);
+  
   return (
   <View>
+
+    
 
 
 
