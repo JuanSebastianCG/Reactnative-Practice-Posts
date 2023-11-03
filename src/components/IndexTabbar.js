@@ -1,12 +1,16 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
 import Tabbar from "./indexComponents/Tabbar";
+import { Sidebar } from "./indexComponents/SideBarMenu";
+
 import HomeScreen from "./screens/HomeScreen";
 import CamaraScreen from "./screens/CamaraScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
+import ShowCategoryScreen from "./screens/Category/ShowCategory";
+import ShowServicesScreen from "./screens/Category/ShowServices";
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
@@ -28,11 +32,17 @@ function IndexTabbar() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
+          <Stack.Screen name="ShowServicesScreen" component={ShowServicesScreen} />
+          <Stack.Screen name="ShowCategoryScreen" component={ShowCategoryScreen} />
+
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
         </Stack.Navigator>
         {/* Superponer el Tabbar de manera absoluta */}
         <View style={styles.tabbarOverlay}>
           <Tabbar />
+        </View>
+        <View style={styles.sideBarOverlay}>
+          <Sidebar />
         </View>
       </View>
     </AuthProvider>
@@ -45,6 +55,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+
+  sideBarOverlay: {
+    position: "absolute",
+    left: 0,
+    top: "50%",
+    
   },
 });
 
