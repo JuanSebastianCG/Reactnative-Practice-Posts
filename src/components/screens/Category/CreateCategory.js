@@ -45,7 +45,7 @@ function CreateCategoryScreen() {
     nameCategoryService: "",
     descriptionCategoryService: "",
     active: "",
-    avatars: [],
+    avatar: [],
   });
 
   //image picker and photo
@@ -54,7 +54,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          avatar: [...PostDataDB.avatar, image],
         });
     },
   });
@@ -64,7 +64,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          avatar: [...PostDataDB.avatar, image],
         });
     },
   });
@@ -79,13 +79,13 @@ function CreateCategoryScreen() {
       !PostDataDB.nameCategoryService ||
       !PostDataDB.descriptionCategoryService ||
       !PostDataDB.active ||
-      !PostDataDB.avatars
+      !PostDataDB.avatar
     ) {
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
-    const url = "/posts";
+    const url = "/admin/category-services";
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
@@ -94,8 +94,8 @@ function CreateCategoryScreen() {
     formData.append("nameCategoryService", PostDataDB.nameCategoryService);
     formData.append("descriptionCategoryService", PostDataDB.descriptionCategoryService);
     formData.append("active", PostDataDB.active);
-    PostDataDB.avatars.forEach((image, index) => {
-      formData.append("avatars", {
+    PostDataDB.avatar.forEach((image, index) => {
+      formData.append("avatar", {
         uri: image.uri,
         name: image.name,
         type: image.type,
@@ -131,30 +131,22 @@ function CreateCategoryScreen() {
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <CustomInTextField
-              label="Titulo"
+              label="Nombre"
               style={styles.input}
-              placeholder="Titulo"
+              placeholder="Nombre"
               value={PostDataDB.nameCategoryService}
               onChangeText={(text) => handleChange("nameCategoryService", text)}
             />
 
             <View>
               <View style={styles.imageContainer}>
-                {PostDataDB.avatars.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatars} />
+                {PostDataDB.avatar.length > 0 && (
+                  <CustomCarrousel data={PostDataDB.avatar} />
                 )}
               </View>
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
-
-            <CustomInTextField
-              label="Subtitulo"
-              style={styles.input}
-              placeholder="Subtitulo"
-              value={PostDataDB.descriptionCategoryService}
-              onChangeText={(text) => handleChange("descriptionCategoryService", text)}
-            />
 
             <CustomInTextArea
               label="Descripcion"
