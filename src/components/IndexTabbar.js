@@ -13,6 +13,7 @@ import ShowServicesScreen from "./screens/Category/ShowServices";
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
+import CreateCategoryScreen from "./screens/Category/CreateCategory";
 import { AuthProvider } from "../utils/authManager";
 
 const Stack = createStackNavigator();
@@ -40,6 +41,8 @@ function IndexTabbar() {
           />
 
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+          <Stack.Screen name="CreateCategoryScreen" component={CreateCategoryScreen} />
+
         </Stack.Navigator>
         {/* Superponer el Tabbar de manera absoluta */}
 
