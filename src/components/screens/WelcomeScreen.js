@@ -18,21 +18,24 @@ function WelcomeScreen() {
   const navigation = useNavigation();
   return (
     <Stack spacing={4} style={styles.container}>
-      <CustomLogo styleLogo = {styles.logoContainer}/>
-      <Text style={styles.text_tittle}>Welcome to Apis </Text>
+      <CustomLogo width={300} height={400} styleLogo={styles.logoContainer} />
 
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate("IndexTabbar");
-        }}>
-        <View style={styles.buttonContainer}>
-          <MaterialCommunityIcons
-            name="arrow-right-circle"
-            color={BasicStylesPage.color1}
-            size={150}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+      <View style={{marginTop: "75%"}}>
+        <Text style={styles.text_tittle}>Welcome to Apis </Text>
+
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate("IndexTabbar");
+          }}>
+          <View style={styles.buttonContainer}>
+            <MaterialCommunityIcons
+              name="arrow-right-circle"
+              color={BasicStylesPage.color1}
+              size={170}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
 
       <Svg height="200" width="300" style={styles.footer}>
         <Polygon points="0,0 300,200 0,200" fill={BasicStylesPage.color1} />
@@ -66,17 +69,18 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    width: 200,
-    height: 200,
-    marginLeft: "25%",
-    marginRight: "25%",
-    marginTop: "15%",
+    flexDirection: "row",
+    right: 40,
+    top: 40,
   },
 
   buttonContainer: {
     alignItems: "center",
-    marginTop: "13%",
+    marginTop: "8%",
+    zIndex: 2,
   },
+
+
 });
 
 export default WelcomeScreen;

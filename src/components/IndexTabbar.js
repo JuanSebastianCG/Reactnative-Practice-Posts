@@ -6,9 +6,8 @@ import Tabbar from "./indexComponents/Tabbar";
 import { Sidebar } from "./indexComponents/SideBarMenu";
 
 import HomeScreen from "./screens/HomeScreen";
-import CamaraScreen from "./screens/CamaraScreen";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
+import LoginScreen from "./screens/User/LoginScreen";
+import RegisterScreen from "./screens/User/RegisterScreen";
 import ShowCategoryScreen from "./screens/Category/ShowCategory";
 import ShowServicesScreen from "./screens/Category/ShowServices";
 
@@ -28,7 +27,6 @@ function IndexTabbar() {
             headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
           }}>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />

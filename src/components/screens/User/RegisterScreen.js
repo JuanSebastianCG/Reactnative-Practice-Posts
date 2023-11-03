@@ -5,15 +5,15 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
-import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_PageInterface";
-import { CustomInTextField } from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
-import { CustomErrorBanner } from "../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
+import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import { Picker } from "@react-native-picker/picker"; 
 /* utils */
-import { TokenUserManager } from "../../utils/asyncStorage";
-import { usePostData } from "../../utils/useAxios";
+import { TokenUserManager } from "../../../utils/asyncStorage";
+import { usePostData } from "../../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();

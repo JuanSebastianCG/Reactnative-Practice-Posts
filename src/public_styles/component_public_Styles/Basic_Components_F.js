@@ -4,7 +4,7 @@ import BasicStylesPage from "../css_public_Styles/Basic_Style";
 
 import { useNavigation } from "@react-navigation/native";
 
-const tenueColor2Button = BasicStylesPage.color2 + "80";
+const tenueColor2Button = BasicStylesPage.color2 + "99";
 
 const CustomButton = ({ onPress, text, textStyle, buttonStyle }) => {
   return (
@@ -19,14 +19,6 @@ const CustomButton = ({ onPress, text, textStyle, buttonStyle }) => {
     </TouchableOpacity>
   );
 };
-
-
-
-
-
-
-
-
 
 
 const styles = StyleSheet.create({
