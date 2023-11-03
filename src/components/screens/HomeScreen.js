@@ -16,7 +16,7 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-
+  const goToCreateService=()=> navigation.navigate("CreateService")
   useEffect(() => {
     if (isFocused) {
       try {
@@ -72,14 +72,22 @@ function HomeScreen() {
       <Text style={styles.text_tittlePoint}>...</Text>
 
       {userToken ? (
-        <CustomButton
-        text="Ver API"
-        onPress={goToShowPosts}
-        buttonStyle={[
-          styles.buttonContainer,
-          { paddingLeft: 26, paddingRight: 26 },
-        ]}
-      />
+        <View>
+          <CustomButton
+            text="servicios"
+            onPress={goToCreateService}
+            buttonStyle={styles.buttonContainer}
+          />
+            <CustomButton
+            text="Ver API"
+            onPress={goToShowPosts}
+            buttonStyle={[
+              styles.buttonContainer,
+              { paddingLeft: 26, paddingRight: 26 },
+            ]}
+          />
+        </View>
+      
       ) : (
         
         <View>
@@ -96,6 +104,7 @@ function HomeScreen() {
             { paddingLeft: 32, paddingRight: 32 },
           ]}
         />
+        
       </View>
       )}
     </ScrollView>

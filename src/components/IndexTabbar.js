@@ -10,6 +10,7 @@ import { View, StyleSheet } from "react-native"; // Usé react-native en lugar d
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
+import CreateService from "./screens/CreateService";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ function IndexTabbar() {
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
         <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+        <Stack.Screen name="CreateService" component={CreateService} />
       </Stack.Navigator>
       {/* Superponer el Tabbar de manera absoluta */}
       <View style={styles.tabbarOverlay}>

@@ -4,37 +4,79 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  Image,
+  Image
 } from "react-native";
 
+import DropDownPicker from "react-native-dropdown-picker";
+import {TokenUserManager} from "../../utils/as"
+import { Checkbox } from "react-native-paper";
+
 import { useNavigation } from "@react-navigation/native";
-import { usePostData } from "../../../utils/useAxios";
+import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 
 import {
   CustomButton,
   CustomErrorBanner,
   CustomLogo,
-} from "../../../public_styles/component_public_Styles/Basic_Components_F";
+} from "../../public_styles/component_public_Styles/Basic_Components_F";
 import {
   CustomInTextField,
   CustomInTextArea,
-} from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import {
   ImagePickerComponent,
   ImagePhotoPickerComponent,
-} from "../../../public_styles/component_public_Styles/Basic_ImageComponent";
+} from "../../public_styles/component_public_Styles/Basic_ImageComponent";
 import {
   CustomSuccessAlert,
   CustomAlertConfirmation,
-} from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+} from "../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { Picker } from "@react-native-picker/picker";
 
-import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
 
-function CreatePostScreen() {
+
+function CreateService() {
+
+    const [isChecked, setIsChecked] = useState(false);
   const navigation = useNavigation();
-  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+const { getToken } = TokenUserManager();
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+
+  const getCurrentDate=()=>{
+ 
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+
+    //Alert.alert(date + '-' + month + '-' + year);
+    // You can turn it in to your desired format
+    return date + '-' + month + '-' + year;//format: d-m-y;
+}
+
+const { BasicIconImagePicker } = ImagePickerComponent({
+  onComplete: (image) => {
+    if (image)
+      setPostDataDB({
+        ...PostDataDB,
+        avatars: [...PostDataDB.avatars, image],
+      });
+  },
+});
+
+const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
+  onComplete: (image) => {
+    if (image)
+      setPostDataDB({
+        ...PostDataDB,
+        avatars: [...PostDataDB.avatars, image],
+      });
+  },
+});
 
   //api
   const { postData, loading, error, data } = usePostData();
@@ -43,34 +85,15 @@ function CreatePostScreen() {
     setPostDataDB({ ...PostDataDB, [name]: value });
   };
   const [PostDataDB, setPostDataDB] = useState({
-    title: "None",
-    subtitle: "None",
+    name: "None",
     description: "None",
+    active: false,
+    category:"None",
     avatars: [],
+    createdAt: getCurrentDate()
   });
 
-  //image picker and photo
-  const { BasicIconImagePicker } = ImagePickerComponent({
-    onComplete: (image) => {
-      if (image)
-        
-      ({
-          ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
-        });
-    },
-  });
-
-  const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
-    onComplete: (image) => {
-      if (image)
-        setPostDataDB({
-          ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
-        });
-    },
-  });
-
+ 
   //modal and alert
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [successPost, setSuccess] = useState(false);
@@ -78,24 +101,28 @@ function CreatePostScreen() {
 
   const handleConfirm = () => {
     if (
-      !PostDataDB.title ||
-      !PostDataDB.subtitle ||
+      !PostDataDB.name ||
+      !PostDataDB.category ||
       !PostDataDB.description ||
-      !PostDataDB.avatars
+      !PostDataDB.avatars ||
+      !PostDataDB.createdAt||
+      !PostDataDB.active
     ) {
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
-    const url = "/posts";
+    const url = "/admin/services/new-service";
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
     };
     const formData = new FormData();
-    formData.append("title", PostDataDB.title);
-    formData.append("subtitle", PostDataDB.subtitle);
+    formData.append("name", PostDataDB.name);
     formData.append("description", PostDataDB.description);
+    formData.append("active", PostDataDB.active);
+    formData.append("createdAt", PostDataDB.createdAt);
+    formData.append("category", PostDataDB.category);
     PostDataDB.avatars.forEach((image, index) => {
       formData.append("avatars", {
         uri: image.uri,
@@ -109,11 +136,33 @@ function CreatePostScreen() {
         console.log("Error:", error);
         setError(true);
       } else {
-        navigation.navigate("ShowPostsScreen")
+        navigation.navigate("HomeScreen")
         setSuccess(true);
       }
     });
     setShowConfirmationModal(false);
+  };
+
+    useEffect(() => {
+        handleGetData();
+    },);
+
+  const handleGetData = async () => {
+    const url = "/admin/category-services";
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    getData(
+      url,
+      (data) => {
+        if (error && !data) {
+          setErrorPost(true);
+          return;
+        }
+        setDataPost(data);
+      },
+      header
+    );
   };
 
   return (
@@ -133,31 +182,12 @@ function CreatePostScreen() {
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <CustomInTextField
-              label="Titulo"
+              label="Nombre"
               style={styles.input}
-              placeholder="Titulo"
-              value={PostDataDB.title}
-              onChangeText={(text) => handleChange("title", text)}
+              placeholder="Nombre"
+              value={PostDataDB.name}
+              onChangeText={(text) => handleChange("name", text)}
             />
-
-            <View>
-              <View style={styles.imageContainer}>
-                {PostDataDB.avatars.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatars} />
-                )}
-              </View>
-              <BasicIconImagePicker buttonStyle={styles.imgPiker} />
-              <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
-            </View>
-
-            <CustomInTextField
-              label="Subtitulo"
-              style={styles.input}
-              placeholder="Subtitulo"
-              value={PostDataDB.subtitle}
-              onChangeText={(text) => handleChange("subtitle", text)}
-            />
-
             <CustomInTextArea
               label="Descripcion"
               style={styles.inputTextArea}
@@ -165,6 +195,36 @@ function CreatePostScreen() {
               value={PostDataDB.description}
               onChangeText={(text) => handleChange("description", text)}
             />
+
+            <Checkbox.Item
+            label="Activar"
+            status={isChecked ? "checked" : "unchecked"}
+            onPress={handleCheckboxChange}
+            onChangeItem={(active) => handleChange("active",active)}
+          />
+            <DropDownPicker
+                style={styles.select}
+                items={[
+                    { label: 'Choose a category', value: null }, 
+                    handleGetData()
+                  ]}
+                value={PostDataDB.category}
+                containerStyle={{ height: 40 }}
+                onChangeItem={(category) => handleChange("category",category)}
+                >   
+            </DropDownPicker>
+
+            <View>
+              <View style={styles.imageContainer}>
+                {PostDataDB.avatars.length > 0 && (
+                  <CustomCarrousel data={PostDataDB.avatars} />
+                )}
+              </View>
+
+              <BasicIconImagePicker buttonStyle={styles.imgPiker} />
+              <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
+
+            </View>
 
             {errorPost && (
               <CustomErrorBanner
@@ -175,7 +235,7 @@ function CreatePostScreen() {
             )}
 
             <CustomButton
-              text="Enviar"
+              text="Crear"
               onPress={() => setShowConfirmationModal(true)}
               buttonStyle={styles.button}
             />
@@ -189,7 +249,6 @@ function CreatePostScreen() {
             <CustomSuccessAlert
               isVisible={successPost}
               message="Post creado con éxito!!"
-              onConfirm={goToShowPosts}
             />
           </View>
         </View>
@@ -290,4 +349,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePostScreen;
+export default CreateService;
