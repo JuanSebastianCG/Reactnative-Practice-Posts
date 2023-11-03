@@ -71,10 +71,13 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     height: 70,
-    backgroundColor: BasicStylesPage.color1,
+    backgroundColor: BasicStylesPage.color6,
     justifyContent: "space-around",
     alignItems: "center",
+
     paddingHorizontal: 16,
+    width: "95%",
+    marginHorizontal: "2.5%",
     borderRadius: 25,
     position: "relative", // Agrega position:relative para superponer elementos
   },

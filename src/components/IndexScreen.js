@@ -5,6 +5,7 @@ import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import IndexTabbar from "./IndexTabbar";
 
+
 const Stack = createStackNavigator();
 
 const IndexScreen = () => {
@@ -23,18 +24,19 @@ const IndexScreen = () => {
   }, []);
 
   return (
-    <Stack.Navigator
-      initialRouteName="WelcomeScreen"
-      screenOptions={{
-        headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
-        headerStyle:
-          orientation === "portrait"
-            ? styles.headerStylePortrait
-            : styles.headerStyleLandscape,
-      }}>
-      <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-      <Stack.Screen name="IndexTabbar" component={IndexTabbar} />
-    </Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName="WelcomeScreen"
+        screenOptions={{
+          headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
+          headerStyle:
+            orientation === "portrait"
+              ? styles.headerStylePortrait
+              : styles.headerStyleLandscape,
+        }}>
+        <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+        <Stack.Screen name="IndexTabbar" component={IndexTabbar} />
+      </Stack.Navigator>
+
   );
 };
 

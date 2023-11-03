@@ -1,9 +1,8 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, View, Image, TextInput } from "react-native"; // Importa View para crear bordes redondeados
+import { TouchableOpacity, Text, StyleSheet, View, Image,  Button } from "react-native"; // Importa View para crear bordes redondeados
 import BasicStylesPage from "../css_public_Styles/Basic_Style";
 
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "native-base";
 
 const tenueColor2Button = BasicStylesPage.color2 + "80";
 
@@ -22,31 +21,10 @@ const CustomButton = ({ onPress, text, textStyle, buttonStyle }) => {
 };
 
 
-const Logo = (styleLogo) => {
-  const navigation = useNavigation();
-  
-  const primaryStyle = ( styleLogo["styleLogo"] != undefined) ? styleLogo["styleLogo"] : styles.logoContainer;
-  return (
-      <TouchableOpacity onPress={() => navigation.navigate("WelcomeScreen")}  style={primaryStyle}>
-        <Image source={require("../../img/logo.png")} style={styles.logo} />
-      </TouchableOpacity>
-    
-  );
-};
 
-const ErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
 
-  return (
-    <View style={[styles.errorBanner,styleBanner]}>
-      <Text style={[styles.errorText]}>{text}</Text>
-      {buttons}
-      <Button title="OK"  onPress={onChange} style={styles.errorButton} >
-        <Text style={[styles.errorText]}>OK</Text>
-      </Button>
 
-    </View>
-  );
-};
+
 
 
 
@@ -75,20 +53,7 @@ const styles = StyleSheet.create({
     paddingLeft: 19,
     paddingRight: 19,
   },
-  /* logo */
-  logoContainer: {
-    width: 80,
-    height: 80,
-    marginRight: "30%",
-    marginLeft: "2%",
-    marginTop: "5%",
-    resizeMode: 'contain', // Ajusta el modo de redimensionamiento según tus necesidades
 
-  },
-  logo: {
-    width: "100%",
-    height: "100%",
-  },
   /* banner */
   errorBanner: {
     borderWidth: 1,
@@ -105,22 +70,21 @@ const styles = StyleSheet.create({
     zIndex : 1,
 
   },
-  errorButton: {
-    backgroundColor: '#FF000000',
-    
+  errorButtonStyle: {
     paddingLeft: -10,
-    alignContent: "flex-end",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: BasicStylesPage.colorWarning1,
-    borderBottomLeftRadius: 80,
+    borderRadius: 50,
 
 
     height: 45,
     borderRadius: 60,
     marginTop: 10,
+      
   },
 });
 
-
-
-export { CustomButton, Logo , ErrorBanner};
+export { CustomButton};

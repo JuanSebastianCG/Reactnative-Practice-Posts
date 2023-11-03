@@ -1,15 +1,17 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import Tabbar from "./indexComponents/Tabbar";
 import HomeScreen from "./screens/HomeScreen";
 import CamaraScreen from "./screens/CamaraScreen"; 
 import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterSwitchScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
-import ImagePiker from "./screens/ImagePickerScreen";
+import CreateCategoryScreen from "./screens/Category/CreateCategory";
+import { AuthProvider } from "../utils/authManager";
 
 const Stack = createStackNavigator();
 
@@ -27,7 +29,6 @@ function IndexTabbar() {
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
         <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-        <Stack.Screen name="ImagePiker" component={ImagePiker} />
       </Stack.Navigator>
       {/* Superponer el Tabbar de manera absoluta */}
       <View style={styles.tabbarOverlay}>

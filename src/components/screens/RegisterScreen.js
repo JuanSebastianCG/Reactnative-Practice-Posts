@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView, View, StyleSheet, ScrollView, Text } from "react-native";
 /* componentes */
 import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
@@ -10,18 +10,34 @@ import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_Pa
 import { CustomInTextField } from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import { CustomErrorBanner } from "../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { Picker } from "@react-native-picker/picker"; 
 /* utils */
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { usePostData } from "../../utils/useAxios";
 
-function LoginScreen() {
+function RegisterScreen() {
   const navigation = useNavigation();
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
 
+  /* {
+    "name": "Juan Pérez",
+    "email": "admin",
+    "password": "admin",
+    "isUnderage": false,
+    "acceptTerms": true,
+    "typeOfDocument": "DNI",
+    "documentNumber": "12345678"
+}
+ */
   const [userData, setUserData] = useState({
-    email: "test@test.com",
-    password: "user123",
+    name: "",
+    email: "",
+    password: "",
+    isUnderage: true,
+    acceptTerms: true,
+    typeOfDocument: [],
+    documentNumber: "",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -33,22 +49,25 @@ function LoginScreen() {
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
-    const url = "/auth/login";
+    const url = "/users";
     const headers = {
       "Content-Type": "application/json",
     };
     const body = {
+      name: userData.name,
       email: userData.email,
-      current_password: userData.password,
+      password: userData.password,
+      isUnderage: userData.isUnderage,
+      acceptTerms: userData.acceptTerms,
+      typeOfDocument: userData.typeOfDocument,
+      documentNumber: userData.documentNumber,
     };
     postData(url, headers, body, (response) => {
       if (error || !response) {
         setLoginError(true);
       } else {
-        const accessToken = response.data.access;
-        console.log("accessToken", accessToken);
-        saveToken(accessToken);
-        navigation.navigate("HomeScreen");
+        console.log(response);
+        navigation.navigate("LoginScreen");
       }
     });
   };
@@ -75,9 +94,15 @@ function LoginScreen() {
           <View style={styles.fieldContainer}>
             <Stack spacing={16}>
               <CustomInTextField
+                label="Nombre"
+                style={styles.input}
+                value={userData.name}
+                onChangeText={(text) => handleChange("name", text)}
+              />
+
+              <CustomInTextField
                 label="Email"
                 style={styles.input}
-                placeholder="Email"
                 value={userData.email}
                 onChangeText={(text) => handleChange("email", text)}
               />
@@ -85,9 +110,28 @@ function LoginScreen() {
               <CustomInTextField
                 label="Password"
                 style={styles.input}
-                placeholder="Password"
                 value={userData.password}
                 onChangeText={(text) => handleChange("password", text)}
+              />
+
+              <View style={styles.input}>
+                <Text>Tipo de documento</Text>
+                <Picker
+                  selectedValue={userData.typeOfDocument}
+                  onValueChange={(itemValue, itemIndex) =>
+                    handleChange("typeOfDocument", itemValue)
+                  }>
+                  <Picker.Item label="DNI" value="DNI" />
+                  <Picker.Item label="Pasaporte" value="Pasaporte" />
+                  {/* Agrega más tipos de documentos según tus necesidades */}
+                </Picker>
+              </View>
+
+              <CustomInTextField
+                label="Número de documento"
+                style={styles.input}
+                value={userData.documentNumber}
+                onChangeText={(text) => handleChange("documentNumber", text)}
               />
             </Stack>
             {loginError && (
@@ -137,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
     borderRadius: 60,
     width: "85%",
-    height: "55%",
+    height: "80%",
     marginBottom: "30%",
     marginTop: 20,
     paddingTop: 40,
@@ -172,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

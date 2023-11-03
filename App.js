@@ -2,12 +2,12 @@ import { StyleSheet, StatusBar, View } from "react-native";
 import React from "react";
 import Index from "./src/components/IndexScreen";
 import { NavigationContainer } from "@react-navigation/native";
-import { NativeBaseProvider } from "native-base"; 
+
 
 
 export default function App() {
   return (
-    <NativeBaseProvider>
+
       <NavigationContainer>
         <View style={styles.headerStyle}>
           <StatusBar
@@ -16,9 +16,9 @@ export default function App() {
             translucent={true} // Hace que el encabezado sea translúcido (opcional)
           />
         </View>
-        <Index />
+        <Index/>
       </NavigationContainer>
-    </NativeBaseProvider>
+  
   );
 }
 
