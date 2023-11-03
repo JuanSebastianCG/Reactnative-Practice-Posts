@@ -91,11 +91,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   logoContainer: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    right: 0,
     top: 0,
+    left: 0,
   },
   scrollContent: {
     alignItems: "center",
