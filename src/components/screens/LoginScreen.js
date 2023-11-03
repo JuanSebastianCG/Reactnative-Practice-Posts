@@ -20,8 +20,8 @@ function LoginScreen() {
   const { postData, loading, error } = usePostData();
 
   const [userData, setUserData] = useState({
-    email: "",
-    password: "",
+    email: "test@test.com",
+    password: "user123",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -33,19 +33,20 @@ function LoginScreen() {
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
-    const url = "/users/login";
+    const url = "/auth/login";
     const headers = {
       "Content-Type": "application/json",
     };
     const body = {
       email: userData.email,
-      password: userData.password,
+      current_password: userData.password,
     };
     postData(url, headers, body, (response) => {
       if (error || !response) {
         setLoginError(true);
       } else {
         const accessToken = response.data.access;
+        console.log("accessToken", accessToken);
         saveToken(accessToken);
         navigation.navigate("HomeScreen");
       }
