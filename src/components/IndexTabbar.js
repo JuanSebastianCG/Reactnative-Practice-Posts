@@ -30,15 +30,20 @@ function IndexTabbar() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
-          <Stack.Screen name="ShowServicesScreen" component={ShowServicesScreen} />
-          <Stack.Screen name="ShowCategoryScreen" component={ShowCategoryScreen} />
+          <Stack.Screen
+            name="ShowServicesScreen"
+            component={ShowServicesScreen}
+          />
+          <Stack.Screen
+            name="ShowCategoryScreen"
+            component={ShowCategoryScreen}
+          />
 
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
         </Stack.Navigator>
         {/* Superponer el Tabbar de manera absoluta */}
-        <View style={styles.tabbarOverlay}>
-          <Tabbar />
-        </View>
+
+        <Tabbar />
         <View style={styles.sideBarOverlay}>
           <Sidebar />
         </View>
@@ -48,18 +53,10 @@ function IndexTabbar() {
 }
 
 const styles = StyleSheet.create({
-  tabbarOverlay: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-
   sideBarOverlay: {
     position: "absolute",
     left: 0,
     top: "50%",
-    
   },
 });
 
