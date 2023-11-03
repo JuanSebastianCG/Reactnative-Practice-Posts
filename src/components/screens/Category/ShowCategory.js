@@ -6,8 +6,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Image
-
+  Image,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import {
@@ -35,7 +34,15 @@ function ShowCategoryScreen() {
 
   useEffect(() => {
     handleGetData();
-  }, [dataPost]);
+    const intervalId = setInterval(() => {
+      handleGetData();
+    }, 5000);
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, []);
 
   const handleError = () => {
     setErrorPost(false);
@@ -44,6 +51,8 @@ function ShowCategoryScreen() {
 
   /* [{"_id":"653dbc450368d11e0cf289c6","nameCategoryService":"Construcción y adecuación","descriptionCategoryService":"Construcción y adecuación","active":true,"avatar":"uploads/categoryServices/1698544706791-pexels-james-frid-901941.jpg","__v":0},{"_id":"653dbc790368d11e0cf289cb","nameCategoryService":"Suministro e instalación","descriptionCategoryService":"Suministro e instalación","active":true,"avatar":"uploads/categoryServices/1698544761304-pexels-photo-7568422.jpeg","__v":0},{"_id":"653dbcbd0368d11e0cf289d0","nameCategoryService":"Redes de frio y refrigeración","descriptionCategoryService":"Redes de frio y refrigeración","active":true,"avatar":"uploads/categoryServices/1698544829132-im2.jpg","__v":0},{"_id":"654504020368d11e0cf4c0a7","nameCategoryService":"Gt prueba","descriptionCategoryService":"Mto","active":true,"avatar":"uploads/categoryServices/1699021826089-1b096120-df65-4841-b6a2-bbac10c1842b.jpeg","__v":0}] */
   const handleGetData = async () => {
+    if (loading) return;
+    
     const url = "/admin/category-services";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -65,13 +74,7 @@ function ShowCategoryScreen() {
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
-    deleteData(
-      url,
-      (data) => {
-        console.log("data:", data);
-      },
-      header
-    );
+    deleteData(url, (data) => {}, header);
   };
 
   return (
@@ -115,8 +118,7 @@ function Card({ Category, handleDelete }) {
           navigation.navigate("ShowServicesScreen", {
             Category,
           })
-        }
-      >
+        }>
         <View style={styleCard.contentContainer}>
           <View style={styleCard.ImageContainer}>
             <Image
@@ -127,7 +129,9 @@ function Card({ Category, handleDelete }) {
             />
           </View>
           <View style={styleCard.descriptionContainer}>
-            <Text style={styleCard.cardText}>{Category.nameCategoryService}</Text>
+            <Text style={styleCard.cardText}>
+              {Category.nameCategoryService}
+            </Text>
             <Text style={styleCard.descriptionText}>
               {Category.descriptionCategoryService}
             </Text>
@@ -194,7 +198,6 @@ const styleCard = StyleSheet.create({
     fontSize: 16, // Ajusta el tamaño de la fuente de la descripción
   },
 });
-
 
 const styles = StyleSheet.create({
   mainContainer: {

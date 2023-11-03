@@ -19,6 +19,11 @@ import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Styl
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import {
+  CustomShowMultipleTag,
+  CustomTag,
+} from "../../../public_styles/component_public_Styles/Basic_Components_F";
 
 function ShowServicesScreen() {
   const [errorPost, setErrorPost] = useState(false);
@@ -33,15 +38,24 @@ function ShowServicesScreen() {
 
   useEffect(() => {
     handleGetData();
-  }, [dataPost]);
+    const intervalId = setInterval(() => {
+      handleGetData();
+    }, 5000);
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, []);
 
   const handleError = () => {
     setErrorPost(false);
     gotToLogin();
   };
 
-  /* [{"_id":"653dbc450368d11e0cf289c6","nameCategoryService":"Construcción y adecuación","descriptionCategoryService":"Construcción y adecuación","active":true,"avatar":"uploads/categoryServices/1698544706791-pexels-james-frid-901941.jpg","__v":0},{"_id":"653dbc790368d11e0cf289cb","nameCategoryService":"Suministro e instalación","descriptionCategoryService":"Suministro e instalación","active":true,"avatar":"uploads/categoryServices/1698544761304-pexels-photo-7568422.jpeg","__v":0},{"_id":"653dbcbd0368d11e0cf289d0","nameCategoryService":"Redes de frio y refrigeración","descriptionCategoryService":"Redes de frio y refrigeración","active":true,"avatar":"uploads/categoryServices/1698544829132-im2.jpg","__v":0},{"_id":"654504020368d11e0cf4c0a7","nameCategoryService":"Gt prueba","descriptionCategoryService":"Mto","active":true,"avatar":"uploads/categoryServices/1699021826089-1b096120-df65-4841-b6a2-bbac10c1842b.jpeg","__v":0}] */
   const handleGetData = async () => {
+    if (loading) return;
+    
     const url = "/admin/services";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -98,7 +112,6 @@ function ShowServicesScreen() {
               handleDelete={handleDelete}
             />
           ))}
-
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
@@ -110,22 +123,137 @@ function ShowServicesScreen() {
   );
 }
 
-[{"_id":"653dbb290368d11e0cf289ac","name":"Construcción, mantenimiento y reparación de maquinaria industrial y obras civiles.","description":"Construcción, mantenimiento y reparación de maquinaria industrial y obras civiles.","active":true,"categoryService":"Obra civil y mantenimiento","photos":["uploads/services/pqwfCAROdBFeryzNgzYcS4ll.jpeg","uploads/services/JhhMIUvjLYEbBga1ipCf_VTS.jpg"],"createdAt":"2023-10-29T01:53:45.209Z","__v":0}]
 function Card({ Service, handleDelete }) {
-  console.log("Service", Service);
-  
   return (
-  <View>
+    <View style={styleCard.card} key={Service._id}>
+      <Svg width="400" height="500" style={styleCard.cardCircle}>
+        <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
+      </Svg>
+      <View style={styleCard.cardHeader}>
+        <CustomCarrousel data={Service.photos} width={330} height={190} />
 
-    
+        <View style={styleCard.titleHeader}>
+          <Text style={styleCard.title}>{Service.name}</Text>
+        </View>
+      </View>
+      <View style={styleCard.cardBody}>
+        <TouchableOpacity
+          style={styleCard.deleteButton}
+          onPress={() => handleDelete(Service._id)}>
+          <Icon name="trash-can" size={40} />
+        </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styleCard.editButton}
+          onPress={() => handleDelete(Service._id)}>
+          <Icon name="pencil" size={40} />
+        </TouchableOpacity>
 
-
-  </View>
+        <Text style={styleCard.subtitle}>{Service.subtitle}</Text>
+        <Text style={styleCard.description}>{Service.description}</Text>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 10,
+            right: 10,
+            marginTop: 10,
+          }}>
+          <CustomTag text={Service.categoryService} />
+        </View>
+      </View>
+    </View>
   );
 }
 
-
+const styleCard = StyleSheet.create({
+  card: {
+    marginBottom: 10,
+    marginLeft: "2%",
+    width: "96%",
+    borderRadius: 10,
+    backgroundColor: BasicStylesPage.color3 + 60,
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+  },
+  cardHeader: {
+    padding: 10,
+    flexDirection: "row",
+    borderTopColor: BasicStylesPage.color4 + 90,
+    borderTopWidth: 4,
+    borderBottomColor: BasicStylesPage.color4 + 90,
+    borderBottomWidth: 4,
+    height: 200,
+  },
+  cardCircle: {
+    position: "absolute",
+    alignSelf: "center",
+  },
+  titleHeader: {
+    backgroundColor: BasicStylesPage.color6 + 99,
+    position: "absolute",
+    marginTop: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    alignItems: "flex-start",
+    width: 220,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: BasicStylesPage.color3,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: BasicStylesPage.color1,
+    fontStyle: "italic",
+  },
+  description: {
+    fontSize: 14,
+    color: BasicStylesPage.color5,
+  },
+  cardBody: {
+    padding: 10,
+    marginTop: 10,
+    height: 130,
+    borderBottomColor: BasicStylesPage.color2,
+    borderBottomWidth: 4,
+    borderLeftColor: BasicStylesPage.color2,
+    borderLeftWidth: 4,
+    borderRightColor: BasicStylesPage.color2,
+    borderRightWidth: 4,
+    borderRadius: 10,
+  },
+  deleteButton: {
+    position: "absolute",
+    top: -35,
+    right: 80,
+    width: 50,
+    height: 50,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginBottom: 70,
+  },
+  editButton: {
+    position: "absolute",
+    top: -39,
+    right: 15,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginBottom: 70,
+  },
+});
 
 const styles = StyleSheet.create({
   mainContainer: {
