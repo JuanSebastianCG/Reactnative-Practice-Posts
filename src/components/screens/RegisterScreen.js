@@ -62,7 +62,6 @@ function RegisterScreen() {
       typeOfDocument: userData.typeOfDocument,
       documentNumber: userData.documentNumber,
     };
-    console.log(body);
     postData(url, headers, body, (response) => {
       if (error || !response) {
         setLoginError(true);

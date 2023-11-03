@@ -29,13 +29,15 @@ import {
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import { TokenUserManager } from "../../../utils/asyncStorage";
 
 function CreatePostScreen() {
   const navigation = useNavigation();
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+  const { getToken } = TokenUserManager();
 
   //api
-  const { postData, loading, error, data } = usePostData();
+  const { postData,  error  } = usePostData();
 
   const handleChange = (name, value) => {
     setPostDataDB({ ...PostDataDB, [name]: value });
@@ -85,10 +87,13 @@ function CreatePostScreen() {
       return;
     }
     const url = "/posts";
+    const token =  async () => await getToken()
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
+       Authorization: `Bearer ${token}`,
     };
+    
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
@@ -100,12 +105,14 @@ function CreatePostScreen() {
         type: image.type,
       });
     });
+    console.log("formData:", formData);
 
     postData(url, headers, formData, (data) => {
       if (error || !data) {
         console.log("Error:", error);
         setError(true);
       } else {
+        console.log("Data:", data);
         navigation.navigate("ShowPostsScreen");
         setSuccess(true);
       }
