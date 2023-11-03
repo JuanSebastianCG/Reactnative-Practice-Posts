@@ -178,7 +178,7 @@ const styleBody = {
     flex: 1,
     backgroundColor: BasicStylesPage.color3,
     paddingTop: 20,
-    height: height *  2,
+    height: height *  0.6,
   },
   sidebarItem: {
     flexDirection: "row",
@@ -255,7 +255,7 @@ const styles = {
     width: 70,
   },
   scrollView: {
-    maxHeight: height * 0.6,
+    maxHeight: height * 0.65,
     marginTop: 10,
     
     
