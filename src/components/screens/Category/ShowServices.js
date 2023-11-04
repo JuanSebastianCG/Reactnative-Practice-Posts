@@ -17,7 +17,6 @@ import { TokenUserManager } from "../../../utils/asyncStorage";
 
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
 import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
 import {
@@ -26,22 +25,28 @@ import {
   CustomTag,
 } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 
+import { useNavigation, useRoute } from "@react-navigation/native";
+
 function ShowServicesScreen() {
   const { getToken } = TokenUserManager();
-  const [errorPost, setErrorPost] = useState(false);
   const { getData, loading, error } = useGetData();
-  const { deleteData, loadingDelete, errorDelete, dataDelete } =
-    useDeleteData();
+  const { deleteData, loadingDelete } = useDeleteData();
 
-  const navigation = useNavigation();
-  const gotToLogin = () => navigation.navigate("LoginScreen");
   const [dataPost, setDataPost] = useState([]);
   const [dataPostCategories, setDataPostCategories] = useState([]);
 
-  const [filterCategories, setFilterCategories] = useState([]);
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const [categoryName, setCategoryName] = useState(route.params?.categoryName);
+  const [filterCategories, setFilterCategories] = useState(
+    categoryName != undefined ? [categoryName] : []
+  );
+
+  const [errorPost, setErrorPost] = useState(false);
+  const gotToLogin = () => navigation.navigate("LoginScreen");
 
   useEffect(() => {
-    console.log(filterCategories);
     handleGetData();
     handleGetDataCategories();
     const intervalId = setInterval(() => {

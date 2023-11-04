@@ -107,6 +107,7 @@ const CustomShowMultipleTag = ({ tags, handleDelete, style }) => {
       {tags.map((tag) => (
         <CustomTag
           text={tag}
+          key={tag}
           onPress={() => handleDelete(tag)}
           deleteMode={true}
         />
