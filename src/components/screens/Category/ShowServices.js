@@ -144,6 +144,7 @@ function ShowServicesScreen() {
                   setFilterCategories([...filterCategories, item]);
                 }
               }}
+              showLastSelected={false}
             />
           </View>
           <CustomShowMultipleTag

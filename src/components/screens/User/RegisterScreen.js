@@ -116,15 +116,15 @@ function RegisterScreen() {
 
               <CustomDropDown
                 label="Tipo de documento"
-                style={styles.inputDropDown}
                 value={userData.typeOfDocument}
                 items={[ 
                   "DNI",
                   "Pasaporte",
                   "Carnet de conducir",
                   "Carnet de identidad",]}
-            
-                onValueChange={(value) => handleChange("typeOfDocument", value)}
+                generalStyle={styles.generalDropDown}
+                onItemSlected={(item) => handleChange("typeOfDocument", item)}
+                placeholder={"Documento"}
               />
                 
 
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
-    width: 190,
+    width: 200,
   },
   button: {
     padding: 10,
@@ -218,6 +218,15 @@ const styles = StyleSheet.create({
   inputDropDown: {
     marginBottom: 16,
     width: 190,
+  },
+  generalDropDown: {
+   /*  backgroundColor: BasicStylesPage.color2, */
+   width: 200,
+   height: 50,
+   top: 10,
+   marginBottom: 16,
+   
+   
   },
 });
 

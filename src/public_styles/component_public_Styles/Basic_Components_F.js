@@ -141,20 +141,23 @@ const stylesTag = StyleSheet.create({
     color: BasicStylesPage.color0,
   },
 });
-/*  */
+/* ====================================CustomDropDown=============================== */
 const CustomDropDown = ({
-  label,
+  placeholder,
   icon,
   items,
-  style,
-  width,
-  height,
+  styleLogo,
+  generalStyle,
+  itmeStyle,
+  fontInputStyle,
   onItemSlected,
+  showLastSelected = true,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [filterText, setFilterText] = useState("");
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const inputRef = useRef(null);
+  const [lastSelected, setLastSelected] = useState(null);
 
   const toggleModal = () => setModalOpen(!isModalOpen);
   const closeSidebar = () => setModalOpen(false);
@@ -162,7 +165,10 @@ const CustomDropDown = ({
   const updateModalPosition = () => {
     if (inputRef.current) {
       inputRef.current.measureInWindow((x, y, inputWidth, inputHeight) => {
-        setModalPosition({ top: y + inputHeight - 70, left: x });
+        setModalPosition({
+          top: y + inputHeight - (generalStyle && generalStyle.height) || 40,
+          left: x,
+        });
       });
     }
   };
@@ -171,23 +177,99 @@ const CustomDropDown = ({
     if (isModalOpen) updateModalPosition();
   }, [isModalOpen]);
 
+  const stylesDropdown = {
+    logo: {
+      borderRadius: 30,
+      width: (generalStyle && generalStyle.width) || 300,
+      backgroundColor: BasicStylesPage.color6,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    modal: {
+      position: "absolute",
+      maxHeight: 200,
+      zIndex: 1,
+      borderRadius: 10,
+      width: (generalStyle && generalStyle.width) || 300,
+    },
+    inputContainer: {
+      backgroundColor:
+        (generalStyle && generalStyle.backgroundColor) ||
+        BasicStylesPage.color6,
+      borderRadius: 30,
+      flexDirection: "row",
+      height: (generalStyle && generalStyle.height) || 50,
+    },
+    scrollView: {
+      marginTop: 4,
+      marginLeft: 10,
+      marginRight: 10,
+    },
+    item: {
+      padding: 15,
+      borderStyle: "solid",
+      borderLeftWidth: 5,
+      backgroundColor:
+        (itmeStyle && itmeStyle.backgroundColor) || BasicStylesPage.color6,
+      borderLeftColor:
+        (itmeStyle && itmeStyle.borderLeftColor) || BasicStylesPage.color2,
+      margin: 2,
+      borderRadius: 15,
+    },
+    input: {
+      position: "absolute",
+      backgroundColor: "rgba(0,0,0,0.0)",
+      width: (generalStyle && generalStyle.width - 80) || 220,
+      height: (generalStyle && generalStyle.height) || 50,
+      left: 50,
+      bottom: 5,
+    },
+    text: {
+      fontSize: 16,
+      color: (itmeStyle && itmeStyle.color) || BasicStylesPage.color2,
+    },
+    modalOverlay: {
+      flex: 1,
+    },
+    placeholder: {
+      color: (fontInputStyle && fontInputStyle.color) || BasicStylesPage.color2,
+      fontSize: (fontInputStyle && fontInputStyle.fontSize) || 18,
+      /* put to width of input */
+      width: (generalStyle && generalStyle.width - 100) || 200,
+      marginLeft: 10,
+    },
+  };
+
   return (
-    <View style={{ flexDirection: "row", ...style }}>
+    <View
+      style={{
+        flexDirection: "row",
+        ...generalStyle,
+        backgroundColor: "rgba(0,0,0,0.0)",
+      }}>
       <TouchableOpacity
         ref={inputRef}
         onPress={toggleModal}
         style={stylesDropdown.logo}>
         <MaterialCommunityIcons
-          name={icon}
-          color={BasicStylesPage.color2}
+          name={(icon && icon) || "magnify"}
+          color={
+            (styleLogo && styleLogo.BackgroundColor) || BasicStylesPage.color2
+          }
           size={50}
         />
+        <Text style={stylesDropdown.placeholder}>
+          {(lastSelected && lastSelected) ||
+            (placeholder && placeholder) ||
+            "Search..."}
+        </Text>
       </TouchableOpacity>
 
       <Modal
         transparent={true}
         visible={isModalOpen}
-        onRequestClose={closeSidebar}>
+        onRequestClose={closeSidebar}
+        animationType="fade">
         <View
           style={[
             stylesDropdown.modal,
@@ -195,17 +277,22 @@ const CustomDropDown = ({
           ]}>
           <View style={stylesDropdown.inputContainer}>
             <MaterialCommunityIcons
-              name={icon}
-              color={BasicStylesPage.color2}
+              name={(icon && icon) || "magnify"}
+              color={
+                (styleLogo && styleLogo.BackgroundColor) ||
+                BasicStylesPage.color2
+              }
               size={50}
             />
             <TextInput
-              placeholder={label}
-              style={stylesDropdown.input}
+              style={[stylesDropdown.input, fontInputStyle]}
               value={filterText}
               onChangeText={(text) => setFilterText(text)}
-              textColor={BasicStylesPage.color2}
-              placeholderTextColor={BasicStylesPage.color2}
+              textColor={
+                (fontInputStyle && fontInputStyle.color) ||
+                BasicStylesPage.color2
+              }
+              
             />
           </View>
           <ScrollView style={stylesDropdown.scrollView}>
@@ -217,6 +304,7 @@ const CustomDropDown = ({
                 <TouchableOpacity
                   style={stylesDropdown.item}
                   onPress={() => {
+                    if (showLastSelected) setLastSelected(item);
                     onItemSlected(item);
                     closeSidebar();
                   }}
@@ -232,54 +320,6 @@ const CustomDropDown = ({
       </Modal>
     </View>
   );
-};
-
-const stylesDropdown = {
-  logo: {
-    backgroundColor: BasicStylesPage.color6,
-    borderRadius: 30,
-    width: 300,
-    padding: 10,
-  },
-  modal: {
-    position: "absolute",
-    maxHeight: 300,
-    zIndex: 1,
-    borderRadius: 10,
-    width: 300,
-  },
-  inputContainer: {
-    backgroundColor: BasicStylesPage.color6,
-    padding: 10,
-    borderRadius: 30,
-    flexDirection: "row",
-  },
-  scrollView: {
-    marginTop: 4,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  item: {
-    padding: 15,
-    backgroundColor: BasicStylesPage.color6,
-    borderStyle: "solid",
-    borderLeftWidth: 5,
-    borderLeftColor: BasicStylesPage.color2,
-    margin: 2,
-    borderRadius: 15,
-  },
-  input: {
-    backgroundColor: "rgba(0,0,0,0.0)",
-    fontSize: 16,
-    width: "70%",
-  },
-  text: {
-    fontSize: 16,
-    color: BasicStylesPage.color2,
-  },
-  modalOverlay: {
-    flex: 1,
-  },
 };
 
 export { CustomButton, CustomTag, CustomShowMultipleTag, CustomDropDown };
