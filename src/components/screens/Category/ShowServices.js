@@ -13,7 +13,7 @@ import {
   useDeleteData,
   basicEndpoint,
 } from "../../../utils/useAxios";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+/* import { TokenUserManager } from "../../../utils/asyncStorage"; */
 
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -28,7 +28,6 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 function ShowServicesScreen() {
-  const { getToken } = TokenUserManager();
   const { getData, loading, error } = useGetData();
   const { deleteData, loadingDelete } = useDeleteData();
 
@@ -65,62 +64,49 @@ function ShowServicesScreen() {
   const handleGetDataCategories = async () => {
     if (loading) return;
     const url = "/admin/category-services";
-    const header = {
-      Authorization: `Bearer ${await getToken()}`,
-    };
-    getData(
-      url,
-      (data) => {
-        if (error && !data) {
-          setErrorPost(true);
-          return;
-        }
-        newData = [];
-        data = data.map((item) => {
-          newData.push(item.nameCategoryService);
-        });
-        setDataPostCategories(newData);
-      },
-      header
-    );
+
+    getData(url, (data) => {
+      if (error && !data) {
+        setErrorPost(true);
+        return;
+      }
+      newData = [];
+      data = data.map((item) => {
+        newData.push(item.nameCategoryService);
+      });
+      setDataPostCategories(newData);
+    });
   };
 
   const handleGetData = async () => {
     if (loading) return;
     const url = "/admin/services";
-    const header = {
-      Authorization: `Bearer ${await getToken()}`,
-    };
-    getData(
-      url,
-      (data) => {
-        if (error && !data) {
-          setErrorPost(true);
-          return;
-        }
-        if (filterCategories.length > 0) {
-          data = data.filter((item) =>
-            filterCategories.includes(item.categoryService)
-          );
-        }
+    getData(url, (data) => {
+      if (error && !data) {
+        setErrorPost(true);
+        return;
+      }
+      if (filterCategories.length > 0) {
+        data = data.filter((item) =>
+          filterCategories.includes(item.categoryService)
+        );
+      }
 
-        for (let i = 0; i < data.length; i++) {
-          uri = `${basicEndpoint}/${data[i].avatar}`;
-          data[i].photos = data[i].photos.map((avatar) => {
-            return { uri: `${basicEndpoint}/${avatar}` };
-          });
-        }
-        setDataPost(data);
-      },
-      header
-    );
+      for (let i = 0; i < data.length; i++) {
+        uri = `${basicEndpoint}/${data[i].avatar}`;
+        data[i].photos = data[i].photos.map((avatar) => {
+          return { uri: `${basicEndpoint}/${avatar}` };
+        });
+      }
+      setDataPost(data);
+    });
   };
   const handleDelete = async (id) => {
     const url = `/data/${id}`;
-    const header = {
+    /*     const header = {
       Authorization: `Bearer ${await getToken()}`,
-    };
-    deleteData(url, (data) => {}, header);
+    }; */
+    deleteData(url, (data) => {});
   };
 
   /* ==============================Vista============================== */
