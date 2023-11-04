@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   View,
-  Image,
-  Button,
+  Animated,
+  Modal,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native"; // Importa View para crear bordes redondeados
 import BasicStylesPage from "../css_public_Styles/Basic_Style";
-
-import { useNavigation } from "@react-navigation/native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { Dimensions } from "react-native";
+import { TextInput } from "react-native-paper";
+const { width, height } = Dimensions.get("window");
 
 const tenueColor2Button = BasicStylesPage.color2 + "99";
 
@@ -80,21 +84,32 @@ const styles = StyleSheet.create({
   },
 });
 
-const CustomTag = ({ text, onPress }) => {
+const CustomTag = ({ text, onPress, deleteMode = false }) => {
   return (
     <View style={stylesTag.tag}>
       <TouchableOpacity style={stylesTag.tagButton} onPress={onPress}>
         <Text style={stylesTag.tagText}>{text}</Text>
+        {deleteMode && (
+          <MaterialCommunityIcons
+            name="close"
+            color={BasicStylesPage.color0}
+            size={20}
+          />
+        )}
       </TouchableOpacity>
     </View>
   );
 };
 
-const CustomShowMultipleTag = ({ tags }) => {
+const CustomShowMultipleTag = ({ tags, handleDelete, style }) => {
   return (
-    <View style={stylesTag.container}>
+    <View style={[stylesTag.container, style]}>
       {tags.map((tag) => (
-        <CustomTag text={tag} onPress={() => {}} />
+        <CustomTag
+          text={tag}
+          onPress={() => handleDelete(tag)}
+          deleteMode={true}
+        />
       ))}
     </View>
   );
@@ -102,15 +117,14 @@ const CustomShowMultipleTag = ({ tags }) => {
 
 const stylesTag = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
     marginTop: 10,
-    marginBottom: 10,
+    flexDirection: "row", // Establecer el flujo de fila
+    flexWrap: "wrap", // Permitir que los elementos se envuelvan a la siguiente línea
   },
   tag: {
     margin: 5,
     backgroundColor: BasicStylesPage.color4 + 40,
-    borderRadius: 10,    
+    borderRadius: 10,
     alignSelf: "flex-start",
   },
   tagButton: {
@@ -123,7 +137,148 @@ const stylesTag = StyleSheet.create({
     color: BasicStylesPage.color1,
     fontSize: 16,
     fontWeight: "bold",
+    color: BasicStylesPage.color0,
   },
 });
 
-export { CustomButton, CustomTag, CustomShowMultipleTag };
+const CustomDropDown = ({
+  label,
+  icon,
+  items,
+  style,
+  width,
+  height,
+  onItemSlected,
+}) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [filterText, setFilterText] = useState("");
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const inputRef = useRef(null);
+
+  const toggleModal = () => setModalOpen(!isModalOpen);
+  const closeSidebar = () => setModalOpen(false);
+
+  const updateModalPosition = () => {
+    if (inputRef.current) {
+      inputRef.current.measureInWindow((x, y, inputWidth, inputHeight) => {
+        setModalPosition({ top: y + inputHeight - 70, left: x });
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) updateModalPosition();
+  }, [isModalOpen]);
+
+  return (
+    <View style={{ flexDirection: "row", ...style }}>
+      <TouchableOpacity
+        ref={inputRef}
+        onPress={toggleModal}
+        style={stylesDropdown.logo}>
+        <MaterialCommunityIcons
+          name={icon}
+          color={BasicStylesPage.color2}
+          size={50}
+        />
+      </TouchableOpacity>
+
+      <Modal
+        transparent={true}
+        visible={isModalOpen}
+        onRequestClose={closeSidebar}>
+        <View
+          style={[
+            stylesDropdown.modal,
+            { top: modalPosition.top, left: modalPosition.left },
+          ]}>
+          <View style={stylesDropdown.inputContainer}>
+            <MaterialCommunityIcons
+              name={icon}
+              color={BasicStylesPage.color2}
+              size={50}
+            />
+            <TextInput
+              placeholder={label}
+              style={stylesDropdown.input}
+              value={filterText}
+              onChangeText={(text) => setFilterText(text)}
+              textColor={BasicStylesPage.color2}
+              placeholderTextColor={BasicStylesPage.color2}
+            />
+          </View>
+          <ScrollView style={stylesDropdown.scrollView}>
+            {items
+              .filter((item) =>
+                item.toLowerCase().includes(filterText.toLowerCase())
+              )
+              .map((item, index) => (
+                <TouchableOpacity
+                  style={stylesDropdown.item}
+                  onPress={() => {
+                    onItemSlected(item);
+                    closeSidebar();
+                  }}
+                  key={index}>
+                  <Text style={stylesDropdown.text}>{item}</Text>
+                </TouchableOpacity>
+              ))}
+          </ScrollView>
+        </View>
+        <TouchableWithoutFeedback onPress={closeSidebar}>
+          <View style={stylesDropdown.modalOverlay} />
+        </TouchableWithoutFeedback>
+      </Modal>
+    </View>
+  );
+};
+
+const stylesDropdown = {
+  logo: {
+    backgroundColor: BasicStylesPage.color6,
+    borderRadius: 30,
+    width: 300,
+    padding: 10,
+  },
+  modal: {
+    position: "absolute",
+    maxHeight: 300,
+    zIndex: 1,
+    borderRadius: 10,
+    width: 300,
+  },
+  inputContainer: {
+    backgroundColor: BasicStylesPage.color6,
+    padding: 10,
+    borderRadius: 30,
+    flexDirection: "row",
+  },
+  scrollView: {
+    marginTop: 4,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  item: {
+    padding: 15,
+    backgroundColor: BasicStylesPage.color6,
+    borderStyle: "solid",
+    borderLeftWidth: 5,
+    borderLeftColor: BasicStylesPage.color2,
+    margin: 2,
+    borderRadius: 15,
+  },
+  input: {
+    backgroundColor: "rgba(0,0,0,0.0)",
+    fontSize: 16,
+    width: "70%",
+  },
+  text: {
+    fontSize: 16,
+    color: BasicStylesPage.color2,
+  },
+  modalOverlay: {
+    flex: 1,
+  },
+};
+
+export { CustomButton, CustomTag, CustomShowMultipleTag, CustomDropDown };

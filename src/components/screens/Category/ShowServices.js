@@ -21,41 +21,67 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
 import {
+  CustomDropDown,
   CustomShowMultipleTag,
   CustomTag,
 } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 
 function ShowServicesScreen() {
+  const { getToken } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
   const { getData, loading, error } = useGetData();
-  const { getToken } = TokenUserManager();
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
 
   const navigation = useNavigation();
   const gotToLogin = () => navigation.navigate("LoginScreen");
   const [dataPost, setDataPost] = useState([]);
+  const [dataPostCategories, setDataPostCategories] = useState([]);
+
+  const [filterCategories, setFilterCategories] = useState([]);
 
   useEffect(() => {
+    console.log(filterCategories);
     handleGetData();
+    handleGetDataCategories();
     const intervalId = setInterval(() => {
       handleGetData();
+      handleGetDataCategories();
     }, 5000);
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
+      if (intervalId) clearInterval(intervalId);
     };
-  }, []);
+  }, [filterCategories]);
 
   const handleError = () => {
     setErrorPost(false);
     gotToLogin();
   };
+  const handleGetDataCategories = async () => {
+    if (loading) return;
+    const url = "/admin/category-services";
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    getData(
+      url,
+      (data) => {
+        if (error && !data) {
+          setErrorPost(true);
+          return;
+        }
+        newData = [];
+        data = data.map((item) => {
+          newData.push(item.nameCategoryService);
+        });
+        setDataPostCategories(newData);
+      },
+      header
+    );
+  };
 
   const handleGetData = async () => {
     if (loading) return;
-    
     const url = "/admin/services";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -67,6 +93,12 @@ function ShowServicesScreen() {
           setErrorPost(true);
           return;
         }
+        if (filterCategories.length > 0) {
+          data = data.filter((item) =>
+            filterCategories.includes(item.categoryService)
+          );
+        }
+
         for (let i = 0; i < data.length; i++) {
           uri = `${basicEndpoint}/${data[i].avatar}`;
           data[i].photos = data[i].photos.map((avatar) => {
@@ -83,14 +115,10 @@ function ShowServicesScreen() {
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
-    deleteData(
-      url,
-      (data) => {
-        console.log("data", data);
-      },
-      header
-    );
+    deleteData(url, (data) => {}, header);
   };
+
+  /* ==============================Vista============================== */
 
   return (
     <SafeAreaView style={styles.container}>
@@ -98,6 +126,28 @@ function ShowServicesScreen() {
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
+          <View style={styles.inputContainer}>
+            {/* DropDown De categoria */}
+            <CustomDropDown
+              items={dataPostCategories}
+              label={"Categorias"}
+              icon={"magnify"}
+              onItemSlected={(item) => {
+                if (!filterCategories.includes(item)) {
+                  setFilterCategories([...filterCategories, item]);
+                }
+              }}
+            />
+          </View>
+          <CustomShowMultipleTag
+            tags={filterCategories}
+            style={{ marginTop: 20, marginLeft: "5%", marginBottom: 20 }}
+            handleDelete={(item) => {
+              setFilterCategories(
+                filterCategories.filter((tag) => tag !== item)
+              );
+            }}
+          />
           {error && (
             <CustomErrorAlert
               isVisible={true}
@@ -281,11 +331,15 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flexGrow: 1,
     justifyContent: "flex-start",
-    marginTop: 50,
+    marginTop: 10,
     paddingBottom: 150,
   },
   cards: {
     marginBottom: 20,
+  },
+  inputContainer: {
+    marginTop: 30,
+    alignItems: "center",
   },
 });
 
