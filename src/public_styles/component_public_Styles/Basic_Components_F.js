@@ -141,7 +141,7 @@ const stylesTag = StyleSheet.create({
     color: BasicStylesPage.color0,
   },
 });
-
+/*  */
 const CustomDropDown = ({
   label,
   icon,

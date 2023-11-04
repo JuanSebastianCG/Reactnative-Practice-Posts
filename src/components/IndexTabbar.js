@@ -35,6 +35,9 @@ function IndexTabbar() {
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
+            initialParams={{ categoryName:""}}
+            options={({ route }) => ({ title: route.params.categoryName })}
+            
           />
           <Stack.Screen
             name="ShowCategoryScreen"

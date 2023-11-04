@@ -26,7 +26,6 @@ import {
 } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 
 import {
-  useFocusEffect,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
@@ -45,15 +44,8 @@ function ShowServicesScreen() {
   const [errorPost, setErrorPost] = useState(false);
   const gotToLogin = () => navigation.navigate("LoginScreen");
 
-  const [filterCategories, setFilterCategories] = useState([]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("useFocusEffect");
-      setFilterCategories(
-        route.params?.categoryName ? [route.params.categoryName] : []
-      );
-    }, [])
+  const [filterCategories, setFilterCategories] = useState(
+    route.params?.categoryName ? [route.params?.categoryName] : []
   );
 
   useEffect(() => {

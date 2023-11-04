@@ -116,7 +116,7 @@ function Card({ Category, handleDelete }) {
       <TouchableOpacity
         style={styleCard.card}
         onPress={() =>
-          navigation.navigate("ShowServicesScreen", {
+          navigation.replace("ShowServicesScreen", {
             categoryName: Category.nameCategoryService,
           })
         }>

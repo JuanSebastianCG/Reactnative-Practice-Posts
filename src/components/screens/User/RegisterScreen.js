@@ -114,7 +114,7 @@ function RegisterScreen() {
                 onChangeText={(text) => handleChange("password", text)}
               />
 
-              {/* <CustomDropDown
+              <CustomDropDown
                 label="Tipo de documento"
                 style={styles.inputDropDown}
                 value={userData.typeOfDocument}
@@ -125,7 +125,7 @@ function RegisterScreen() {
                   "Carnet de identidad",]}
             
                 onValueChange={(value) => handleChange("typeOfDocument", value)}
-              /> */}
+              />
                 
 
               <CustomInTextField
