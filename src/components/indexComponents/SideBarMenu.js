@@ -49,6 +49,7 @@ const Sidebar = () => {
       closeSidebar();
     }
   }, [isModalOpen]);
+  
 
   return (
     <View style={styles.container}>

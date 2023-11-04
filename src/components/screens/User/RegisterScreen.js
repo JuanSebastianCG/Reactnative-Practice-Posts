@@ -5,7 +5,7 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomButton, CustomDropDown } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
 import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
@@ -114,18 +114,19 @@ function RegisterScreen() {
                 onChangeText={(text) => handleChange("password", text)}
               />
 
-              <View style={styles.input}>
-                <Text>Tipo de documento</Text>
-                <Picker
-                  selectedValue={userData.typeOfDocument}
-                  onValueChange={(itemValue, itemIndex) =>
-                    handleChange("typeOfDocument", itemValue)
-                  }>
-                  <Picker.Item label="DNI" value="DNI" />
-                  <Picker.Item label="Pasaporte" value="Pasaporte" />
-                  {/* Agrega más tipos de documentos según tus necesidades */}
-                </Picker>
-              </View>
+              {/* <CustomDropDown
+                label="Tipo de documento"
+                style={styles.inputDropDown}
+                value={userData.typeOfDocument}
+                items={[ 
+                  "DNI",
+                  "Pasaporte",
+                  "Carnet de conducir",
+                  "Carnet de identidad",]}
+            
+                onValueChange={(value) => handleChange("typeOfDocument", value)}
+              /> */}
+                
 
               <CustomInTextField
                 label="Número de documento"
@@ -213,6 +214,10 @@ const styles = StyleSheet.create({
     borderColor: BasicStylesPage.color0,
     alignItems: "center",
     justifyContent: "center",
+  },
+  inputDropDown: {
+    marginBottom: 16,
+    width: 190,
   },
 });
 
