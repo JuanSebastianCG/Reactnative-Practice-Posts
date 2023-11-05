@@ -148,8 +148,9 @@ const CustomDropDown = ({
   items,
   styleLogo,
   generalStyle,
-  itmeStyle,
+  itemStyle,
   fontInputStyle,
+  generalBorderStyle,
   onItemSlected,
   showLastSelected = true,
 }) => {
@@ -177,11 +178,31 @@ const CustomDropDown = ({
     if (isModalOpen) updateModalPosition();
   }, [isModalOpen]);
 
+  const styleOptional = {
+    InputOptionalStyle: {
+      backgroundColor:
+        (generalStyle && generalStyle.backgroundColor) ||
+        BasicStylesPage.color6,
+      borderWidth: (generalBorderStyle && generalBorderStyle.borderWidth) || 0,
+      borderColor:
+        (generalBorderStyle && generalBorderStyle.borderColor) ||
+        BasicStylesPage.color6,
+      borderRadius:
+        (generalBorderStyle && generalBorderStyle.borderRadius) || 30,
+      padding: (generalBorderStyle && generalBorderStyle.padding) || 0,
+      paddingLeft: (generalBorderStyle && generalBorderStyle.paddingLeft) || 0,
+      paddingRight:
+        (generalBorderStyle && generalBorderStyle.paddingRight) || 0,
+      paddingTop: (generalBorderStyle && generalBorderStyle.paddingTop) || 0,
+      paddingBottom:
+        (generalBorderStyle && generalBorderStyle.paddingBottom) || 0,
+    },
+  };
+
   const stylesDropdown = {
     logo: {
       borderRadius: 30,
       width: (generalStyle && generalStyle.width) || 300,
-      backgroundColor: BasicStylesPage.color6,
       flexDirection: "row",
       alignItems: "center",
     },
@@ -193,10 +214,6 @@ const CustomDropDown = ({
       width: (generalStyle && generalStyle.width) || 300,
     },
     inputContainer: {
-      backgroundColor:
-        (generalStyle && generalStyle.backgroundColor) ||
-        BasicStylesPage.color6,
-      borderRadius: 30,
       flexDirection: "row",
       height: (generalStyle && generalStyle.height) || 50,
     },
@@ -207,26 +224,24 @@ const CustomDropDown = ({
     },
     item: {
       padding: 15,
-      borderStyle: "solid",
-      borderLeftWidth: 5,
+      borderLeftWidth: (itemStyle && itemStyle.borderLeftWidth) || 5,
       backgroundColor:
-        (itmeStyle && itmeStyle.backgroundColor) || BasicStylesPage.color6,
+        (itemStyle && itemStyle.backgroundColor) || BasicStylesPage.color6,
       borderLeftColor:
-        (itmeStyle && itmeStyle.borderLeftColor) || BasicStylesPage.color2,
-      margin: 2,
-      borderRadius: 15,
+        (itemStyle && itemStyle.borderLeftColor) || BasicStylesPage.color2,
+      margin: (itemStyle && itemStyle.margin) || 5,
+      borderRadius: (itemStyle && itemStyle.borderRadius) || 15,
     },
     input: {
-      position: "absolute",
       backgroundColor: "rgba(0,0,0,0.0)",
-      width: (generalStyle && generalStyle.width - 80) || 220,
-      height: (generalStyle && generalStyle.height) || 50,
-      left: 50,
-      bottom: 5,
+      width: (generalStyle && generalStyle.width - 50) || 200,
+      height: (generalStyle && generalStyle.height) || 0,
+      bottom: 2,
+      marginLeft: -10,
     },
     text: {
       fontSize: 16,
-      color: (itmeStyle && itmeStyle.color) || BasicStylesPage.color2,
+      color: (itemStyle && itemStyle.color) || BasicStylesPage.color2,
     },
     modalOverlay: {
       flex: 1,
@@ -234,7 +249,6 @@ const CustomDropDown = ({
     placeholder: {
       color: (fontInputStyle && fontInputStyle.color) || BasicStylesPage.color2,
       fontSize: (fontInputStyle && fontInputStyle.fontSize) || 18,
-      /* put to width of input */
       width: (generalStyle && generalStyle.width - 100) || 200,
       marginLeft: 10,
     },
@@ -250,12 +264,13 @@ const CustomDropDown = ({
       <TouchableOpacity
         ref={inputRef}
         onPress={toggleModal}
-        style={stylesDropdown.logo}>
+        style={[stylesDropdown.logo, styleOptional.InputOptionalStyle]}>
         <MaterialCommunityIcons
           name={(icon && icon) || "magnify"}
           color={
             (styleLogo && styleLogo.BackgroundColor) || BasicStylesPage.color2
           }
+          style={ styleLogo }
           size={50}
         />
         <Text style={stylesDropdown.placeholder}>
@@ -275,7 +290,11 @@ const CustomDropDown = ({
             stylesDropdown.modal,
             { top: modalPosition.top, left: modalPosition.left },
           ]}>
-          <View style={stylesDropdown.inputContainer}>
+          <View
+            style={[
+              stylesDropdown.inputContainer,
+              styleOptional.InputOptionalStyle,
+            ]}>
             <MaterialCommunityIcons
               name={(icon && icon) || "magnify"}
               color={
@@ -292,7 +311,8 @@ const CustomDropDown = ({
                 (fontInputStyle && fontInputStyle.color) ||
                 BasicStylesPage.color2
               }
-              
+              underlineColor="transparent"
+              underlineStyle={{ backgroundColor: "transparent" }}
             />
           </View>
           <ScrollView style={stylesDropdown.scrollView}>
@@ -302,14 +322,15 @@ const CustomDropDown = ({
               )
               .map((item, index) => (
                 <TouchableOpacity
-                  style={stylesDropdown.item}
+                  style={[stylesDropdown.item, itemStyle]}
                   onPress={() => {
                     if (showLastSelected) setLastSelected(item);
                     onItemSlected(item);
                     closeSidebar();
                   }}
                   key={index}>
-                  <Text style={stylesDropdown.text}>{item}</Text>
+                  <Text style={[stylesDropdown.text, { color: (itemStyle && itemStyle.color) || BasicStylesPage.color2 }
+                  ]}>{item}</Text>
                 </TouchableOpacity>
               ))}
           </ScrollView>

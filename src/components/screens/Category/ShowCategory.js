@@ -207,11 +207,11 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 10,
+    bottom: 20,
     right: 15,
     width: 80,
     height: 80,
-    backgroundColor: BasicStylesPage.color4 + 80,
+    backgroundColor: BasicStylesPage.color4 + 70,
     borderRadius: 60,
     alignItems: "center",
     justifyContent: "center",
