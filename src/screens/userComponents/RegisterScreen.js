@@ -35,15 +35,6 @@ function RegisterScreen() {
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
 
-/*   "firstname": "John",
-  "lastname": "Doe",
-  "email": "johndoe@example.com",
-  "current_password": "password123",
-  "role": "user",
-  "active": true,
-  "avatar": "https://example.com/avatar.jpg"
-   */
-
   const [userData, setUserData] = useState({
     firstname: "Juan Sebastian test2",
     lastname: "Cardenas",
@@ -68,20 +59,20 @@ function RegisterScreen() {
     const headers = {
       "Content-Type": "application/json",
     };
-    formData = new FormData();
-    formData.append("firstname", userData.firstname);
-    formData.append("lastname", userData.lastname);
-    formData.append("email", userData.email);
-    formData.append("current_password", userData.password);
-    formData.append("role", userData.role);
-    formData.append("active", userData.active);
-    formData.append("avatar", userData.avatar);
-    console.log(formData);
+    const formData = {
+      firstname: userData.firstname,
+      lastname: userData.lastname,
+      email: userData.email,
+      current_password: userData.password,
+      role: userData.role,
+      active: userData.active,
+      avatar: userData.avatar,
+    };
+
 
     postData(url,formData, headers , (response) => {
-      
-      console.log(response);
-      console.log(error);
+      console.log("response", response);
+      console.log("error", error);
       if (error || !response) {
         setLoginError(true);
       } else {
@@ -139,9 +130,6 @@ function RegisterScreen() {
                 value={userData.password}
                 onChangeText={(text) => handleChange("current_password", text)}
               />
-
-
-
 
               <CustomCheckBox
                 label="he leído y acepto los términos y condiciones"
