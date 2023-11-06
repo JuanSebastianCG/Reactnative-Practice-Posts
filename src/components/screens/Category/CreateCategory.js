@@ -30,11 +30,12 @@ import {
 
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
 import { bool } from "prop-types";
+import { TokenUserManager } from "../../../utils/asyncStorage";
 
 function CreateCategoryScreen() {
   const navigation = useNavigation();
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-
+  const { getToken } = TokenUserManager();
   //api
   const { postData, loading, error, data } = usePostData();
 
@@ -43,8 +44,8 @@ function CreateCategoryScreen() {
   };
 
   const [PostDataDB, setPostDataDB] = useState({
-    nameCategoryService: "",
-    descriptionCategoryService: "",
+    nameCategoryService: "Caso 2",
+    descriptionCategoryService: "Cristian David Santa, Juan Sebastian Cardenas, Sergio Jaramillo Botero",
     active: "",
     avatar: "",
   });
@@ -90,21 +91,35 @@ function CreateCategoryScreen() {
       setShowConfirmationModal(false);
       return;
     }
-    const url = "/admin/category-services";
+    const url = "/admin/category-services/new-category";
+    const token =  async () => await getToken()
+    console.log(token)
+    console.log(PostDataDB.nameCategoryService);
+    console.log(PostDataDB.descriptionCategoryService)
+    console.log(PostDataDB.active)
+    console.log(PostDataDB.avatar)
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
     };
     const formData = new FormData();
     formData.append("nameCategoryService", PostDataDB.nameCategoryService);
     formData.append("descriptionCategoryService", PostDataDB.descriptionCategoryService);
     formData.append("active", PostDataDB.active);
-    formData.append("avatar", {
-        uri: PostDataDB.avatar.uri,
+    if (PostDataDB.avatar) {
+        formData.append("avatar", {
+          uri: PostDataDB.avatar.uri,
+          name: PostDataDB.avatar.name, // Nombre del archivo
+          type: PostDataDB.avatar.type, // Tipo del archivo
+        });
+      }
+/*     formData.append("avatar", {
+         uri: PostDataDB.avatar.uri,
         name: PostDataDB.avatar.name,
-        type: PostDataDB.avatar.type,
-      });
-    
+        type: PostDataDB.avatar.type, 
+        });
+     */
     /* avatar.forEach((image, index) => {
       formData.append("avatar", {
         uri: image.uri,

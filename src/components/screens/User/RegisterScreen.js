@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView, Text } from "react-native";
+import { SafeAreaView, View, StyleSheet, ScrollView, Text, Button } from "react-native";
 /* componentes */
 import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +20,7 @@ import { usePostData } from "../../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
+  const goToPolicy = () => navigation.navigate("policyScreen");
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
 
@@ -50,20 +51,28 @@ function RegisterScreen() {
   };
 
   const [loginError, setLoginError] = useState(false);
-
+/* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
-    const url = "/users";
+    const url = "/auth/register";
     const headers = {
       "Content-Type": "application/json",
     };
     const body = {
-      name: userData.name,
+      firstname: userData.firstname,
+      lastname: userData.lastname,
+      email: userData.email,
+      current_password: userData.password,
+/*       isUnderage: userData.isUnderage,
+      acceptTerms: userData.acceptTerms,
+      typeOfDocument: userData.typeOfDocument,
+      documentNumber: userData.documentNumber, */
+     /*  name: userData.name,
       email: userData.email,
       password: userData.password,
       isUnderage: userData.isUnderage,
       acceptTerms: userData.acceptTerms,
       typeOfDocument: userData.typeOfDocument,
-      documentNumber: userData.documentNumber,
+      documentNumber: userData.documentNumber, */
     };
     postData(url, headers, body, (response) => {
       if (error || !response) {
@@ -99,8 +108,15 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Nombre"
                 style={styles.input}
-                value={userData.name}
-                onChangeText={(text) => handleChange("name", text)}
+                value={userData.firstname}
+                onChangeText={(text) => handleChange("firstname", text)}
+              />
+
+              <CustomInTextField
+                label="Apellido"
+                style={styles.input}
+                value={userData.lastnamename}
+                onChangeText={(text) => handleChange("lastname", text)}
               />
 
               <CustomInTextField
@@ -113,11 +129,13 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Password"
                 style={styles.input}
-                value={userData.password}
-                onChangeText={(text) => handleChange("password", text)}
+                value={userData.current_password}
+                onChangeText={(text) => handleChange("current_password", text)}
               />
 
-              <CustomDropDown
+              <Button title="Politica de tratamiento de datos" onPress={goToPolicy} />
+
+              {/* <CustomDropDown
                 label="Tipo de documento"
                 value={userData.typeOfDocument}
                 items={[
@@ -136,14 +154,14 @@ function RegisterScreen() {
                   BackgroundColor: BasicStylesPage.color2,
                   marginLeft: 2,
                 }}
-              />
+              /> */}
 
-              <CustomInTextField
+{/*               <CustomInTextField
                 label="Número de documento"
                 style={styles.input}
                 value={userData.documentNumber}
                 onChangeText={(text) => handleChange("documentNumber", text)}
-              />
+              /> */}
             </Stack>
             {loginError && (
               <CustomErrorBanner
@@ -157,6 +175,7 @@ function RegisterScreen() {
               onPress={handleSubmit}
               buttonStyle={styles.button}
             />
+  
           </View>
         </View>
       </ScrollView>

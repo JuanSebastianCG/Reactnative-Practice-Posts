@@ -22,9 +22,11 @@ export function usePostData() {
         setError(null);
         const response = await axios.post(url, body, { headers });
         setData(response); 
+        console.log("exito axios:" ,response)
         onComplete(response); 
       } catch (err) {
         setError(err);
+        console.log("Error axios:" ,err)
         onComplete(null);
       } finally {
         setLoading(false);

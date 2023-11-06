@@ -19,6 +19,8 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+  const goToCreateServiceCategory = () => navigation.navigate("CreateCategoryScreen");
+
   const { logged, handleLoggin } = useAuth();
 
   useFocusEffect(
@@ -44,7 +46,7 @@ function HomeScreen() {
       <CustomLogoutButton />
       <CustomLogo styleLogo={styles.logoContainer} />
 
-      <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
+      {/* <Text style={styles.text_tittle}>Que Quieres Hacer?</Text> */}
       <Text style={styles.text_tittlePoint}>...</Text>
 
       <CustomButton
@@ -64,6 +66,15 @@ function HomeScreen() {
         <CustomButton
           text="Ver api"
           onPress={goToShowPosts}
+          buttonStyle={[
+            styles.buttonContainer,
+            { paddingLeft: 26, paddingRight: 26 },
+          ]}
+        />
+
+        <CustomButton
+          text="Crear categoryService"
+          onPress={goToCreateServiceCategory}
           buttonStyle={[
             styles.buttonContainer,
             { paddingLeft: 26, paddingRight: 26 },

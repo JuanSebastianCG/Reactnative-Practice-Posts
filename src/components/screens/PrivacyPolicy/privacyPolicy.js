@@ -1,10 +1,16 @@
 import React from 'react';
 import { View, Text, Linking, StyleSheet,TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from "@react-navigation/native";
 
-const goBack = () => navigation.navigate("RegisterScreen");
 
 const PrivacyPolicy = () => {
+    const navigation = useNavigation();
+    const goBack = () => navigation.navigate("RegisterScreen");
   return (
+    <SafeAreaView>
+    <ScrollView>
     <View style={styles.container}>
       <Text style={styles.heading}>Política de Privacidad</Text>
       <Text style={styles.updated}>Última actualización: 06 de noviembre de 2023</Text>
@@ -231,6 +237,8 @@ const PrivacyPolicy = () => {
         <Text style={styles.buttonText} onPress={goBack}>Botón</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
