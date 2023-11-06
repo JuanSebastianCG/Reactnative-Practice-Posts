@@ -46,7 +46,6 @@ function LoginScreen() {
         setLoginError(true);
       } else {
         const accessToken = response.data.access;
-        console.log("accessToken", accessToken);
         saveToken(accessToken);
         navigation.navigate("HomeScreen");
       }

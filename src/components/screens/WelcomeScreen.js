@@ -18,7 +18,7 @@ function WelcomeScreen() {
   const navigation = useNavigation();
   return (
     <Stack spacing={4} style={styles.container}>
-      <CustomLogo width={300} height={400} styleLogo={styles.logoContainer} />
+      <CustomLogo width={220} height={320} styleLogo={styles.logoContainer} />
 
       <View style={{marginTop: "75%"}}>
         <Text style={styles.text_tittle}>Welcome to Apis </Text>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 
   logoContainer: {
     flexDirection: "row",
-    right: 40,
+    right: 78,
     top: 40,
   },
 

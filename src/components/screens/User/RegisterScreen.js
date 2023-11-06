@@ -5,12 +5,15 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import {
+  CustomButton,
+  CustomDropDown,
+} from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
 import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
-import { Picker } from "@react-native-picker/picker"; 
+
 /* utils */
 import { TokenUserManager } from "../../../utils/asyncStorage";
 import { usePostData } from "../../../utils/useAxios";
@@ -114,18 +117,26 @@ function RegisterScreen() {
                 onChangeText={(text) => handleChange("password", text)}
               />
 
-              <View style={styles.input}>
-                <Text>Tipo de documento</Text>
-                <Picker
-                  selectedValue={userData.typeOfDocument}
-                  onValueChange={(itemValue, itemIndex) =>
-                    handleChange("typeOfDocument", itemValue)
-                  }>
-                  <Picker.Item label="DNI" value="DNI" />
-                  <Picker.Item label="Pasaporte" value="Pasaporte" />
-                  {/* Agrega más tipos de documentos según tus necesidades */}
-                </Picker>
-              </View>
+              <CustomDropDown
+                label="Tipo de documento"
+                value={userData.typeOfDocument}
+                items={[
+                  "DNI",
+                  "Pasaporte",
+                  "Carnet de conducir",
+                  "Carnet de identidad",
+                ]}
+                generalStyle={styles.generalDropDown}
+                generalBorderStyle={styles.generalBorderDropDown}
+                itemStyle={{}}
+                fontInputStyle={{ color: BasicStylesPage.color4 }}
+                onItemSlected={(item) => handleChange("typeOfDocument", item)}
+                placeholder={"Documento"}
+                styleLogo={{
+                  BackgroundColor: BasicStylesPage.color2,
+                  marginLeft: 2,
+                }}
+              />
 
               <CustomInTextField
                 label="Número de documento"
@@ -189,7 +200,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
-    width: 190,
+    width: 200,
   },
   button: {
     padding: 10,
@@ -213,6 +224,23 @@ const styles = StyleSheet.create({
     borderColor: BasicStylesPage.color0,
     alignItems: "center",
     justifyContent: "center",
+  },
+  inputDropDown: {
+    marginBottom: 16,
+    width: 190,
+  },
+  generalDropDown: {
+    backgroundColor: BasicStylesPage.color3,
+    width: 200,
+    height: 50,
+    top: 10,
+    marginBottom: 16,
+  },
+  generalBorderDropDown: {
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: BasicStylesPage.color0 + 99,
+    borderRadius: 30,
   },
 });
 

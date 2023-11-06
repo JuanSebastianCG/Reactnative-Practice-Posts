@@ -24,7 +24,8 @@ export const CustomLogo = ({ styleLogo, width = 140, height = 200 }) => {
     height - height / 5
   }`;
   return (
-    <TouchableOpacity style={{ width: width, height: height, position: "absolute", top: 0, right: 0,}} onPress={() => navigation.navigate("WelcomeScreen")}>
+    <TouchableOpacity style={{ width: width, height: height, position: "absolute", top: 0, right: 0,zIndex:1
+    }} onPress={() => navigation.navigate("WelcomeScreen")}>
       
       <Svg
         height={height}

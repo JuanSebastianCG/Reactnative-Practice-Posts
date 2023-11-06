@@ -31,18 +31,22 @@ function IndexTabbar() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
+          <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
+            initialParams={{ categoryName:""}}
+            options={({ route }) => ({ title: route.params.categoryName })}
+            
           />
           <Stack.Screen
             name="ShowCategoryScreen"
             component={ShowCategoryScreen}
           />
-
-          <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-          <Stack.Screen name="CreateCategoryScreen" component={CreateCategoryScreen} />
-
+          <Stack.Screen
+            name="CreateCategoryScreen"
+            component={CreateCategoryScreen}
+          />
         </Stack.Navigator>
         {/* Superponer el Tabbar de manera absoluta */}
 

@@ -19,7 +19,6 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-  const goToCategoryCreate = () =>navigation.navigate("CreateCategoryScreen")
   const { logged, handleLoggin } = useAuth();
 
   useFocusEffect(
@@ -35,7 +34,6 @@ function HomeScreen() {
       horizontal={false}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
-
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
       </Svg>
@@ -46,7 +44,7 @@ function HomeScreen() {
       <CustomLogoutButton />
       <CustomLogo styleLogo={styles.logoContainer} />
 
-      {/* <Text style={styles.text_tittle}>Que Quieres Hacer?</Text> */}
+      <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
       <Text style={styles.text_tittlePoint}>...</Text>
 
       <CustomButton
@@ -66,15 +64,6 @@ function HomeScreen() {
         <CustomButton
           text="Ver api"
           onPress={goToShowPosts}
-          buttonStyle={[
-            styles.buttonContainer,
-            { paddingLeft: 26, paddingRight: 26 },
-          ]}
-        />
-
-        <CustomButton
-          text="Crear Categoria"
-          onPress={goToCategoryCreate}
           buttonStyle={[
             styles.buttonContainer,
             { paddingLeft: 26, paddingRight: 26 },
