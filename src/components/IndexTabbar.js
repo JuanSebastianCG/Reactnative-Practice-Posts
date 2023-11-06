@@ -29,12 +29,13 @@ function IndexTabbar() {
             headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
           }}>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
+          {/* <Stack.Screen name="CamaraScreen" component={CamaraScreen} /> */}
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
           <Stack.Screen name="CreateCategoryScreen" component={CreateCategoryScreen} />
+          <Stack.Screen name="PolicyScreen" component={PolicyScreen} />
 
         </Stack.Navigator>
         {/* Superponer el Tabbar de manera absoluta */}

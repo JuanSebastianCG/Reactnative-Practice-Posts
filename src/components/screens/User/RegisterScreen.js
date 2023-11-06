@@ -13,6 +13,7 @@ import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic
 import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import Checkbox from 'expo-checkbox';
 
 /* utils */
 import { TokenUserManager } from "../../../utils/asyncStorage";
@@ -20,9 +21,11 @@ import { usePostData } from "../../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
-  const goToPolicy = () => navigation.navigate("policyScreen");
+  const goToPolicy = () => navigation.navigate("PolicyScreen");
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+  const [policyAccepted, setPolicyAccepted] = useState(false);
+
 
   /* {
     "name": "Juan Pérez",
@@ -35,13 +38,14 @@ function RegisterScreen() {
 }
  */
   const [userData, setUserData] = useState({
-    name: "",
+    firstname:"",
+    lastname: "",
     email: "",
-    password: "",
-    isUnderage: true,
-    acceptTerms: true,
-    typeOfDocument: [],
-    documentNumber: "",
+    current_password: "",
+    role: "user",
+    active: true,
+/*     typeOfDocument: [],
+    documentNumber: "", */
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -50,9 +54,19 @@ function RegisterScreen() {
     });
   };
 
+  
+  const handleCheckboxChange = () => {
+    setPolicyAccepted(!policyAccepted);
+  };
+
   const [loginError, setLoginError] = useState(false);
 /* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
+    if (!policyAccepted) {
+      alert('Debes aceptar la política de privacidad para registrarte');
+      return;
+    }
+
     const url = "/auth/register";
     const headers = {
       "Content-Type": "application/json",
@@ -62,6 +76,8 @@ function RegisterScreen() {
       lastname: userData.lastname,
       email: userData.email,
       current_password: userData.password,
+      role: userData.role,
+      active:userData.active
 /*       isUnderage: userData.isUnderage,
       acceptTerms: userData.acceptTerms,
       typeOfDocument: userData.typeOfDocument,
@@ -76,6 +92,7 @@ function RegisterScreen() {
     };
     postData(url, headers, body, (response) => {
       if (error || !response) {
+        console.log(error);
         setLoginError(true);
       } else {
         console.log(response);
@@ -115,7 +132,7 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Apellido"
                 style={styles.input}
-                value={userData.lastnamename}
+                value={userData.lastname}
                 onChangeText={(text) => handleChange("lastname", text)}
               />
 
@@ -170,6 +187,12 @@ function RegisterScreen() {
                 onChange={() => setLoginError(false)}
               />
             )}
+
+          <View style={styles.checkboxContainer}>
+            <Checkbox value={policyAccepted} onValueChange={handleCheckboxChange} />
+            <Text style={styles.checkboxLabel}>He leído y Acepto la política de privacidad</Text>
+          </View>
+
             <CustomButton
               text="Login"
               onPress={handleSubmit}

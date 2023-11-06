@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
     const navigation = useNavigation();
     const goBack = () => navigation.navigate("RegisterScreen");
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
     <ScrollView>
     <View style={styles.container}>
       <Text style={styles.heading}>Política de Privacidad</Text>
@@ -234,7 +234,7 @@ const PrivacyPolicy = () => {
         Por número de teléfono: 3183603995
         </Text>
         <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText} onPress={goBack}>Botón</Text>
+        <Text style={styles.buttonText} onPress={goBack}>Continuar con el registro</Text>
       </TouchableOpacity>
     </View>
     </ScrollView>
