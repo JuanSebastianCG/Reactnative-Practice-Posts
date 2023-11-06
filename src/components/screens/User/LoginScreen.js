@@ -47,6 +47,7 @@ function LoginScreen() {
       } else {
         const accessToken = response.data.access;
         saveToken(accessToken);
+        console.log("LoginScreen.js: ", accessToken);
         navigation.navigate("HomeScreen");
       }
     });

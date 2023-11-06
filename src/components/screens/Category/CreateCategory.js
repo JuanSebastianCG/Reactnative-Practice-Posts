@@ -9,7 +9,7 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../../utils/useAxios";
-import { Polygon, Svg } from "react-native-svg"; 
+import { Polygon, Svg } from "react-native-svg";
 
 import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
@@ -29,14 +29,17 @@ import {
   CustomAlertConfirmation,
   CustomErrorBanner,
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { TokenUserManager } from "../../../utils/asyncStorage";
+import { Avatar } from "react-native-paper";
 
-import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
-import { bool } from "prop-types";
+import axios from "axios";
 
 function CreateCategoryScreen() {
   const navigation = useNavigation();
+  const { getToken } = TokenUserManager();
+
   const [showTermsAndConditions, setShowTermsAndConditions] = useState(false);
-  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+  const goToShowCaracteristic = () => navigation.navigate("ShowCategoryScreen");
 
   //api
   const { postData, loading, error, data } = usePostData();
@@ -46,9 +49,9 @@ function CreateCategoryScreen() {
   };
 
   const [PostDataDB, setPostDataDB] = useState({
-    nameCategoryService: "",
-    descriptionCategoryService: "",
-    active: "",
+    nameCategoryService: "Testeo",
+    descriptionCategoryService: "Juan Cardenas testeo",
+    active: true,
     avatar: "",
   });
 
@@ -78,54 +81,53 @@ function CreateCategoryScreen() {
   const [successPost, setSuccess] = useState(false);
   const [errorPost, setError] = useState(false);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (
       !PostDataDB.nameCategoryService ||
       !PostDataDB.descriptionCategoryService ||
       !PostDataDB.active ||
       !PostDataDB.avatar
     ) {
-        console.log(PostDataDB.nameCategoryService);
-        console.log(PostDataDB.descriptionCategoryService)
-        console.log(PostDataDB.active)
-        console.log(PostDataDB.avatar)
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
-    const url = "/admin/category-services";
+
+    const token = await getToken();
+    const url =
+      "http://mantenimientoandino.co:3000/api/v1/admin/category-services/new-category";
+
     const headers = {
+      Authorization: `Bearer ${token}`,
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
     };
+
     const formData = new FormData();
     formData.append("nameCategoryService", PostDataDB.nameCategoryService);
-    formData.append("descriptionCategoryService", PostDataDB.descriptionCategoryService);
+    formData.append(
+      "descriptionCategoryService",
+      PostDataDB.descriptionCategoryService
+    );
     formData.append("active", PostDataDB.active);
     formData.append("avatar", {
-        uri: PostDataDB.avatar.uri,
-        name: PostDataDB.avatar.name,
-        type: PostDataDB.avatar.type,
-      });
-    
-    /* avatar.forEach((image, index) => {
-      formData.append("avatar", {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
-      });
-    }); */
+      uri: PostDataDB.avatar.uri,
+      name: PostDataDB.avatar.name,
+      type: PostDataDB.avatar.type,
+    });
 
-    postData(url, headers, formData, (data) => {
-      if (error || !data) {
-        console.log("Error:", error);
+    postData(url, formData, headers, (data) => {
+      if (error || data == null) {
         setError(true);
-      } else {
-        navigation.navigate("ShowPostsScreen");
+        setShowConfirmationModal(false);
+        return;
+      }
+      else{
         setSuccess(true);
+        setShowConfirmationModal(false);
+        return;
       }
     });
-    setShowConfirmationModal(false);
   };
 
   return (
@@ -153,15 +155,14 @@ function CreateCategoryScreen() {
             />
 
             <View>
-
-                <View style={styles.imageContainer}>
+              <View style={styles.imageContainer}>
                 {PostDataDB.avatar && (
-                    <Image
+                  <Image
                     source={{ uri: PostDataDB.avatar.uri }}
                     style={styles.image}
-                    />
+                  />
                 )}
-                </View>
+              </View>
               {/* <View style={styles.imageContainer}>
                 {PostDataDB.avatar.length > 0 && (
                   <CustomCarrousel data={PostDataDB.avatar} />
@@ -176,18 +177,20 @@ function CreateCategoryScreen() {
               style={styles.inputTextArea}
               placeholder="Descripcion"
               value={PostDataDB.descriptionCategoryService}
-              onChangeText={(text) => handleChange("descriptionCategoryService", text)}
+              onChangeText={(text) =>
+                handleChange("descriptionCategoryService", text)
+              }
             />
 
             <CustomButton
               text="Activo"
-              onPress={() => setPostDataDB({...PostDataDB, active: true})}
+              onPress={() => setPostDataDB({ ...PostDataDB, active: true })}
               buttonStyle={styles.button}
             />
 
             {errorPost && (
               <CustomErrorBanner
-                text="No se pudo crear el post. Por favor, verifique sus credenciales."
+                text="No se pudo crear la categoria. Por favor, verifique sus credenciales."
                 styleBanner={styles.errorBanner}
                 onChange={() => setError(false)}
               />
@@ -208,14 +211,14 @@ function CreateCategoryScreen() {
             <CustomSuccessAlert
               isVisible={successPost}
               message="Post creado con éxito!!"
-              onConfirm={goToShowPosts}
+              onConfirm={goToShowCaracteristic}
             />
 
-           <CustomTermsAndConditionsAlert
+            <CustomTermsAndConditionsAlert
               isVisible={showTermsAndConditions}
               onConfirm={() => setShowTermsAndConditions(false)}
               onCancel={() => setShowTermsAndConditions(false)}
-            /> 
+            />
           </View>
         </View>
       </ScrollView>
@@ -312,6 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     zIndex: 1,
     marginBottom: 70,
+  },
+
+  errorBanner: {
+    marginTop: 20,
+    marginLeft: "8%",
+    marginRight: "8%",
+
   },
 });
 

@@ -14,24 +14,19 @@ export function usePostData() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const postData = useCallback(
-    async (especificUrl, headers = {}, body = null, onComplete = () => {}) => {
-      const url = `${basicEndpoint}${version}${especificUrl}`;
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await axios.post(url, body, { headers });
-        setData(response); 
-        onComplete(response); 
-      } catch (err) {
-        setError(err);
-        onComplete(null);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  const postData = useCallback(async (url, formData, headers, onComplete = () => {}) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(url, formData, { headers });
+      setData(response.data);
+      onComplete(response.data);
+    } catch (error) {
+      setError(error);
+      onComplete(null);
+    } finally {
+      setLoading(false);
+    }
+  });
 
   return { postData, loading, error, data };
 }

@@ -14,9 +14,6 @@ const TokenUserManager = () => {
   };
 
   const getToken = async () => {
-    /* if (token !== null) {
-      return token;
-    } */
     try {
       const storedToken = await AsyncStorage.getItem("accessToken");
       if (storedToken !== null) {
