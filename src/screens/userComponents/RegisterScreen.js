@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView, Text, Button } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 /* componentes */
 import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
@@ -10,9 +17,15 @@ import {
   CustomDropDown,
 } from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
-import { CustomInTextField } from "../../public/customComponent/Basic_FormComponents";
+import {
+  CustomCheckBox,
+  CustomInTextField,
+} from "../../public/customComponent/Basic_FormComponents";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
-import { CustomErrorBanner } from "../../public/customComponent/Basic_AlertComponent";
+import {
+  CustomErrorBanner,
+  CustomTermsAndConditionsAlert,
+} from "../../public/customComponent/Basic_AlertComponent";
 
 /* utils */
 import { TokenUserManager } from "../../utils/asyncStorage";
@@ -20,9 +33,9 @@ import { usePostData } from "../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
-  const goToPolicy = () => navigation.navigate("policyScreen");
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+  const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
   /* {
     "name": "Juan Pérez",
@@ -51,7 +64,7 @@ function RegisterScreen() {
   };
 
   const [loginError, setLoginError] = useState(false);
-/* http://mantenimientoandino.co:3000/api/v1/auth/register */
+  /* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
     const url = "/auth/register";
     const headers = {
@@ -62,7 +75,7 @@ function RegisterScreen() {
       lastname: userData.lastname,
       email: userData.email,
       current_password: userData.password,
-/*    isUnderage: userData.isUnderage,
+      /*    isUnderage: userData.isUnderage,
       acceptTerms: userData.acceptTerms,
       typeOfDocument: userData.typeOfDocument,
       documentNumber: userData.documentNumber, */
@@ -126,8 +139,6 @@ function RegisterScreen() {
                 onChangeText={(text) => handleChange("current_password", text)}
               />
 
-              <Button title="Politica de tratamiento de datos" onPress={goToPolicy} />
-
               {/* <CustomDropDown
                 label="Tipo de documento"
                 value={userData.typeOfDocument}
@@ -149,12 +160,27 @@ function RegisterScreen() {
                 }}
               /> */}
 
-{/*               <CustomInTextField
+              {/*               <CustomInTextField
                 label="Número de documento"
                 style={styles.input}
                 value={userData.documentNumber}
                 onChangeText={(text) => handleChange("documentNumber", text)}
               /> */}
+
+              <CustomCheckBox
+                label="he leído y acepto los términos y condiciones"
+                style={{ marginTop: 20, marginBottom: 20 }}
+                value={userData.isUnderage}
+                onChange={(value) => handleChange("isUnderage", value)}
+              />
+
+              <TouchableOpacity
+                onPress={() => setTermsAndConditionsAlert(true)}
+                style={{ marginBottom: 20 }}>
+                <Text style={BasicStylesPage.hrefLinkFontStyles.hrefLink}>
+                  Ver términos y condiciones
+                </Text>
+              </TouchableOpacity>
             </Stack>
             {loginError && (
               <CustomErrorBanner
@@ -168,7 +194,11 @@ function RegisterScreen() {
               onPress={handleSubmit}
               buttonStyle={styles.button}
             />
-  
+
+            <CustomTermsAndConditionsAlert
+              isVisible={termsAndConditionsAlert}
+              onChange={() => setTermsAndConditionsAlert(false)}
+            />
           </View>
         </View>
       </ScrollView>

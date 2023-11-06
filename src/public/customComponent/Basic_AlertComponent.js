@@ -11,6 +11,7 @@ import BasicStylesPage from "../cssStyles/Basic_Style";
 import { CustomButton } from "./Basic_Components";
 import { Polygon, Svg } from "react-native-svg";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import PrivacyPolicy from "../../components/termsAndConditions/privacyPolicy";
 
 export function CustomAlertConfirmation({
   isVisible,
@@ -251,11 +252,7 @@ const stylesErrorBanner = StyleSheet.create({
 });
 
 /* terms and conditions */
-export const CustomTermsAndConditionsAlert = ({
-  onConfirm,
-  onDecline,
-  isVisible,
-}) => {
+export const CustomTermsAndConditionsAlert = ({ onChange, isVisible }) => {
   return (
     <Modal
       isVisible={isVisible}
@@ -264,28 +261,24 @@ export const CustomTermsAndConditionsAlert = ({
       backdropColor={BasicStylesPage.color1}>
       <View style={stylesTermsAndConditions.modalContent}>
         <View style={stylesTermsAndConditions.modalContent2}>
-          <ScrollView
-            contentContainerStyle={stylesTermsAndConditions.scrollContainer}>
-            <Text style={stylesTermsAndConditions.message}>
-              adasda
-            </Text>
-          </ScrollView>
+          <View style={stylesTermsAndConditions.scrollContainer}>
+            <PrivacyPolicy />
+          </View>
           <View style={stylesTermsAndConditions.SelectionContainer}>
             <Text style={stylesTermsAndConditions.message1}>
               ¿Aceptas los términos y condiciones?
             </Text>
             <View style={stylesTermsAndConditions.buttonContainer}>
               <CustomButton
-                text="Decline"
-                onPress={onDecline}
-                textStyle={stylesTermsAndConditions.confirmButton}
-                buttonStyle={stylesTermsAndConditions.buttonConfirmation}
-              />
-              <CustomButton
-                text="Accept"
-                onPress={onConfirm}
-                textStyle={stylesTermsAndConditions.cancelButton}
-                buttonStyle={stylesTermsAndConditions.buttonCancel}
+                text="Aceptar"
+                onPress={onChange}
+                buttonStyle={{
+                  borderRadius: 20,
+                  backgroundColor: BasicStylesPage.color3,
+                  borderColor: BasicStylesPage.color2,
+                  borderWidth: 4,
+                }}
+                textStyle={{ color: BasicStylesPage.color4, fontSize: 16 }}
               />
             </View>
           </View>
@@ -304,12 +297,12 @@ const stylesTermsAndConditions = StyleSheet.create({
     borderRadius: 8,
     width: "90%",
     borderWidth: 4,
-    borderColor: BasicStylesPage.color3,
+    borderColor: BasicStylesPage.color0,
   },
   modalContent2: {
     padding: 6,
     borderWidth: 4,
-    borderColor: BasicStylesPage.color2,
+    borderColor: BasicStylesPage.color3,
   },
   message: {
     backgroundColor: BasicStylesPage.color3,
@@ -318,7 +311,6 @@ const stylesTermsAndConditions = StyleSheet.create({
     borderBottomWidth: 4,
     color: BasicStylesPage.color4,
     textAlign: "justify",
-
     borderRadius: 10,
     padding: 20,
     paddingTop: 10,
@@ -326,30 +318,11 @@ const stylesTermsAndConditions = StyleSheet.create({
     margin: 8,
   },
   buttonContainer: {
-    flexDirection: "row",
     justifyContent: "space-around",
+    marginBottom: 10,
+    marginRight: 10,
   },
-  confirmButton: {
-    color: BasicStylesPage.color1,
-    fontSize: 16,
-  },
-  cancelButton: {
-    color: BasicStylesPage.color1,
-    fontSize: 16,
-  },
-  buttonConfirmation: {
-    backgroundColor: BasicStylesPage.colorWarning3,
-    borderRadius: 40,
 
-    fontSize: 18,
-    marginBottom: 16,
-  },
-  buttonCancel: {
-    backgroundColor: BasicStylesPage.colorWarning2,
-    borderRadius: 30,
-    fontSize: 18,
-    marginBottom: 16,
-  },
   footer: {
     position: Platform.OS === "android" ? "absolute" : "relative",
     bottom: 0,
@@ -358,22 +331,30 @@ const stylesTermsAndConditions = StyleSheet.create({
     alignItems: "center",
   },
   scrollContainer: {
-    
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
     height: 500,
+    borderLeftWidth: 5,
+    backgroundColor: BasicStylesPage.color3,
+    padding: 8,
+    paddingBottom: 20,
+    borderLeftColor: BasicStylesPage.color2,
+    borderRightWidth: 5,
+    borderRightColor: BasicStylesPage.color2,
   },
   message1: {
     color: BasicStylesPage.color4,
     padding: 20,
-    fontSize: 18,
-    marginBottom: 16,
+    flex: 1,
+    fontSize: 15,
     textAlign: "center",
   },
   SelectionContainer: {
+    flexDirection: "row",
+
     backgroundColor: BasicStylesPage.color3,
-    margin: 6,
+    marginTop: 10,
     borderRadius: 4,
     borderLeftColor: BasicStylesPage.color2,
     borderLeftWidth: 5,
