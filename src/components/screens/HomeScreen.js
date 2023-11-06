@@ -46,7 +46,7 @@ function HomeScreen() {
       <CustomLogoutButton />
       <CustomLogo styleLogo={styles.logoContainer} />
 
-      {/* <Text style={styles.text_tittle}>Que Quieres Hacer?</Text> */}
+      <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
       <Text style={styles.text_tittlePoint}>...</Text>
 
       <CustomButton

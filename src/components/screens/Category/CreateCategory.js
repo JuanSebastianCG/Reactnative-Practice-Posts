@@ -39,7 +39,7 @@ function CreateCategoryScreen() {
   const { getToken } = TokenUserManager();
 
   const [showTermsAndConditions, setShowTermsAndConditions] = useState(false);
-  const goToShowCaracteristic = () => navigation.navigate("ShowCategoryScreen");
+  const goToShowCaracteristic = () => navigation.replace("ShowCategoryScreen");
 
   //api
   const { postData, loading, error, data } = usePostData();
@@ -94,9 +94,6 @@ function CreateCategoryScreen() {
     }
 
     const token = await getToken();
-    const url =
-      "http://mantenimientoandino.co:3000/api/v1/admin/category-services/new-category";
-
     const headers = {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
@@ -117,7 +114,7 @@ function CreateCategoryScreen() {
       type: PostDataDB.avatar.type,
     });
 
-    postData(url, formData, headers, (data) => {
+    postData("/admin/category-services/new-category", formData, headers, (data) => {
       if (error || data == null) {
         setError(true);
         setShowConfirmationModal(false);

@@ -41,14 +41,15 @@ function LoginScreen() {
       email: userData.email,
       current_password: userData.password,
     };
-    postData(url, headers, body, (response) => {
-      if (error || !response) {
-        setLoginError(true);
-      } else {
+    postData(url,body, headers, (response) => {
+      if (response != null) {
+        console.log("LoginScreen.js: ", response);
         const accessToken = response.data.access;
         saveToken(accessToken);
-        console.log("LoginScreen.js: ", accessToken);
         navigation.navigate("HomeScreen");
+      }
+      if (error != null) {
+        setLoginError(true);
       }
     });
   };

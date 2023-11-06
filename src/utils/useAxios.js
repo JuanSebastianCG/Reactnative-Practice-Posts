@@ -14,12 +14,17 @@ export function usePostData() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const postData = useCallback(async (url, formData, headers, onComplete = () => {}) => {
+  const postData = useCallback(async (RelativeUrl, formData, headers, onComplete = () => {}) => {
+    const url = `${basicEndpoint}${version}${RelativeUrl}`;
+    /* console.log("url", url);
+    console.log("formData", formData);
+    console.log("headers", headers); */
     try {
       setLoading(true);
+      setError(null);
       const response = await axios.post(url, formData, { headers });
-      setData(response.data);
-      onComplete(response.data);
+      setData(response);
+      onComplete(response);
     } catch (error) {
       setError(error);
       onComplete(null);
