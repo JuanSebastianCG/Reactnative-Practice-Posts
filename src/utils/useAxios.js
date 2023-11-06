@@ -16,9 +16,9 @@ export function usePostData() {
 
   const postData = useCallback(async (RelativeUrl, formData, headers, onComplete = () => {}) => {
     const url = `${basicEndpoint}${version}${RelativeUrl}`;
-    /* console.log("url", url);
+    console.log("url", url);
     console.log("formData", formData);
-    console.log("headers", headers); */
+    console.log("headers", headers);
     try {
       setLoading(true);
       setError(null);
@@ -26,6 +26,7 @@ export function usePostData() {
       setData(response);
       onComplete(response);
     } catch (error) {
+      console.error("Error making POST request:", error);
       setError(error);
       onComplete(null);
     } finally {
@@ -80,11 +81,10 @@ export function useDeleteData() {
   const deleteData = useCallback(
     async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
       const url = `${basicEndpoint}${version}${especificUrl}`;
-
+      console.log("url", url);
       try {
         setLoading(true);
         setError(null);
-
         const config = {
           headers,
           data: body,

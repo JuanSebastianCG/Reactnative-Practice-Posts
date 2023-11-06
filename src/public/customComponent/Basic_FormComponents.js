@@ -124,7 +124,7 @@ const stylesForm = StyleSheet.create({
   },
 });
 
-const CustomInTextArea = ({ label, style, value, onChange }) => {
+const CustomInTextArea = ({ label, style, value, onChangeText }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const translateY = useRef(new Animated.Value(0)).current;
@@ -217,8 +217,8 @@ const stylesFormTextArea = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
   },
 });
-const CustomCheckBox = ({ label, style, onChange }) => {
-  const [isChecked, setIsChecked] = useState(false);
+const CustomCheckBox = ({ label, style, onChange, value }) => {
+  const [isChecked, setIsChecked] = useState(value);
 
   const toggleCheckbox = () => {
     const newValue = !isChecked;

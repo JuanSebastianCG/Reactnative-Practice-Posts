@@ -12,10 +12,7 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import {
-  CustomButton,
-  CustomDropDown,
-} from "../../public/customComponent/Basic_Components";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
   CustomCheckBox,
@@ -37,24 +34,25 @@ function RegisterScreen() {
   const { postData, loading, error } = usePostData();
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
-  /* {
-    "name": "Juan Pérez",
-    "email": "admin",
-    "password": "admin",
-    "isUnderage": false,
-    "acceptTerms": true,
-    "typeOfDocument": "DNI",
-    "documentNumber": "12345678"
-}
- */
+
+/*   "firstname": "John",
+  "lastname": "Doe",
+  "email": "johndoe@example.com",
+  "current_password": "password123",
+  "role": "user",
+  "active": true,
+  "avatar": "https://example.com/avatar.jpg"
+   */
+
   const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    isUnderage: true,
+    firstname: "Juan Sebastian test2",
+    lastname: "Cardenas",
+    email: "Juan@gmail.com",
+    password: "juan123",
+    role: "UsuarioTest",
     acceptTerms: true,
-    typeOfDocument: [],
-    documentNumber: "",
+    active: true,
+    avatar: "https://example.com/avatar.jpg",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -70,17 +68,20 @@ function RegisterScreen() {
     const headers = {
       "Content-Type": "application/json",
     };
-    const body = {
-      firstname: userData.firstname,
-      lastname: userData.lastname,
-      email: userData.email,
-      current_password: userData.password,
-      /*    isUnderage: userData.isUnderage,
-      acceptTerms: userData.acceptTerms,
-      typeOfDocument: userData.typeOfDocument,
-      documentNumber: userData.documentNumber, */
-    };
-    postData(url, headers, body, (response) => {
+    formData = new FormData();
+    formData.append("firstname", userData.firstname);
+    formData.append("lastname", userData.lastname);
+    formData.append("email", userData.email);
+    formData.append("current_password", userData.password);
+    formData.append("role", userData.role);
+    formData.append("active", userData.active);
+    formData.append("avatar", userData.avatar);
+    console.log(formData);
+
+    postData(url,formData, headers , (response) => {
+      
+      console.log(response);
+      console.log(error);
       if (error || !response) {
         setLoginError(true);
       } else {
@@ -121,7 +122,7 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Apellido"
                 style={styles.input}
-                value={userData.lastnamename}
+                value={userData.lastname}
                 onChangeText={(text) => handleChange("lastname", text)}
               />
 
@@ -135,42 +136,17 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Password"
                 style={styles.input}
-                value={userData.current_password}
+                value={userData.password}
                 onChangeText={(text) => handleChange("current_password", text)}
               />
 
-              {/* <CustomDropDown
-                label="Tipo de documento"
-                value={userData.typeOfDocument}
-                items={[
-                  "DNI",
-                  "Pasaporte",
-                  "Carnet de conducir",
-                  "Carnet de identidad",
-                ]}
-                generalStyle={styles.generalDropDown}
-                generalBorderStyle={styles.generalBorderDropDown}
-                itemStyle={{}}
-                fontInputStyle={{ color: BasicStylesPage.color4 }}
-                onItemSlected={(item) => handleChange("typeOfDocument", item)}
-                placeholder={"Documento"}
-                styleLogo={{
-                  BackgroundColor: BasicStylesPage.color2,
-                  marginLeft: 2,
-                }}
-              /> */}
 
-              {/*               <CustomInTextField
-                label="Número de documento"
-                style={styles.input}
-                value={userData.documentNumber}
-                onChangeText={(text) => handleChange("documentNumber", text)}
-              /> */}
+
 
               <CustomCheckBox
                 label="he leído y acepto los términos y condiciones"
                 style={{ marginTop: 20, marginBottom: 20 }}
-                value={userData.isUnderage}
+                value={userData.acceptTerms}
                 onChange={(value) => handleChange("isUnderage", value)}
               />
 

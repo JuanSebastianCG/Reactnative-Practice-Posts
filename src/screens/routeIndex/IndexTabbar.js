@@ -12,6 +12,7 @@ import RegisterScreen from "../userComponents/RegisterScreen";
 import ShowCategoryScreen from "../../screens/CategoryAndServices/ShowCategory";
 import ShowServicesScreen from "../../screens/CategoryAndServices/ShowServices";
 import CreateCategoryScreen from "../../screens/CategoryAndServices/CreateCategory";
+import CreateServiceScreen from "../CategoryAndServices/CreateService";
 
 import ShowPostsScreen from "../postsComponents/ShowPostsScreen";
 import CreatePostScreen from "../postsComponents/CreatePostScreen";
@@ -34,6 +35,9 @@ function IndexTabbar() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+
+          <Stack.Screen name="CreateServiceScreen" component={CreateServiceScreen} />
+          
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}

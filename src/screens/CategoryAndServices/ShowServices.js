@@ -89,6 +89,7 @@ function ShowServicesScreen() {
 
   const handleGetData = async () => {
     if (loading) return;
+    
     const url = "/admin/services";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -105,12 +106,14 @@ function ShowServicesScreen() {
             filterCategories.includes(item.categoryService)
           );
         }
+        /* console.log(data); */
 
         for (let i = 0; i < data.length; i++) {
           uri = `${basicEndpoint}/${data[i].avatar}`;
           data[i].photos = data[i].photos.map((avatar) => {
             return { uri: `${basicEndpoint}/${avatar}` };
           });
+          
         }
         setDataPost(data);
       },
@@ -118,7 +121,7 @@ function ShowServicesScreen() {
     );
   };
   const handleDelete = async (id) => {
-    const url = `/data/${id}`;
+    const url = `/admin/services/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -173,7 +176,7 @@ function ShowServicesScreen() {
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("CreateCategoryScreen")}>
+          onPress={() => navigation.navigate("CreateServiceScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>
