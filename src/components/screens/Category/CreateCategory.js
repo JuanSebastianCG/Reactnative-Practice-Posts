@@ -13,6 +13,8 @@ import { Polygon, Svg } from "react-native-svg";
 
 import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
+
+import { CustomTermsAndConditionsAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import {
   CustomInTextField,
   CustomInTextArea,
@@ -32,6 +34,7 @@ import { CustomCarrousel } from "../../../public_styles/component_public_Styles/
 
 function CreateCategoryScreen() {
   const navigation = useNavigation();
+  const [showTermsAndConditions, setShowTermsAndConditions] = useState(false);
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
 
   //api
@@ -181,6 +184,12 @@ function CreateCategoryScreen() {
               message="Post creado con éxito!!"
               onConfirm={goToShowPosts}
             />
+
+           <CustomTermsAndConditionsAlert
+              isVisible={showTermsAndConditions}
+              onConfirm={() => setShowTermsAndConditions(false)}
+              onCancel={() => setShowTermsAndConditions(false)}
+            /> 
           </View>
         </View>
       </ScrollView>
