@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 
 const Tabbar = () => {
   const navigation = useNavigation();

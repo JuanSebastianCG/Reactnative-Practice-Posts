@@ -8,15 +8,15 @@ import { Polygon, Svg } from "react-native-svg";
 import {
   CustomButton,
   CustomDropDown,
-} from "../../../public_styles/component_public_Styles/Basic_Components_F";
-import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
-import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
-import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+} from "../../public/customComponent/Basic_Components";
+import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
+import { CustomInTextField } from "../../public/customComponent/Basic_FormComponents";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import { CustomErrorBanner } from "../../public/customComponent/Basic_AlertComponent";
 
 /* utils */
-import { TokenUserManager } from "../../../utils/asyncStorage";
-import { usePostData } from "../../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
+import { usePostData } from "../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
@@ -62,14 +62,7 @@ function RegisterScreen() {
       lastname: userData.lastname,
       email: userData.email,
       current_password: userData.password,
-/*       isUnderage: userData.isUnderage,
-      acceptTerms: userData.acceptTerms,
-      typeOfDocument: userData.typeOfDocument,
-      documentNumber: userData.documentNumber, */
-     /*  name: userData.name,
-      email: userData.email,
-      password: userData.password,
-      isUnderage: userData.isUnderage,
+/*    isUnderage: userData.isUnderage,
       acceptTerms: userData.acceptTerms,
       typeOfDocument: userData.typeOfDocument,
       documentNumber: userData.documentNumber, */

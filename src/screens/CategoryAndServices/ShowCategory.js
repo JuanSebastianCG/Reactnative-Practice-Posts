@@ -8,18 +8,17 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
   useDeleteData,
   basicEndpoint,
-} from "../../../utils/useAxios";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+} from "../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 
 function ShowCategoryScreen() {
   const [errorPost, setErrorPost] = useState(false);

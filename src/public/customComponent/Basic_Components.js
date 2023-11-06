@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
 } from "react-native"; // Importa View para crear bordes redondeados
-import BasicStylesPage from "../css_public_Styles/Basic_Style";
+import BasicStylesPage from "../cssStyles/Basic_Style";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Dimensions } from "react-native";
 import { TextInput } from "react-native-paper";

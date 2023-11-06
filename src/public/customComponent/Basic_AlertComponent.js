@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Modal from "react-native-modal";
-import BasicStylesPage from "../css_public_Styles/Basic_Style";
-import { CustomButton } from "./Basic_Components_F";
+import BasicStylesPage from "../cssStyles/Basic_Style";
+import { CustomButton } from "./Basic_Components";
 import { Polygon, Svg } from "react-native-svg";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -267,48 +267,7 @@ export const CustomTermsAndConditionsAlert = ({
           <ScrollView
             contentContainerStyle={stylesTermsAndConditions.scrollContainer}>
             <Text style={stylesTermsAndConditions.message}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-              facilisis elit vel ornare auctor. Aliquam rutrum, mauris non
-              accumsan efficitur, nisi nibh suscipit lorem, vel ultricies ante
-              urna id mauris. Etiam fermentum pharetra diam, eget finibus quam.
-              Donec nunc tellus, porttitor non diam ultrices, rutrum dignissim
-              turpis. Donec eget condimentum sapien. Aliquam scelerisque ac nisl
-              id faucibus. Vestibulum arcu nisl, fermentum nec sapien cursus,
-              pharetra facilisis justo. Sed erat purus, dapibus a hendrerit in,
-              ullamcorper eu risus. Ut sit amet diam diam. Vestibulum suscipit
-              scelerisque leo, sed congue erat elementum eu. Nam faucibus dolor
-              in aliquet condimentum. Nunc at ipsum varius, auctor ligula a,
-              auctor diam. Quisque sed dolor tempor, semper purus vel, placerat
-              lacus. Ut ut sodales justo, ac porttitor dolor. Praesent eget
-              rhoncus metus. Nulla tincidunt nulla a quam maximus porttitor.
-              Praesent volutpat nibh eget tellus egestas pharetra. Curabitur
-              sagittis magna dapibus, dapibus ligula id, aliquet ante. Praesent
-              vitae faucibus massa. Sed elementum, metus sit amet vulputate
-              pulvinar, nunc nisi sagittis mi, id aliquet sapien neque
-              condimentum orci. Nulla eleifend est sit amet dui vulputate, at
-              condimentum sem tincidunt. Donec condimentum dolor libero, et
-              dictum nunc consectetur at. Sed quis fringilla ante, eget ornare
-              erat. Donec tellus enim, varius in porta sit amet, semper eu
-              dolor. Fusce sapien sem, porta eget libero ut, faucibus aliquam
-              ligula. Morbi vestibulum dolor at imperdiet sollicitudin. Nullam
-              nec nibh eget massa tincidunt porttitor. Vivamus purus mi,
-              placerat at dui ac, accumsan pharetra urna. Proin venenatis
-              aliquet facilisis. Nullam ultricies varius tellus ut pharetra.
-              Mauris pulvinar mauris vel tortor rhoncus, et pharetra est
-              maximus. Praesent ullamcorper lorem elit, in congue arcu
-              scelerisque nec. Suspendisse posuere ex libero, at dapibus dui
-              sagittis ultricies. Etiam eget enim lobortis, cursus dui vitae,
-              laoreet orci. Suspendisse accumsan mauris justo, vitae ultrices
-              mauris ornare sagittis.
-              nec nibh eget massa tincidunt porttitor. Vivamus purus mi,
-              placerat at dui ac, accumsan pharetra urna. Proin venenatis
-              aliquet facilisis. Nullam ultricies varius tellus ut pharetra.
-              Mauris pulvinar mauris vel tortor rhoncus, et pharetra est
-              maximus. Praesent ullamcorper lorem elit, in congue arcu
-              scelerisque nec. Suspendisse posuere ex libero, at dapibus dui
-              sagittis ultricies. Etiam eget enim lobortis, cursus dui vitae,
-              laoreet orci. Suspendisse accumsan mauris justo, vitae ultrices
-              mauris ornare sagittis.
+              adasda
             </Text>
           </ScrollView>
           <View style={stylesTermsAndConditions.SelectionContainer}>

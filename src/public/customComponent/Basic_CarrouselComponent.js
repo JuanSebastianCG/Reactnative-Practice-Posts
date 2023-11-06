@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, Image, Text, View, StyleSheet } from "react-native";
 import { interpolate, useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
-import BasicStylesPage from "../css_public_Styles/Basic_Style";
+import BasicStylesPage from "../cssStyles/Basic_Style";
 
 function CustomCarrousel({ data = [], width = 350, height = 200 }) {
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -8,51 +8,45 @@ import {
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-import { usePostData } from "../../../utils/useAxios";
+import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 
-import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
-import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
-
-import { CustomTermsAndConditionsAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
+import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
   CustomInTextField,
   CustomInTextArea,
-} from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+} from "../../public/customComponent/Basic_FormComponents";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import {
   ImagePickerComponent,
   ImagePhotoPickerComponent,
-} from "../../../public_styles/component_public_Styles/Basic_ImageComponent";
+} from "../../components/cameraAndGalery/CamaraGaleryPicker.js";
 import {
   CustomSuccessAlert,
   CustomAlertConfirmation,
   CustomErrorBanner,
-} from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
-import { TokenUserManager } from "../../../utils/asyncStorage";
-import { Avatar } from "react-native-paper";
+} from "../../public/customComponent/Basic_AlertComponent";
 
-import axios from "axios";
+import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
-function CreateCategoryScreen() {
+function CreatePostScreen() {
   const navigation = useNavigation();
+  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
   const { getToken } = TokenUserManager();
 
-  const [showTermsAndConditions, setShowTermsAndConditions] = useState(false);
-  const goToShowCaracteristic = () => navigation.replace("ShowCategoryScreen");
-
   //api
-  const { postData, loading, error, data } = usePostData();
+  const { postData,  error  } = usePostData();
 
   const handleChange = (name, value) => {
     setPostDataDB({ ...PostDataDB, [name]: value });
   };
-
   const [PostDataDB, setPostDataDB] = useState({
-    nameCategoryService: "Testeo",
-    descriptionCategoryService: "Juan Cardenas testeo",
-    active: true,
-    avatar: "",
+    title: "",
+    subtitle: "",
+    description: "",
+    avatars: [],
   });
 
   //image picker and photo
@@ -61,7 +55,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatar: image,
+          avatars: [...PostDataDB.avatars, image],
         });
     },
   });
@@ -71,7 +65,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatar: image,
+          avatars: [...PostDataDB.avatars, image],
         });
     },
   });
@@ -81,51 +75,49 @@ function CreateCategoryScreen() {
   const [successPost, setSuccess] = useState(false);
   const [errorPost, setError] = useState(false);
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (
-      !PostDataDB.nameCategoryService ||
-      !PostDataDB.descriptionCategoryService ||
-      !PostDataDB.active ||
-      !PostDataDB.avatar
+      !PostDataDB.title ||
+      !PostDataDB.subtitle ||
+      !PostDataDB.description ||
+      !PostDataDB.avatars
     ) {
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
-
-    const token = await getToken();
+    const url = "/posts";
+    const token =  async () => await getToken()
     const headers = {
-      Authorization: `Bearer ${token}`,
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
+       Authorization: `Bearer ${token}`,
     };
-
+    
     const formData = new FormData();
-    formData.append("nameCategoryService", PostDataDB.nameCategoryService);
-    formData.append(
-      "descriptionCategoryService",
-      PostDataDB.descriptionCategoryService
-    );
-    formData.append("active", PostDataDB.active);
-    formData.append("avatar", {
-      uri: PostDataDB.avatar.uri,
-      name: PostDataDB.avatar.name,
-      type: PostDataDB.avatar.type,
+    formData.append("title", PostDataDB.title);
+    formData.append("subtitle", PostDataDB.subtitle);
+    formData.append("description", PostDataDB.description);
+    PostDataDB.avatars.forEach((image, index) => {
+      formData.append("avatars", {
+        uri: image.uri,
+        name: image.name,
+        type: image.type,
+      });
     });
+    console.log("formData:", formData);
 
-    postData("/admin/category-services/new-category", formData, headers, (data) => {
-      if (error || data == null) {
+    postData(url, headers, formData, (data) => {
+      if (error || !data) {
+        console.log("Error:", error);
         setError(true);
-        setShowConfirmationModal(false);
-        return;
-      }
-      else{
+      } else {
+        console.log("Data:", data);
+        navigation.navigate("ShowPostsScreen");
         setSuccess(true);
-        setShowConfirmationModal(false);
-        return;
       }
     });
+    setShowConfirmationModal(false);
   };
 
   return (
@@ -145,50 +137,42 @@ function CreateCategoryScreen() {
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <CustomInTextField
-              label="Categoria"
+              label="Titulo"
               style={styles.input}
-              placeholder="Categoria"
-              value={PostDataDB.nameCategoryService}
-              onChangeText={(text) => handleChange("nameCategoryService", text)}
+              placeholder="Titulo"
+              value={PostDataDB.title}
+              onChangeText={(text) => handleChange("title", text)}
             />
 
             <View>
               <View style={styles.imageContainer}>
-                {PostDataDB.avatar && (
-                  <Image
-                    source={{ uri: PostDataDB.avatar.uri }}
-                    style={styles.image}
-                  />
+                {PostDataDB.avatars.length > 0 && (
+                  <CustomCarrousel data={PostDataDB.avatars} />
                 )}
               </View>
-              {/* <View style={styles.imageContainer}>
-                {PostDataDB.avatar.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatar} />
-                )}
-              </View> */}
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
+
+            <CustomInTextField
+              label="Subtitulo"
+              style={styles.input}
+              placeholder="Subtitulo"
+              value={PostDataDB.subtitle}
+              onChangeText={(text) => handleChange("subtitle", text)}
+            />
 
             <CustomInTextArea
               label="Descripcion"
               style={styles.inputTextArea}
               placeholder="Descripcion"
-              value={PostDataDB.descriptionCategoryService}
-              onChangeText={(text) =>
-                handleChange("descriptionCategoryService", text)
-              }
-            />
-
-            <CustomButton
-              text="Activo"
-              onPress={() => setPostDataDB({ ...PostDataDB, active: true })}
-              buttonStyle={styles.button}
+              value={PostDataDB.description}
+              onChangeText={(text) => handleChange("description", text)}
             />
 
             {errorPost && (
               <CustomErrorBanner
-                text="No se pudo crear la categoria. Por favor, verifique sus credenciales."
+                text="No se pudo crear el post. Por favor, verifique sus credenciales."
                 styleBanner={styles.errorBanner}
                 onChange={() => setError(false)}
               />
@@ -209,13 +193,7 @@ function CreateCategoryScreen() {
             <CustomSuccessAlert
               isVisible={successPost}
               message="Post creado con éxito!!"
-              onConfirm={goToShowCaracteristic}
-            />
-
-            <CustomTermsAndConditionsAlert
-              isVisible={showTermsAndConditions}
-              onConfirm={() => setShowTermsAndConditions(false)}
-              onCancel={() => setShowTermsAndConditions(false)}
+              onConfirm={goToShowPosts}
             />
           </View>
         </View>
@@ -314,13 +292,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
     marginBottom: 70,
   },
-
-  errorBanner: {
-    marginTop: 20,
-    marginLeft: "8%",
-    marginRight: "8%",
-
-  },
 });
 
-export default CreateCategoryScreen;
+export default CreatePostScreen;

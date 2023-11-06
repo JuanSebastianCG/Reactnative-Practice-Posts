@@ -4,6 +4,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  ActivityIndicator,
   Text,
   TouchableOpacity,
 } from "react-native";
@@ -12,84 +13,40 @@ import {
   useGetData,
   useDeleteData,
   basicEndpoint,
-} from "../../../utils/useAxios";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+} from "../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
-import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
-import {
-  CustomDropDown,
-  CustomShowMultipleTag,
-  CustomTag,
-} from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import { useNavigation } from "@react-navigation/native";
+import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
+import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 
-import {
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-
-function ShowServicesScreen() {
+function ShowPostsScreen() {
+  const { getData, loading, error, data } = useGetData();
+  const [isDeleted, setIsDeleted] = useState(false);
   const { getToken } = TokenUserManager();
-  const { getData, loading, error } = useGetData();
-  const { deleteData, loadingDelete } = useDeleteData();
+  const [errorPost, setErrorPost] = useState(false);
 
-  const [dataPost, setDataPost] = useState([]);
-  const [dataPostCategories, setDataPostCategories] = useState([]);
+  const { deleteData, loadingDelete, errorDelete, dataDelete } =
+    useDeleteData();
 
   const navigation = useNavigation();
-  const route = useRoute();
-
-  const [errorPost, setErrorPost] = useState(false);
   const gotToLogin = () => navigation.navigate("LoginScreen");
-
-  const [filterCategories, setFilterCategories] = useState(
-    route.params?.categoryName ? [route.params?.categoryName] : []
-  );
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     handleGetData();
-    handleGetDataCategories();
-    const intervalId = setInterval(() => {
-      handleGetData();
-      handleGetDataCategories();
-    }, 5000);
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [filterCategories]);
+    setIsDeleted(false);
+  }, [isDeleted, data]);
 
   const handleError = () => {
     setErrorPost(false);
     gotToLogin();
   };
-  const handleGetDataCategories = async () => {
-    if (loading) return;
-    const url = "/admin/category-services";
-    const header = {
-      Authorization: `Bearer ${await getToken()}`,
-    };
-    getData(
-      url,
-      (data) => {
-        if (error && !data) {
-          setErrorPost(true);
-          return;
-        }
-        newData = [];
-        data = data.map((item) => {
-          newData.push(item.nameCategoryService);
-        });
-        setDataPostCategories(newData);
-      },
-      header
-    );
-  };
 
   const handleGetData = async () => {
-    if (loading) return;
-    const url = "/admin/services";
+    const url = "/posts";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -100,32 +57,32 @@ function ShowServicesScreen() {
           setErrorPost(true);
           return;
         }
-        if (filterCategories.length > 0) {
-          data = data.filter((item) =>
-            filterCategories.includes(item.categoryService)
-          );
-        }
-
         for (let i = 0; i < data.length; i++) {
           uri = `${basicEndpoint}/${data[i].avatar}`;
-          data[i].photos = data[i].photos.map((avatar) => {
+          data[i].avatars = data[i].avatars.map((avatar) => {
             return { uri: `${basicEndpoint}/${avatar}` };
           });
         }
-        setDataPost(data);
+        setPosts(data);
       },
       header
     );
+
+    //http://192.168.20.26:3000/api/v1/uploads/post/1697776043933-1fd0c384-43c2-4c48-8818-80ca2a166a9a.jpeg
   };
   const handleDelete = async (id) => {
-    const url = `/data/${id}`;
+    const url = `/posts/${id}`;
+    console.log("id:", id);
     const header = {
       Authorization: `Bearer ${await getToken()}`,
-    };
-    deleteData(url, (data) => {}, header);
+    }
+    deleteData(url, (data) => {
+      if (data) {
+        setPosts(posts.filter((post) => post._id !== id));
+        setIsDeleted(true);
+      }
+    },header);
   };
-
-  /* ==============================Vista============================== */
 
   return (
     <SafeAreaView style={styles.container}>
@@ -133,29 +90,7 @@ function ShowServicesScreen() {
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
-          <View style={styles.inputContainer}>
-            {/* DropDown De categoria */}
-            <CustomDropDown
-              items={dataPostCategories}
-              label={"Categorias"}
-              icon={"magnify"}
-              onItemSlected={(item) => {
-                if (!filterCategories.includes(item)) {
-                  setFilterCategories([...filterCategories, item]);
-                }
-              }}
-              showLastSelected={false}
-            />
-          </View>
-          <CustomShowMultipleTag
-            tags={filterCategories}
-            style={{ marginTop: 20, marginLeft: "5%", marginBottom: 20 }}
-            handleDelete={(item) => {
-              setFilterCategories(
-                filterCategories.filter((tag) => tag !== item)
-              );
-            }}
-          />
+          {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
           {error && (
             <CustomErrorAlert
               isVisible={true}
@@ -163,17 +98,15 @@ function ShowServicesScreen() {
               onConfirm={handleError}
             />
           )}
-          {dataPost.map((Service) => (
-            <Card
-              key={Service._id}
-              Service={Service}
-              handleDelete={handleDelete}
-            />
+          {posts.map((post, index) => (
+            <View style={styles.cards} key={index}>
+              <Card post={post} handleDelete={handleDelete} />
+            </View>
           ))}
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("CreateCategoryScreen")}>
+          onPress={() => navigation.navigate("CreatePostScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>
@@ -181,43 +114,34 @@ function ShowServicesScreen() {
   );
 }
 
-function Card({ Service, handleDelete }) {
+function Card({ post, handleDelete }) {
   return (
-    <View style={styleCard.card} key={Service._id}>
+    <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={Service.photos} width={330} height={190} />
+        <CustomCarrousel data={post.avatars} width={330} height={190} />
 
         <View style={styleCard.titleHeader}>
-          <Text style={styleCard.title}>{Service.name}</Text>
+          <Text style={styleCard.title}>{post.title}</Text>
         </View>
       </View>
       <View style={styleCard.cardBody}>
         <TouchableOpacity
           style={styleCard.deleteButton}
-          onPress={() => handleDelete(Service._id)}>
+          onPress={() => handleDelete(post._id)}>
           <Icon name="trash-can" size={40} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styleCard.editButton}
-          onPress={() => handleDelete(Service._id)}>
+          onPress={() => handleDelete(post._id)}>
           <Icon name="pencil" size={40} />
         </TouchableOpacity>
 
-        <Text style={styleCard.subtitle}>{Service.subtitle}</Text>
-        <Text style={styleCard.description}>{Service.description}</Text>
-        <View
-          style={{
-            position: "absolute",
-            bottom: 10,
-            right: 10,
-            marginTop: 10,
-          }}>
-          <CustomTag text={Service.categoryService} />
-        </View>
+        <Text style={styleCard.subtitle}>{post.subtitle}</Text>
+        <Text style={styleCard.description}>{post.description}</Text>
       </View>
     </View>
   );
@@ -249,7 +173,7 @@ const styleCard = StyleSheet.create({
     alignSelf: "center",
   },
   titleHeader: {
-    backgroundColor: BasicStylesPage.color6 + 99,
+    backgroundColor: BasicStylesPage.color6,
     position: "absolute",
     marginTop: 20,
     paddingTop: 5,
@@ -257,7 +181,6 @@ const styleCard = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     alignItems: "flex-start",
-    width: 220,
   },
   title: {
     fontSize: 18,
@@ -276,7 +199,7 @@ const styleCard = StyleSheet.create({
   cardBody: {
     padding: 10,
     marginTop: 10,
-    height: 130,
+    height: 100,
     borderBottomColor: BasicStylesPage.color2,
     borderBottomWidth: 4,
     borderLeftColor: BasicStylesPage.color2,
@@ -287,7 +210,7 @@ const styleCard = StyleSheet.create({
   },
   deleteButton: {
     position: "absolute",
-    top: -35,
+    bottom: 10,
     right: 80,
     width: 50,
     height: 50,
@@ -300,7 +223,7 @@ const styleCard = StyleSheet.create({
   },
   editButton: {
     position: "absolute",
-    top: -39,
+    bottom: 10,
     right: 15,
     width: 60,
     height: 60,
@@ -320,11 +243,11 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 20,
+    bottom: 10,
     right: 15,
     width: 80,
     height: 80,
-    backgroundColor: BasicStylesPage.color4 + 70,
+    backgroundColor: BasicStylesPage.color4 + 80,
     borderRadius: 60,
     alignItems: "center",
     justifyContent: "center",
@@ -339,16 +262,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flexGrow: 1,
     justifyContent: "flex-start",
-    marginTop: 10,
+    marginTop: 50,
     paddingBottom: 150,
   },
   cards: {
     marginBottom: 20,
   },
-  inputContainer: {
-    marginTop: 30,
-    alignItems: "center",
-  },
 });
 
-export default ShowServicesScreen;
+export default ShowPostsScreen;

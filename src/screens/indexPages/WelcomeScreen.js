@@ -10,9 +10,9 @@ import { Text, Stack } from "@react-native-material/core";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
-import { CustomLogo } from "../../public_styles/component_public_Styles/Basic_PageInterface";
-import AnimatedTriangleRain from "../../public_styles/animations_public/AnimatedTriangleRain";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
+import AnimatedTriangleRain from "../../public/animations/AnimatedTriangleRain";
 
 function WelcomeScreen() {
   const navigation = useNavigation();

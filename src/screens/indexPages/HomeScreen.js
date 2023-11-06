@@ -3,14 +3,13 @@ import { ScrollView, View, Text } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Svg, Polygon } from "react-native-svg";
 import { StyleSheet, Platform } from "react-native";
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
-import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
 import {
   CustomLogo,
   CustomLogoutButton,
-} from "../../public_styles/component_public_Styles/Basic_PageInterface";
+} from "../../public/customComponent/Basic_PageInterface";
 
-import { TokenUserManager } from "../../utils/asyncStorage";
 import { useAuth } from "../../utils/authManager";
 
 function HomeScreen() {

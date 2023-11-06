@@ -6,7 +6,7 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../cssStyles/Basic_Style";
 
 const CustomInTextField = ({ label, style, value, onChangeText }) => {
   const [isFocused, setIsFocused] = useState(false);

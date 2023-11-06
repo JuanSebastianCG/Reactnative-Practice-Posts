@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import { Dimensions } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 const { width, height } = Dimensions.get("window");
@@ -49,7 +49,6 @@ const Sidebar = () => {
       closeSidebar();
     }
   }, [isModalOpen]);
-  
 
   return (
     <View style={styles.container}>
@@ -127,9 +126,7 @@ const SideBarBody = ({ closeSidebar }) => {
   const navigation = useNavigation();
 
   return (
-
-
-      <View style={styleBody.container}>
+    <View style={styleBody.container}>
       <Svg width="400" height="500" style={styleBody.cardCircle}>
         <Circle cx="200" cy="160" r="100" fill={BasicStylesPage.color2 + 90} />
       </Svg>
@@ -137,38 +134,38 @@ const SideBarBody = ({ closeSidebar }) => {
       <Svg width="400" height="500" style={styleBody.cardCircle}>
         <Circle cx="200" cy="380" r="70" fill={BasicStylesPage.color2 + 90} />
       </Svg>
-        <Text style={styleBody.sidebarItemTitle}>MENU</Text>
-        <Dropdown
-          title="Home"
-          titleIcon="home"
-          items={[
-            {
-              text: "Home",
-              onPress: () => navigation.navigate("HomeScreen"),
-            },
-            {
-              text: "login",
-              onPress: () => navigation.navigate("LoginScreen"),
-            },
-          ]}
-          closeSidebar={closeSidebar}
-        />
-        <Dropdown
-          title="Categorias"
-          titleIcon="shape"
-          items={[
-            {
-              text: "Ver Categorias",
-              onPress: () => navigation.navigate("ShowCategoryScreen"),
-            },
-            {
-              text: "Ver Servicios",
-              onPress: () => navigation.navigate("ShowServicesScreen"),
-            },
-          ]}
-          closeSidebar={closeSidebar}
-        />
-      </View>
+      <Text style={styleBody.sidebarItemTitle}>MENU</Text>
+      <Dropdown
+        title="Home"
+        titleIcon="home"
+        items={[
+          {
+            text: "Home",
+            onPress: () => navigation.navigate("HomeScreen"),
+          },
+          {
+            text: "login",
+            onPress: () => navigation.navigate("LoginScreen"),
+          },
+        ]}
+        closeSidebar={closeSidebar}
+      />
+      <Dropdown
+        title="Categorias"
+        titleIcon="shape"
+        items={[
+          {
+            text: "Ver Categorias",
+            onPress: () => navigation.navigate("ShowCategoryScreen"),
+          },
+          {
+            text: "Ver Servicios",
+            onPress: () => navigation.navigate("ShowServicesScreen"),
+          },
+        ]}
+        closeSidebar={closeSidebar}
+      />
+    </View>
   );
 };
 
@@ -179,7 +176,7 @@ const styleBody = {
     flex: 1,
     backgroundColor: BasicStylesPage.color3,
     paddingTop: 20,
-    height: height *  0.6,
+    height: height * 0.6,
   },
   sidebarItem: {
     flexDirection: "row",
@@ -224,7 +221,6 @@ const styleBody = {
     position: "absolute",
     alignSelf: "center",
   },
-
 };
 
 const styles = {
@@ -258,8 +254,6 @@ const styles = {
   scrollView: {
     maxHeight: height * 0.65,
     marginTop: 10,
-    
-    
   },
   /* Resto de los estilos sin cambios */
 };

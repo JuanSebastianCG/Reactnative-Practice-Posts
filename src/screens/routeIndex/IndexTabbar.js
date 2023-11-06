@@ -2,20 +2,21 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
-import Tabbar from "./indexComponents/Tabbar";
-import { Sidebar } from "./indexComponents/SideBarMenu";
+import Tabbar from "../../components/indexComponentsBar/Tabbar"
+import { Sidebar } from "../../components/indexComponentsBar/SideBarMenu";
 
-import HomeScreen from "./screens/HomeScreen";
-import LoginScreen from "./screens/User/LoginScreen";
-import RegisterScreen from "./screens/User/RegisterScreen";
-import ShowCategoryScreen from "./screens/Category/ShowCategory";
-import ShowServicesScreen from "./screens/Category/ShowServices";
+import HomeScreen from "../indexPages/HomeScreen";
+import LoginScreen from "../userComponents/LoginScreen";
+import RegisterScreen from "../userComponents/RegisterScreen";
 
-import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
-import CreatePostScreen from "./screens/posts/CreatePostScreen";
-import CreateCategoryScreen from "./screens/Category/CreateCategory";
-import PolicyScreen from "./screens/PrivacyPolicy/privacyPolicy";
-import { AuthProvider } from "../utils/authManager";
+import ShowCategoryScreen from "../../screens/CategoryAndServices/ShowCategory";
+import ShowServicesScreen from "../../screens/CategoryAndServices/ShowServices";
+import CreateCategoryScreen from "../../screens/CategoryAndServices/CreateCategory";
+
+import ShowPostsScreen from "../postsComponents/ShowPostsScreen";
+import CreatePostScreen from "../postsComponents/CreatePostScreen";
+
+import { AuthProvider } from "../../utils/authManager";
 
 const Stack = createStackNavigator();
 
@@ -33,13 +34,11 @@ function IndexTabbar() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-          <Stack.Screen name="policyScreen" component={PolicyScreen} />
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
-            initialParams={{ categoryName:""}}
+            initialParams={{ categoryName: "" }}
             options={({ route }) => ({ title: route.params.categoryName })}
-            
           />
           <Stack.Screen
             name="ShowCategoryScreen"
@@ -50,7 +49,6 @@ function IndexTabbar() {
             component={CreateCategoryScreen}
           />
         </Stack.Navigator>
-        {/* Superponer el Tabbar de manera absoluta */}
 
         <Tabbar />
         <View style={styles.sideBarOverlay}>

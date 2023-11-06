@@ -2,10 +2,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
-import WelcomeScreen from "./screens/WelcomeScreen";
-import IndexTabbar from "./IndexTabbar";
-import CamaraScreen from "./screens/CamaraScreen";
+import CamaraScreen from "../../components/cameraAndGalery/CamaraScreen";
+import WelcomeScreen from "../indexPages/WelcomeScreen";
 
+import IndexTabbar from "./IndexTabbar";
 
 const Stack = createStackNavigator();
 
