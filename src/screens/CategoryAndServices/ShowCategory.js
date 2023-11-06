@@ -64,16 +64,16 @@ function ShowCategoryScreen() {
           return;
         }
         setDataPost(data);
-        for (let i = 0; i < data.length; i++) {
+      /*   for (let i = 0; i < data.length; i++) {
           console.log(data[i]._id);
-        }
+        } */
 
       },
       header
     );
   };
   const handleDelete = async (id) => {
-    const url = `/data/${id}`;
+    const url = `/admin/category-services/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -124,6 +124,11 @@ function Card({ Category, handleDelete }) {
           })
         }>
         <View style={styleCard.contentContainer}>
+        <TouchableOpacity
+          style={styleCard.deleteButton}
+          onPress={() => handleDelete(Category._id)}>
+          <Icon name="trash-can" size={40} />
+        </TouchableOpacity>
           <View style={styleCard.ImageContainer}>
             <Image
               style={styleCard.image}
@@ -201,6 +206,16 @@ const styleCard = StyleSheet.create({
     color: BasicStylesPage.color1,
     fontSize: 16, // Ajusta el tamaño de la fuente de la descripción
   },
+  deleteButton: {
+    position: "absolute",
+    bottom: -10,
+    right: 120,
+    zIndex: 2,
+    borderRadius: 60,
+    padding: 10,
+    backgroundColor: BasicStylesPage.color4 + 99,
+
+  }
 });
 
 const styles = StyleSheet.create({
@@ -235,6 +250,7 @@ const styles = StyleSheet.create({
   cards: {
     marginBottom: 20,
   },
+
 });
 
 export default ShowCategoryScreen;

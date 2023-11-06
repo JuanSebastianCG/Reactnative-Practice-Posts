@@ -147,6 +147,10 @@ const SideBarBody = ({ closeSidebar }) => {
             text: "login",
             onPress: () => navigation.navigate("LoginScreen"),
           },
+          {
+            text: "Register",
+            onPress: () => navigation.navigate("RegisterScreen"),
+          },
         ]}
         closeSidebar={closeSidebar}
       />

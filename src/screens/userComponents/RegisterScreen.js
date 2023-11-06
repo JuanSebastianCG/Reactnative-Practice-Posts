@@ -35,6 +35,7 @@ function RegisterScreen() {
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
 
+
   const [userData, setUserData] = useState({
     firstname: "Juan Sebastian test2",
     lastname: "Cardenas",
@@ -68,18 +69,16 @@ function RegisterScreen() {
       active: userData.active,
       avatar: userData.avatar,
     };
-
-
-    postData(url,formData, headers , (response) => {
-      console.log("response", response);
-      console.log("error", error);
-      if (error || !response) {
-        setLoginError(true);
-      } else {
-        console.log(response);
+    
+    postData(url, formData, headers , (response) => {
+      console.log(response);
+      if (response) {
         navigation.navigate("LoginScreen");
+      } else {
+        setLoginError(true);
       }
     });
+
   };
 
   return (

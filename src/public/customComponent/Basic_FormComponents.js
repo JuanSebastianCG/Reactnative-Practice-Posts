@@ -208,6 +208,7 @@ const stylesFormTextArea = StyleSheet.create({
   inputText: {
     fontSize: 16,
     padding: 5,
+    paddingTop: 12,
   },
   label: {
     position: "absolute",

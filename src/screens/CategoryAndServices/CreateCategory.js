@@ -171,6 +171,7 @@ function CreateCategoryScreen() {
             <CustomInTextArea
               label="Descripcion"
               style={styles.inputTextArea}
+              
               placeholder="Descripcion"
               value={PostDataDB.descriptionCategoryService}
               onChangeText={(text) =>
@@ -178,11 +179,11 @@ function CreateCategoryScreen() {
               }
             />
 
-            <CustomButton
+            {/* <CustomButton
               text="Activo"
               onPress={() => setPostDataDB({ ...PostDataDB, active: true })}
               buttonStyle={styles.button}
-            />
+            /> */}
 
             {errorPost && (
               <CustomErrorBanner
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     width: 240,
     height: 130,
-    paddingTop: 10,
+    paddingTop: 20,
   },
   button: {
     padding: 10,
