@@ -9,7 +9,7 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../../utils/useAxios";
-import { Polygon, Svg } from "react-native-svg";
+import { Polygon, Svg } from "react-native-svg"; 
 
 import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
@@ -29,6 +29,7 @@ import {
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import { bool } from "prop-types";
 
 function CreateCategoryScreen() {
   const navigation = useNavigation();
@@ -45,7 +46,7 @@ function CreateCategoryScreen() {
     nameCategoryService: "",
     descriptionCategoryService: "",
     active: "",
-    avatar: [],
+    avatar: "",
   });
 
   //image picker and photo
@@ -54,7 +55,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatar: [...PostDataDB.avatar, image],
+          avatar: image,
         });
     },
   });
@@ -64,7 +65,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatar: [...PostDataDB.avatar, image],
+          avatar: image,
         });
     },
   });
@@ -81,6 +82,10 @@ function CreateCategoryScreen() {
       !PostDataDB.active ||
       !PostDataDB.avatar
     ) {
+        console.log(PostDataDB.nameCategoryService);
+        console.log(PostDataDB.descriptionCategoryService)
+        console.log(PostDataDB.active)
+        console.log(PostDataDB.avatar)
       setError(true);
       setShowConfirmationModal(false);
       return;
@@ -94,13 +99,19 @@ function CreateCategoryScreen() {
     formData.append("nameCategoryService", PostDataDB.nameCategoryService);
     formData.append("descriptionCategoryService", PostDataDB.descriptionCategoryService);
     formData.append("active", PostDataDB.active);
-    PostDataDB.avatar.forEach((image, index) => {
+    formData.append("avatar", {
+        uri: PostDataDB.avatar.uri,
+        name: PostDataDB.avatar.name,
+        type: PostDataDB.avatar.type,
+      });
+    
+    /* avatar.forEach((image, index) => {
       formData.append("avatar", {
         uri: image.uri,
         name: image.name,
         type: image.type,
       });
-    });
+    }); */
 
     postData(url, headers, formData, (data) => {
       if (error || !data) {
@@ -131,19 +142,28 @@ function CreateCategoryScreen() {
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <CustomInTextField
-              label="Nombre"
+              label="Categoria"
               style={styles.input}
-              placeholder="Nombre"
+              placeholder="Categoria"
               value={PostDataDB.nameCategoryService}
               onChangeText={(text) => handleChange("nameCategoryService", text)}
             />
 
             <View>
-              <View style={styles.imageContainer}>
+
+                <View style={styles.imageContainer}>
+                {PostDataDB.avatar && (
+                    <Image
+                    source={{ uri: PostDataDB.avatar.uri }}
+                    style={styles.image}
+                    />
+                )}
+                </View>
+              {/* <View style={styles.imageContainer}>
                 {PostDataDB.avatar.length > 0 && (
                   <CustomCarrousel data={PostDataDB.avatar} />
                 )}
-              </View>
+              </View> */}
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
@@ -152,8 +172,14 @@ function CreateCategoryScreen() {
               label="Descripcion"
               style={styles.inputTextArea}
               placeholder="Descripcion"
-              value={PostDataDB.active}
-              onChangeText={(text) => handleChange("active", text)}
+              value={PostDataDB.descriptionCategoryService}
+              onChangeText={(text) => handleChange("descriptionCategoryService", text)}
+            />
+
+            <CustomButton
+              text="Activo"
+              onPress={() => setPostDataDB({...PostDataDB, active: true})}
+              buttonStyle={styles.button}
             />
 
             {errorPost && (
