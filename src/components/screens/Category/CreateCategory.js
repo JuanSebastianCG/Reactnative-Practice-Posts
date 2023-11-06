@@ -101,6 +101,7 @@ function CreateCategoryScreen() {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
     };
 
     const formData = new FormData();

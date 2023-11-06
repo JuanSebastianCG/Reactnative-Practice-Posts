@@ -14,6 +14,7 @@ import ShowServicesScreen from "./screens/Category/ShowServices";
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
 import CreateCategoryScreen from "./screens/Category/CreateCategory";
+import PolicyScreen from "./screens/PrivacyPolicy/privacyPolicy";
 import { AuthProvider } from "../utils/authManager";
 
 const Stack = createStackNavigator();
@@ -32,6 +33,7 @@ function IndexTabbar() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+          <Stack.Screen name="policyScreen" component={PolicyScreen} />
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
