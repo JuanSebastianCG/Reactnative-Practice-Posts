@@ -1,14 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
+<<<<<<< HEAD
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+=======
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+>>>>>>> origin/switch-checkbox-component
 import { Svg, Polygon } from "react-native-svg";
 import { StyleSheet, Platform } from "react-native";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
 import {
-  CustomButton,
   CustomLogo,
+<<<<<<< HEAD
 } from "../../public_styles/component_public_Styles/Basic_Components_F";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+=======
+  CustomLogoutButton,
+} from "../../public_styles/component_public_Styles/Basic_PageInterface";
+
+import { TokenUserManager } from "../../utils/asyncStorage";
+import { useAuth } from "../../utils/authManager";
+
+>>>>>>> origin/switch-checkbox-component
 function HomeScreen() {
   const [userToken, setUserToken] = useState(null);
   const navigation = useNavigation();
@@ -16,6 +29,7 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+<<<<<<< HEAD
   const goToCreateService=()=> navigation.navigate("CreateService")
   useEffect(() => {
     if (isFocused) {
@@ -37,19 +51,15 @@ function HomeScreen() {
       console.error('Error al obtener el token desde AsyncStorage:', error);
     }
   };
+=======
+  const { logged, handleLoggin } = useAuth();
+>>>>>>> origin/switch-checkbox-component
 
-/*   useEffect(() => {
-    // Obten el token de acceso de AsyncStorage y actualiza el estado
-    AsyncStorage.getItem("accessToken")
-      .then((token) => {
-        if (token) {
-          setAccessToken(token);
-        }
-      })
-      .catch((error) => {
-        console.log("Error al obtener el token de acceso:", error);
-      });
-  }, []); */
+  useFocusEffect(
+    React.useCallback(() => {
+      handleLoggin();
+    }, [])
+  );
 
   return (
     <ScrollView
@@ -57,20 +67,21 @@ function HomeScreen() {
       contentContainerStyle={styles.scrollContent}
       horizontal={false}
       showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
+      showsHorizontalScrollIndicator={false}>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
       </Svg>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
       </Svg>
-  
+
+      <CustomLogoutButton />
       <CustomLogo styleLogo={styles.logoContainer} />
-  
+
       <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
       <Text style={styles.text_tittlePoint}>...</Text>
 
+<<<<<<< HEAD
       {userToken ? (
         <View>
           <CustomButton
@@ -107,6 +118,31 @@ function HomeScreen() {
         
       </View>
       )}
+=======
+      <CustomButton
+        text="Registrarse"
+        onPress={goToRegister}
+        buttonStyle={styles.buttonContainer}
+      />
+      <CustomButton
+        text="Login"
+        onPress={goToLogin}
+        buttonStyle={[
+          styles.buttonContainer,
+          { paddingLeft: 32, paddingRight: 32 },
+        ]}
+      />
+   
+        <CustomButton
+          text="Ver api"
+          onPress={goToShowPosts}
+          buttonStyle={[
+            styles.buttonContainer,
+            { paddingLeft: 26, paddingRight: 26 },
+          ]}
+        />
+    
+>>>>>>> origin/switch-checkbox-component
     </ScrollView>
   );
 }
@@ -117,11 +153,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   logoContainer: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    right: 0,
-    top:0,
+    top: 0,
+    left: 0,
   },
   scrollContent: {
     alignItems: "center",
@@ -140,7 +173,7 @@ const styles = StyleSheet.create({
     color: BasicStylesPage.color1,
     paddingLeft: 60,
     paddingRight: 20,
-    fontSize: 4,
+    fontSize: 64,
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: 80,

@@ -34,13 +34,17 @@ export function ImagePickerComponent({ onComplete = () => {} }) {
     onComplete(data);
   };
 
-  const BasicViewPicker = ({buttonStyle, positionStyle}) => (
+  const BasicViewPicker = ({ buttonStyle, positionStyle }) => (
     <View style={positionStyle}>
-      <CustomButton text="Seleccionar Imagen" onPress={pickImage} buttonStyle={buttonStyle} />
+      <CustomButton
+        text="Seleccionar Imagen"
+        onPress={pickImage}
+        buttonStyle={buttonStyle}
+      />
     </View>
   );
 
-  const BasicIconImagePicker = ({buttonStyle}) => (
+  const BasicIconImagePicker = ({ buttonStyle }) => (
     <View style={buttonStyle}>
       <TouchableOpacity onPress={pickImage}>
         <Icon name="image-edit" size={55} color={BasicStylesPage.color0} />
@@ -55,42 +59,43 @@ export function ImagePickerComponent({ onComplete = () => {} }) {
   };
 }
 
-export function ImagePhotoPickerComponent({onComplete = () => {}}) {
+export function ImagePhotoPickerComponent({ onComplete = () => {} }) {
   const [imageDataPhoto, setImageDataPhoto] = useState(null);
 
   const takePhoto = async () => {
-    const { status } = await Camera.getCameraPermissionsAsync();
-    if (status === "granted") {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-      data = null;
-      if (!result.canceled) {
-        const localUri = result.assets[0].uri;
-        const filename = localUri.split("/").pop();
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : `image`;
-        data = {
-          uri: localUri,
-          name: filename,
-          type,
-        };
-      }
-      setImageDataPhoto(data);
-      onComplete(data);
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    data = null;
+    if (!result.canceled) {
+      const localUri = result.assets[0].uri;
+      const filename = localUri.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+      data = {
+        uri: localUri,
+        name: filename,
+        type,
+      };
     }
+    setImageDataPhoto(data);
+    onComplete(data);
   };
 
-  const BasicViewPhoto = ({buttonStyle, positionStyle}) => (
+  const BasicViewPhoto = ({ buttonStyle, positionStyle }) => (
     <View style={positionStyle}>
-      <CustomButton text="Seleccionar Imagen" onPress={takePhoto} buttonStyle={positionStyle} />
+      <CustomButton
+        text="Seleccionar Imagen"
+        onPress={takePhoto}
+        buttonStyle={positionStyle}
+      />
     </View>
   );
 
-  const BasicIconImagePhoto = ({buttonStyle}) => (
+  const BasicIconImagePhoto = ({ buttonStyle }) => (
     <View style={buttonStyle}>
       <TouchableOpacity onPress={takePhoto}>
         <Icon name="camera-plus" size={55} color={BasicStylesPage.color0} />

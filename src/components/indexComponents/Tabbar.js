@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Importa 'useEffect'
 import {
   View,
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
+  Keyboard, // Importa 'Keyboard'
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -14,10 +15,30 @@ const Tabbar = () => {
   const navigation = useNavigation();
 
   const [activeTab, setActiveTab] = useState("Home");
+  const [tabbarVisible, setTabbarVisible] = useState(true); // Estado para controlar la visibilidad del Tabbar
+
   const handleTabPress = (tabName) => setActiveTab(tabName);
 
+  useEffect(() => {
+    // Agrega un listener para detectar cuando se muestra el teclado
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setTabbarVisible(false); // Oculta el Tabbar cuando se muestra el teclado
+    });
+
+    // Agrega un listener para detectar cuando se oculta el teclado
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setTabbarVisible(true); // Muestra el Tabbar cuando se oculta el teclado
+    });
+
+    // Limpia los listeners cuando el componente se desmonta
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <View style={styles.tabContainer}>
+    <View style={[styles.tabContainer, !tabbarVisible && styles.hiddenTabContainer]}>
       <TouchableWithoutFeedback
         onPress={() => {
           handleTabPress("Home");
@@ -74,12 +95,16 @@ const styles = StyleSheet.create({
     backgroundColor: BasicStylesPage.color6,
     justifyContent: "space-around",
     alignItems: "center",
-
     paddingHorizontal: 16,
     width: "95%",
     marginHorizontal: "2.5%",
     borderRadius: 25,
-    position: "relative", // Agrega position:relative para superponer elementos
+    position: "absolute",
+    bottom: 10,
+    zIndex: 2,
+  },
+  hiddenTabContainer: {
+    display: "none", // Oculta el Tabbar
   },
   tabIconWrapper: {
     width: 50,
@@ -96,8 +121,8 @@ const styles = StyleSheet.create({
   activeTab: {
     backgroundColor: BasicStylesPage.color3,
     borderRadius: 60,
-    position: "relative", 
-    zIndex: 1, 
+    position: "relative",
+    zIndex: 1,
     height: 60,
     width: 60,
   },

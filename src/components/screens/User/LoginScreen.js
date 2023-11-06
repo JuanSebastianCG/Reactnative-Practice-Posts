@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
+<<<<<<< HEAD:src/components/screens/LoginScreen.js
 
 
+=======
+/* componentes */
+>>>>>>> origin/switch-checkbox-component:src/components/screens/User/LoginScreen.js
 import { Stack } from "@react-native-material/core";
-
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
+<<<<<<< HEAD:src/components/screens/LoginScreen.js
 import {
   CustomButton,
   CustomErrorBanner,
@@ -16,13 +19,25 @@ import {
 import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import AsyncStorage from "@react-native-async-storage/async-storage"
+=======
+import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
+import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
+import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
+import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+/* utils */
+import { TokenUserManager } from "../../../utils/asyncStorage";
+import { usePostData } from "../../../utils/useAxios";
+>>>>>>> origin/switch-checkbox-component:src/components/screens/User/LoginScreen.js
 
 function LoginScreen() {
   const navigation = useNavigation();
+  const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+
   const [userData, setUserData] = useState({
-    email: "",
-    password: "",
+    email: "test@test.com",
+    password: "user123",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -34,22 +49,20 @@ function LoginScreen() {
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
-    const url = "/users/login";
+    const url = "/auth/login";
     const headers = {
       "Content-Type": "application/json",
     };
     const body = {
       email: userData.email,
-      password: userData.password,
+      current_password: userData.password,
     };
     postData(url, headers, body, (response) => {
-      /* console.log("token",response.data) */
       if (error || !response) {
-        console.log("Error:", error);
         setLoginError(true);
       } else {
-
         const accessToken = response.data.access;
+<<<<<<< HEAD:src/components/screens/LoginScreen.js
         AsyncStorage.setItem("accessToken",  accessToken )
         .then(() => {
           navigation.navigate("ShowPostsScreen");
@@ -61,6 +74,10 @@ function LoginScreen() {
         .catch((storageError) => {
           console.log("Error al guardar el token en AsyncStorage:", storageError);
         });
+=======
+        saveToken(accessToken);
+        navigation.navigate("HomeScreen");
+>>>>>>> origin/switch-checkbox-component:src/components/screens/User/LoginScreen.js
       }
     });
   };
@@ -101,21 +118,19 @@ function LoginScreen() {
                 value={userData.password}
                 onChangeText={(text) => handleChange("password", text)}
               />
-
-
             </Stack>
             {loginError && (
-                <CustomErrorBanner
-                  text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
-                  styleBanner={styles.errorBanner}
-                  onChange={() => setLoginError(false)}
-                />
-              )}
-              <CustomButton
-                text="Login"
-                onPress={handleSubmit}
-                buttonStyle={styles.button}
+              <CustomErrorBanner
+                text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
+                styleBanner={styles.errorBanner}
+                onChange={() => setLoginError(false)}
               />
+            )}
+            <CustomButton
+              text="Login"
+              onPress={handleSubmit}
+              buttonStyle={styles.button}
+            />
           </View>
         </View>
       </ScrollView>
@@ -128,10 +143,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   errorBanner: {
-    marginLeft: '10%',
-    marginRight: '10%',
-    
-
+    marginLeft: "10%",
+    marginRight: "10%",
   },
   footer: {
     position: "absolute",
@@ -169,9 +182,9 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    position: 'absolute',
-    top: 0,      // Alinea el componente en la parte superior
-    right: 0,    // Alinea el componente en la esquina derecha
+    position: "absolute",
+    top: 0, // Alinea el componente en la parte superior
+    right: 0, // Alinea el componente en la esquina derecha
     width: 120,
     height: 120,
   },
@@ -186,7 +199,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
 });
 
 export default LoginScreen;

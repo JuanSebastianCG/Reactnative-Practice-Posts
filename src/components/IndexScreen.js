@@ -4,6 +4,8 @@ import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
 import WelcomeScreen from "./screens/WelcomeScreen";
 import IndexTabbar from "./IndexTabbar";
+import CamaraScreen from "./screens/CamaraScreen";
+
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,7 @@ const IndexScreen = () => {
       }}>
       <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <Stack.Screen name="IndexTabbar" component={IndexTabbar} />
+      <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
     </Stack.Navigator>
   );
 };

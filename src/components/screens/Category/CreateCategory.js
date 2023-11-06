@@ -9,10 +9,12 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../../utils/useAxios";
-import { Polygon, Svg } from "react-native-svg";
+import { Polygon, Svg } from "react-native-svg"; 
 
 import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
+
+import { CustomTermsAndConditionsAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import {
   CustomInTextField,
   CustomInTextArea,
@@ -29,34 +31,34 @@ import {
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 
 import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+import { bool } from "prop-types";
 
-function CreatePostScreen() {
+function CreateCategoryScreen() {
   const navigation = useNavigation();
+  const [showTermsAndConditions, setShowTermsAndConditions] = useState(false);
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-  const { getToken } = TokenUserManager();
 
   //api
-  const { postData,  error  } = usePostData();
+  const { postData, loading, error, data } = usePostData();
 
   const handleChange = (name, value) => {
     setPostDataDB({ ...PostDataDB, [name]: value });
   };
+
   const [PostDataDB, setPostDataDB] = useState({
-    title: "",
-    subtitle: "",
-    description: "",
-    avatars: [],
+    nameCategoryService: "",
+    descriptionCategoryService: "",
+    active: "",
+    avatar: "",
   });
 
   //image picker and photo
   const { BasicIconImagePicker } = ImagePickerComponent({
     onComplete: (image) => {
       if (image)
-        
-      ({
+        setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          avatar: image,
         });
     },
   });
@@ -66,7 +68,7 @@ function CreatePostScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          avatar: image,
         });
     },
   });
@@ -78,42 +80,47 @@ function CreatePostScreen() {
 
   const handleConfirm = () => {
     if (
-      !PostDataDB.title ||
-      !PostDataDB.subtitle ||
-      !PostDataDB.description ||
-      !PostDataDB.avatars
+      !PostDataDB.nameCategoryService ||
+      !PostDataDB.descriptionCategoryService ||
+      !PostDataDB.active ||
+      !PostDataDB.avatar
     ) {
+        console.log(PostDataDB.nameCategoryService);
+        console.log(PostDataDB.descriptionCategoryService)
+        console.log(PostDataDB.active)
+        console.log(PostDataDB.avatar)
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
-    const url = "/posts";
-    const token =  async () => await getToken()
+    const url = "/admin/category-services";
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
-       Authorization: `Bearer ${token}`,
     };
-    
     const formData = new FormData();
-    formData.append("title", PostDataDB.title);
-    formData.append("subtitle", PostDataDB.subtitle);
-    formData.append("description", PostDataDB.description);
-    PostDataDB.avatars.forEach((image, index) => {
-      formData.append("avatars", {
+    formData.append("nameCategoryService", PostDataDB.nameCategoryService);
+    formData.append("descriptionCategoryService", PostDataDB.descriptionCategoryService);
+    formData.append("active", PostDataDB.active);
+    formData.append("avatar", {
+        uri: PostDataDB.avatar.uri,
+        name: PostDataDB.avatar.name,
+        type: PostDataDB.avatar.type,
+      });
+    
+    /* avatar.forEach((image, index) => {
+      formData.append("avatar", {
         uri: image.uri,
         name: image.name,
         type: image.type,
       });
-    });
-    console.log("formData:", formData);
+    }); */
 
     postData(url, headers, formData, (data) => {
       if (error || !data) {
         console.log("Error:", error);
         setError(true);
       } else {
-        console.log("Data:", data);
         navigation.navigate("ShowPostsScreen");
         setSuccess(true);
       }
@@ -138,37 +145,44 @@ function CreatePostScreen() {
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <CustomInTextField
-              label="Titulo"
+              label="Categoria"
               style={styles.input}
-              placeholder="Titulo"
-              value={PostDataDB.title}
-              onChangeText={(text) => handleChange("title", text)}
+              placeholder="Categoria"
+              value={PostDataDB.nameCategoryService}
+              onChangeText={(text) => handleChange("nameCategoryService", text)}
             />
 
             <View>
-              <View style={styles.imageContainer}>
-                {PostDataDB.avatars.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatars} />
+
+                <View style={styles.imageContainer}>
+                {PostDataDB.avatar && (
+                    <Image
+                    source={{ uri: PostDataDB.avatar.uri }}
+                    style={styles.image}
+                    />
                 )}
-              </View>
+                </View>
+              {/* <View style={styles.imageContainer}>
+                {PostDataDB.avatar.length > 0 && (
+                  <CustomCarrousel data={PostDataDB.avatar} />
+                )}
+              </View> */}
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
-
-            <CustomInTextField
-              label="Subtitulo"
-              style={styles.input}
-              placeholder="Subtitulo"
-              value={PostDataDB.subtitle}
-              onChangeText={(text) => handleChange("subtitle", text)}
-            />
 
             <CustomInTextArea
               label="Descripcion"
               style={styles.inputTextArea}
               placeholder="Descripcion"
-              value={PostDataDB.description}
-              onChangeText={(text) => handleChange("description", text)}
+              value={PostDataDB.descriptionCategoryService}
+              onChangeText={(text) => handleChange("descriptionCategoryService", text)}
+            />
+
+            <CustomButton
+              text="Activo"
+              onPress={() => setPostDataDB({...PostDataDB, active: true})}
+              buttonStyle={styles.button}
             />
 
             {errorPost && (
@@ -196,6 +210,12 @@ function CreatePostScreen() {
               message="Post creado con éxito!!"
               onConfirm={goToShowPosts}
             />
+
+           <CustomTermsAndConditionsAlert
+              isVisible={showTermsAndConditions}
+              onConfirm={() => setShowTermsAndConditions(false)}
+              onCancel={() => setShowTermsAndConditions(false)}
+            /> 
           </View>
         </View>
       </ScrollView>
@@ -295,4 +315,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePostScreen;
+export default CreateCategoryScreen;
