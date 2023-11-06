@@ -13,6 +13,8 @@ import { Polygon, Svg } from "react-native-svg";
 
 import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
+
+import { CustomTermsAndConditionsAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import {
   CustomInTextField,
   CustomInTextArea,
@@ -27,12 +29,17 @@ import {
   CustomAlertConfirmation,
   CustomErrorBanner,
 } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { TokenUserManager } from "../../../utils/asyncStorage";
+import { Avatar } from "react-native-paper";
 
-import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import axios from "axios";
 
 function CreateCategoryScreen() {
   const navigation = useNavigation();
-  const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
+  const { getToken } = TokenUserManager();
+
+  const [showTermsAndConditions, setShowTermsAndConditions] = useState(false);
+  const goToShowCaracteristic = () => navigation.replace("ShowCategoryScreen");
 
   //api
   const { postData, loading, error, data } = usePostData();
@@ -42,10 +49,10 @@ function CreateCategoryScreen() {
   };
 
   const [PostDataDB, setPostDataDB] = useState({
-    nameCategoryService: "",
-    descriptionCategoryService: "",
-    active: "",
-    avatar: [],
+    nameCategoryService: "Testeo",
+    descriptionCategoryService: "Juan Cardenas testeo",
+    active: true,
+    avatar: "",
   });
 
   //image picker and photo
@@ -54,7 +61,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatar: [...PostDataDB.avatar, image],
+          avatar: image,
         });
     },
   });
@@ -64,7 +71,7 @@ function CreateCategoryScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatar: [...PostDataDB.avatar, image],
+          avatar: image,
         });
     },
   });
@@ -74,7 +81,7 @@ function CreateCategoryScreen() {
   const [successPost, setSuccess] = useState(false);
   const [errorPost, setError] = useState(false);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (
       !PostDataDB.nameCategoryService ||
       !PostDataDB.descriptionCategoryService ||
@@ -85,33 +92,40 @@ function CreateCategoryScreen() {
       setShowConfirmationModal(false);
       return;
     }
-    const url = "/admin/category-services";
+
+    const token = await getToken();
     const headers = {
+      Authorization: `Bearer ${token}`,
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
     };
+
     const formData = new FormData();
     formData.append("nameCategoryService", PostDataDB.nameCategoryService);
-    formData.append("descriptionCategoryService", PostDataDB.descriptionCategoryService);
+    formData.append(
+      "descriptionCategoryService",
+      PostDataDB.descriptionCategoryService
+    );
     formData.append("active", PostDataDB.active);
-    PostDataDB.avatar.forEach((image, index) => {
-      formData.append("avatar", {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
-      });
+    formData.append("avatar", {
+      uri: PostDataDB.avatar.uri,
+      name: PostDataDB.avatar.name,
+      type: PostDataDB.avatar.type,
     });
 
-    postData(url, headers, formData, (data) => {
-      if (error || !data) {
-        console.log("Error:", error);
+    postData("/admin/category-services/new-category", formData, headers, (data) => {
+      if (error || data == null) {
         setError(true);
-      } else {
-        navigation.navigate("ShowPostsScreen");
+        setShowConfirmationModal(false);
+        return;
+      }
+      else{
         setSuccess(true);
+        setShowConfirmationModal(false);
+        return;
       }
     });
-    setShowConfirmationModal(false);
   };
 
   return (
@@ -131,19 +145,27 @@ function CreateCategoryScreen() {
         <View style={styles.formContainer}>
           <View style={styles.fieldContainer}>
             <CustomInTextField
-              label="Nombre"
+              label="Categoria"
               style={styles.input}
-              placeholder="Nombre"
+              placeholder="Categoria"
               value={PostDataDB.nameCategoryService}
               onChangeText={(text) => handleChange("nameCategoryService", text)}
             />
 
             <View>
               <View style={styles.imageContainer}>
+                {PostDataDB.avatar && (
+                  <Image
+                    source={{ uri: PostDataDB.avatar.uri }}
+                    style={styles.image}
+                  />
+                )}
+              </View>
+              {/* <View style={styles.imageContainer}>
                 {PostDataDB.avatar.length > 0 && (
                   <CustomCarrousel data={PostDataDB.avatar} />
                 )}
-              </View>
+              </View> */}
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
@@ -152,13 +174,21 @@ function CreateCategoryScreen() {
               label="Descripcion"
               style={styles.inputTextArea}
               placeholder="Descripcion"
-              value={PostDataDB.active}
-              onChangeText={(text) => handleChange("active", text)}
+              value={PostDataDB.descriptionCategoryService}
+              onChangeText={(text) =>
+                handleChange("descriptionCategoryService", text)
+              }
+            />
+
+            <CustomButton
+              text="Activo"
+              onPress={() => setPostDataDB({ ...PostDataDB, active: true })}
+              buttonStyle={styles.button}
             />
 
             {errorPost && (
               <CustomErrorBanner
-                text="No se pudo crear el post. Por favor, verifique sus credenciales."
+                text="No se pudo crear la categoria. Por favor, verifique sus credenciales."
                 styleBanner={styles.errorBanner}
                 onChange={() => setError(false)}
               />
@@ -179,7 +209,13 @@ function CreateCategoryScreen() {
             <CustomSuccessAlert
               isVisible={successPost}
               message="Post creado con éxito!!"
-              onConfirm={goToShowPosts}
+              onConfirm={goToShowCaracteristic}
+            />
+
+            <CustomTermsAndConditionsAlert
+              isVisible={showTermsAndConditions}
+              onConfirm={() => setShowTermsAndConditions(false)}
+              onCancel={() => setShowTermsAndConditions(false)}
             />
           </View>
         </View>
@@ -277,6 +313,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     zIndex: 1,
     marginBottom: 70,
+  },
+
+  errorBanner: {
+    marginTop: 20,
+    marginLeft: "8%",
+    marginRight: "8%",
+
   },
 });
 

@@ -1,49 +1,56 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
 import Tabbar from "./indexComponents/Tabbar";
+import { Sidebar } from "./indexComponents/SideBarMenu";
+
 import HomeScreen from "./screens/HomeScreen";
-import CamaraScreen from "./screens/CamaraScreen"; 
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
+import LoginScreen from "./screens/User/LoginScreen";
+import RegisterScreen from "./screens/User/RegisterScreen";
+import ShowCategoryScreen from "./screens/Category/ShowCategory";
+import ShowServicesScreen from "./screens/Category/ShowServices";
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
 import CreateCategoryScreen from "./screens/Category/CreateCategory";
+import PolicyScreen from "./screens/PrivacyPolicy/privacyPolicy";
 import { AuthProvider } from "../utils/authManager";
 
 const Stack = createStackNavigator();
 
 function IndexTabbar() {
   return (
-    <View style={{ flex: 1 }}>
-      <Stack.Navigator
-        initialRouteName="HomeScreen"
-        screenOptions={{
-          headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
-        }}>
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
-        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-      </Stack.Navigator>
-      {/* Superponer el Tabbar de manera absoluta */}
-      <View style={styles.tabbarOverlay}>
-        <Tabbar />
+    <AuthProvider>
+      <View style={{ flex: 1 }}>
+        <Stack.Navigator
+          initialRouteName="HomeScreen"
+          screenOptions={{
+            headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
+          }}>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+          <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
+          <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+          <Stack.Screen name="CreateCategoryScreen" component={CreateCategoryScreen} />
+
+        </Stack.Navigator>
+        {/* Superponer el Tabbar de manera absoluta */}
+        <View style={styles.tabbarOverlay}>
+          <Tabbar />
+        </View>
       </View>
-    </View>
+    </AuthProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  tabbarOverlay: {
+  sideBarOverlay: {
     position: "absolute",
-    bottom: 0,
     left: 0,
-    right: 0,
+    top: "50%",
   },
 });
 

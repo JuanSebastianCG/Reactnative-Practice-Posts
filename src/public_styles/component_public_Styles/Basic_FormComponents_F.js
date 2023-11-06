@@ -215,12 +215,7 @@ const stylesFormTextArea = StyleSheet.create({
   },
 });
 
-const CustomCheckBox = ({ label, style, value, onChangeText }) => {
-
-}
-const stylesFormCheckBox = StyleSheet.create({
-
-});
-
+const CustomCheckBox = ({ label, style, value, onChangeText }) => {};
+const stylesFormCheckBox = StyleSheet.create({});
 
 export { CustomInTextField, CustomInTextArea };
