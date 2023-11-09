@@ -173,7 +173,7 @@ function ShowServicesScreen() {
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("CreateCategoryScreen")}>
+          onPress={() => navigation.navigate("CreateService")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>

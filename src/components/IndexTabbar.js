@@ -13,36 +13,14 @@ import ShowServicesScreen from "./screens/Category/ShowServices";
 
 import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
 import CreatePostScreen from "./screens/posts/CreatePostScreen";
-<<<<<<< HEAD
-import CreateService from "./screens/CreateService";
-=======
 import CreateCategoryScreen from "./screens/Category/CreateCategory";
 import { AuthProvider } from "../utils/authManager";
->>>>>>> origin/switch-checkbox-component
+import CreateService from "./screens/Category/CreateService";
 
 const Stack = createStackNavigator();
 
 function IndexTabbar() {
   return (
-<<<<<<< HEAD
-    <View style={{ flex: 1 }}>
-      <Stack.Navigator
-        initialRouteName="HomeScreen"
-        screenOptions={{
-          headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
-        }}>
-          
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="CamaraScreen" component={CamaraScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
-        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-        <Stack.Screen name="CreateService" component={CreateService} />
-      </Stack.Navigator>
-      {/* Superponer el Tabbar de manera absoluta */}
-      <View style={styles.tabbarOverlay}>
-=======
     <AuthProvider>
       <View style={{ flex: 1 }}>
         <Stack.Navigator
@@ -55,6 +33,7 @@ function IndexTabbar() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+          <Stack.Screen name="CreateService" component={CreateService} />
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
@@ -73,7 +52,6 @@ function IndexTabbar() {
         </Stack.Navigator>
         {/* Superponer el Tabbar de manera absoluta */}
 
->>>>>>> origin/switch-checkbox-component
         <Tabbar />
         <View style={styles.sideBarOverlay}>
           <Sidebar />

@@ -116,7 +116,6 @@ const stylesForm = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 1,
     backgroundColor: BasicStylesPage.color0,
   },
 });
@@ -156,12 +155,11 @@ const CustomInTextArea = ({ label, style, value, onChangeText }) => {
       onPress={handlePress}
       style={[stylesFormTextArea.touchableContainer, style]}>
       <View
-        style={[stylesFormTextArea.inputContainer, { height: style.height }]}>
+        style={[stylesFormTextArea.inputContainer]}>
         <TextInput
           ref={inputRef}
           style={[
-            stylesFormTextArea.inputText,
-            { width: style.width },
+            stylesFormTextArea.inputText,   
             { textAlignVertical: "top" }, // Ajusta la alineación vertical
           ]}
           value={value}

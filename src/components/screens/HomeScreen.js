@@ -1,59 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
-<<<<<<< HEAD
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-=======
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
->>>>>>> origin/switch-checkbox-component
 import { Svg, Polygon } from "react-native-svg";
 import { StyleSheet, Platform } from "react-native";
 import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
 import { CustomButton } from "../../public_styles/component_public_Styles/Basic_Components_F";
 import {
   CustomLogo,
-<<<<<<< HEAD
-} from "../../public_styles/component_public_Styles/Basic_Components_F";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-=======
   CustomLogoutButton,
 } from "../../public_styles/component_public_Styles/Basic_PageInterface";
 
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { useAuth } from "../../utils/authManager";
 
->>>>>>> origin/switch-checkbox-component
 function HomeScreen() {
   const [userToken, setUserToken] = useState(null);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-<<<<<<< HEAD
-  const goToCreateService=()=> navigation.navigate("CreateService")
-  useEffect(() => {
-    if (isFocused) {
-      try {
-        obtenerToken()
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    
-  }, [isFocused]); 
-
-  const obtenerToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem('accessToken');
-      console.log('Token recuperado:', token);
-      setUserToken(token)
-    } catch (error) {
-      console.error('Error al obtener el token desde AsyncStorage:', error);
-    }
-  };
-=======
   const { logged, handleLoggin } = useAuth();
->>>>>>> origin/switch-checkbox-component
 
   useFocusEffect(
     React.useCallback(() => {
@@ -81,44 +47,6 @@ function HomeScreen() {
       <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
       <Text style={styles.text_tittlePoint}>...</Text>
 
-<<<<<<< HEAD
-      {userToken ? (
-        <View>
-          <CustomButton
-            text="servicios"
-            onPress={goToCreateService}
-            buttonStyle={styles.buttonContainer}
-          />
-            <CustomButton
-            text="Ver API"
-            onPress={goToShowPosts}
-            buttonStyle={[
-              styles.buttonContainer,
-              { paddingLeft: 26, paddingRight: 26 },
-            ]}
-          />
-        </View>
-      
-      ) : (
-        
-        <View>
-        <CustomButton
-          text="Registrarse"
-          onPress={goToRegister}
-          buttonStyle={styles.buttonContainer}
-        />
-        <CustomButton
-          text="Login"
-          onPress={goToLogin}
-          buttonStyle={[
-            styles.buttonContainer,
-            { paddingLeft: 32, paddingRight: 32 },
-          ]}
-        />
-        
-      </View>
-      )}
-=======
       <CustomButton
         text="Registrarse"
         onPress={goToRegister}
@@ -142,7 +70,6 @@ function HomeScreen() {
           ]}
         />
     
->>>>>>> origin/switch-checkbox-component
     </ScrollView>
   );
 }

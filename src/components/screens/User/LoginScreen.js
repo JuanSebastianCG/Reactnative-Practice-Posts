@@ -1,25 +1,10 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView } from "react-native";
-<<<<<<< HEAD:src/components/screens/LoginScreen.js
-
-
-=======
 /* componentes */
->>>>>>> origin/switch-checkbox-component:src/components/screens/User/LoginScreen.js
 import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-<<<<<<< HEAD:src/components/screens/LoginScreen.js
-import {
-  CustomButton,
-  CustomErrorBanner,
-  CustomLogo,
-} from "../../public_styles/component_public_Styles/Basic_Components_F";
-import {CustomInTextField} from "../../public_styles/component_public_Styles/Basic_FormComponents_F";
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
-import AsyncStorage from "@react-native-async-storage/async-storage"
-=======
 import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
 import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
 import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
@@ -28,7 +13,6 @@ import { CustomErrorBanner } from "../../../public_styles/component_public_Style
 /* utils */
 import { TokenUserManager } from "../../../utils/asyncStorage";
 import { usePostData } from "../../../utils/useAxios";
->>>>>>> origin/switch-checkbox-component:src/components/screens/User/LoginScreen.js
 
 function LoginScreen() {
   const navigation = useNavigation();
@@ -62,22 +46,8 @@ function LoginScreen() {
         setLoginError(true);
       } else {
         const accessToken = response.data.access;
-<<<<<<< HEAD:src/components/screens/LoginScreen.js
-        AsyncStorage.setItem("accessToken",  accessToken )
-        .then(() => {
-          navigation.navigate("ShowPostsScreen");
-          return AsyncStorage.getItem("accessToken");
-        })
-        .then((token) => {
-          console.log("Token almacenado en AsyncStorage:", token);
-        })
-        .catch((storageError) => {
-          console.log("Error al guardar el token en AsyncStorage:", storageError);
-        });
-=======
         saveToken(accessToken);
         navigation.navigate("HomeScreen");
->>>>>>> origin/switch-checkbox-component:src/components/screens/User/LoginScreen.js
       }
     });
   };
