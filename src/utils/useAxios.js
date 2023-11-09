@@ -14,24 +14,25 @@ export function usePostData() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const postData = useCallback(
-    async (especificUrl, headers = {}, body = null, onComplete = () => {}) => {
-      const url = `${basicEndpoint}${version}${especificUrl}`;
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await axios.post(url, body, { headers });
-        setData(response); 
-        onComplete(response); 
-      } catch (err) {
-        setError(err);
-        onComplete(null);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  const postData = useCallback(async (RelativeUrl, formData, headers, onComplete = () => {}) => {
+    const url = `${basicEndpoint}${version}${RelativeUrl}`;
+   /*  console.log("url", url);
+    console.log("formData", formData);
+    console.log("headers", headers); */
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.post(url, formData, { headers });
+      setData(response);
+      onComplete(response);
+    } catch (error) {
+      console.error("Error making POST request:", error);
+      setError(error);
+      onComplete(null);
+    } finally {
+      setLoading(false);
+    }
+  });
 
   return { postData, loading, error, data };
 }
@@ -80,11 +81,9 @@ export function useDeleteData() {
   const deleteData = useCallback(
     async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
       const url = `${basicEndpoint}${version}${especificUrl}`;
-
       try {
         setLoading(true);
         setError(null);
-
         const config = {
           headers,
           data: body,

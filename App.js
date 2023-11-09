@@ -1,6 +1,6 @@
 import { StyleSheet, StatusBar, View } from "react-native";
 import React from "react";
-import Index from "./src/components/IndexScreen";
+import Index from "./src/screens/routeIndex/IndexScreen";
 import { NavigationContainer } from "@react-navigation/native";
 
 
