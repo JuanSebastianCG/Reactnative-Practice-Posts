@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Camera } from "expo-camera";
 
-import { CustomButton } from "./Basic_Components_F";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import BasicStylesPage from "../css_public_Styles/Basic_Style";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
+
+
 
 export function ImagePickerComponent({ onComplete = () => {} }) {
   const [imageData, setImageData] = useState(null);

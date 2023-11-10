@@ -8,18 +8,17 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
   useDeleteData,
   basicEndpoint,
-} from "../../../utils/useAxios";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+} from "../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import { CustomErrorAlert } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 
 function ShowCategoryScreen() {
   const [errorPost, setErrorPost] = useState(false);
@@ -65,16 +64,16 @@ function ShowCategoryScreen() {
           return;
         }
         setDataPost(data);
-        for (let i = 0; i < data.length; i++) {
+      /*   for (let i = 0; i < data.length; i++) {
           console.log(data[i]._id);
-        }
+        } */
 
       },
       header
     );
   };
   const handleDelete = async (id) => {
-    const url = `/data/${id}`;
+    const url = `/admin/category-services/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -125,6 +124,11 @@ function Card({ Category, handleDelete }) {
           })
         }>
         <View style={styleCard.contentContainer}>
+        <TouchableOpacity
+          style={styleCard.deleteButton}
+          onPress={() => handleDelete(Category._id)}>
+          <Icon name="trash-can" size={40} />
+        </TouchableOpacity>
           <View style={styleCard.ImageContainer}>
             <Image
               style={styleCard.image}
@@ -202,6 +206,16 @@ const styleCard = StyleSheet.create({
     color: BasicStylesPage.color1,
     fontSize: 16, // Ajusta el tamaño de la fuente de la descripción
   },
+  deleteButton: {
+    position: "absolute",
+    bottom: -10,
+    right: 120,
+    zIndex: 2,
+    borderRadius: 60,
+    padding: 10,
+    backgroundColor: BasicStylesPage.color4 + 99,
+
+  }
 });
 
 const styles = StyleSheet.create({
@@ -236,6 +250,7 @@ const styles = StyleSheet.create({
   cards: {
     marginBottom: 20,
   },
+
 });
 
 export default ShowCategoryScreen;

@@ -5,14 +5,15 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import { CustomButton } from "../../../public_styles/component_public_Styles/Basic_Components_F";
-import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
-import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
-import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+
+import { CustomButton } from "../../public/customComponent/Basic_Components";
+import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
+import { CustomInTextField } from "../../public/customComponent/Basic_FormComponents";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import { CustomErrorBanner } from "../../public/customComponent/Basic_AlertComponent";
 /* utils */
-import { TokenUserManager } from "../../../utils/asyncStorage";
-import { usePostData } from "../../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
+import { usePostData } from "../../utils/useAxios";
 
 function LoginScreen() {
   const navigation = useNavigation();
@@ -43,9 +44,9 @@ function LoginScreen() {
     };
     postData(url,body, headers, (response) => {
       if (response != null) {
-        console.log("LoginScreen.js: ", response);
         const accessToken = response.data.access;
         saveToken(accessToken);
+        console.log("Token guardado: ", accessToken);
         navigation.navigate("HomeScreen");
       }
       if (error != null) {

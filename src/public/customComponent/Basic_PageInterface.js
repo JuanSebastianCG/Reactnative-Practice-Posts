@@ -1,12 +1,13 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Image, View } from "react-native"; // Importa View para crear bordes redondeados
-import BasicStylesPage from "../css_public_Styles/Basic_Style";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { useAuth } from "../../utils/authManager";
 import { Polygon, Svg } from "react-native-svg";
+
+import BasicStylesPage from "../cssStyles/Basic_Style";
 
 export const CustomLogo = ({ styleLogo, width = 140, height = 200 }) => {
   const navigation = useNavigation();

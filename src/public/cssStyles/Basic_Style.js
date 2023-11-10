@@ -12,6 +12,7 @@ const colorWarning1 = '#FF0000';
 const colorWarning2 = '#bdffc6';
 const colorWarning3 = '#ff9f9f';
 
+const colorHrefLink = '#c300e1';
 /* const color0 = '#b90202';
 const color1 = '#c54040'; 
 const color2 = '#FFDBDB';
@@ -28,12 +29,22 @@ const fontText = 'normal';
 const fontWeightTitle = 'bold';
 const fontWeightText = 'normal';
 
+
 const sizeFontFormInput = 16;
 const sizeFontButton = 19; 
 
 
 const BasicStyles = StyleSheet.create({
 
+});
+
+const hrefLinkFontStyles = StyleSheet.create({
+  hrefLink: {
+    color: colorHrefLink,
+    fontSize: sizeFontFormInput,
+    fontWeight: fontWeightText,
+    textDecorationLine: 'underline',
+  },
 });
 
 
@@ -54,6 +65,7 @@ const BasicStylesPage = {
   sizeFontFormInput,
   sizeFontButton,
   BasicStyles,
+  hrefLinkFontStyles,
 };
 
 

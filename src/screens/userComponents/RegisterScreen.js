@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, StyleSheet, ScrollView, Text, Button } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 /* componentes */
 import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
+import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
+<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
   CustomButton,
   CustomDropDown,
 } from "../../../public_styles/component_public_Styles/Basic_Components_F";
@@ -14,30 +24,38 @@ import { CustomInTextField } from "../../../public_styles/component_public_Style
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
 import Checkbox from 'expo-checkbox';
+=======
+  CustomCheckBox,
+  CustomInTextField,
+} from "../../public/customComponent/Basic_FormComponents";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import {
+  CustomErrorBanner,
+  CustomTermsAndConditionsAlert,
+} from "../../public/customComponent/Basic_AlertComponent";
+>>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
 
 /* utils */
-import { TokenUserManager } from "../../../utils/asyncStorage";
-import { usePostData } from "../../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
+import { usePostData } from "../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
+<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
   const goToPolicy = () => navigation.navigate("PolicyScreen");
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
   const [policyAccepted, setPolicyAccepted] = useState(false);
+=======
+  const { saveToken, getToken, deleteToken } = TokenUserManager();
+  const { postData, loading, error } = usePostData();
+  const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
+
+>>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
 
 
-  /* {
-    "name": "Juan Pérez",
-    "email": "admin",
-    "password": "admin",
-    "isUnderage": false,
-    "acceptTerms": true,
-    "typeOfDocument": "DNI",
-    "documentNumber": "12345678"
-}
- */
   const [userData, setUserData] = useState({
+<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
     firstname:"",
     lastname: "",
     email: "",
@@ -46,6 +64,16 @@ function RegisterScreen() {
     active: true,
 /*     typeOfDocument: [],
     documentNumber: "", */
+=======
+    firstname: "Juan Sebastian test2",
+    lastname: "Cardenas",
+    email: "Juan@gmail.com",
+    password: "juan123",
+    role: "UsuarioTest",
+    acceptTerms: true,
+    active: true,
+    avatar: "https://example.com/avatar.jpg",
+>>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -60,7 +88,7 @@ function RegisterScreen() {
   };
 
   const [loginError, setLoginError] = useState(false);
-/* http://mantenimientoandino.co:3000/api/v1/auth/register */
+  /* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
     if (!policyAccepted) {
       alert('Debes aceptar la política de privacidad para registrarte');
@@ -71,6 +99,7 @@ function RegisterScreen() {
     const headers = {
       "Content-Type": "application/json",
     };
+<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
 
     const formData = new FormData();
     formData.append("firstname", userData.firstname);
@@ -81,11 +110,15 @@ function RegisterScreen() {
     formData.append("active", userData.active);
 
 /*     const body = {
+=======
+    const formData = {
+>>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
       firstname: userData.firstname,
       lastname: userData.lastname,
       email: userData.email,
       current_password: userData.password,
       role: userData.role,
+<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
       active:userData.active */
 
     postData(url, headers, formData, (response) => {
@@ -94,9 +127,21 @@ function RegisterScreen() {
         setLoginError(true);
       } else {
         console.log(response);
+=======
+      active: userData.active,
+      avatar: userData.avatar,
+    };
+    
+    postData(url, formData, headers , (response) => {
+      console.log(response);
+      if (response) {
+>>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
         navigation.navigate("LoginScreen");
+      } else {
+        setLoginError(true);
       }
     });
+
   };
 
   return (
@@ -144,39 +189,24 @@ function RegisterScreen() {
               <CustomInTextField
                 label="Password"
                 style={styles.input}
-                value={userData.current_password}
+                value={userData.password}
                 onChangeText={(text) => handleChange("current_password", text)}
               />
 
-              <Button title="Politica de tratamiento de datos" onPress={goToPolicy} />
+              <CustomCheckBox
+                label="he leído y acepto los términos y condiciones"
+                style={{ marginTop: 20, marginBottom: 20 }}
+                value={userData.acceptTerms}
+                onChange={(value) => handleChange("isUnderage", value)}
+              />
 
-              {/* <CustomDropDown
-                label="Tipo de documento"
-                value={userData.typeOfDocument}
-                items={[
-                  "DNI",
-                  "Pasaporte",
-                  "Carnet de conducir",
-                  "Carnet de identidad",
-                ]}
-                generalStyle={styles.generalDropDown}
-                generalBorderStyle={styles.generalBorderDropDown}
-                itemStyle={{}}
-                fontInputStyle={{ color: BasicStylesPage.color4 }}
-                onItemSlected={(item) => handleChange("typeOfDocument", item)}
-                placeholder={"Documento"}
-                styleLogo={{
-                  BackgroundColor: BasicStylesPage.color2,
-                  marginLeft: 2,
-                }}
-              /> */}
-
-{/*               <CustomInTextField
-                label="Número de documento"
-                style={styles.input}
-                value={userData.documentNumber}
-                onChangeText={(text) => handleChange("documentNumber", text)}
-              /> */}
+              <TouchableOpacity
+                onPress={() => setTermsAndConditionsAlert(true)}
+                style={{ marginBottom: 20 }}>
+                <Text style={BasicStylesPage.hrefLinkFontStyles.hrefLink}>
+                  Ver términos y condiciones
+                </Text>
+              </TouchableOpacity>
             </Stack>
             {loginError && (
               <CustomErrorBanner
@@ -196,7 +226,11 @@ function RegisterScreen() {
               onPress={handleSubmit}
               buttonStyle={styles.button}
             />
-  
+
+            <CustomTermsAndConditionsAlert
+              isVisible={termsAndConditionsAlert}
+              onChange={() => setTermsAndConditionsAlert(false)}
+            />
           </View>
         </View>
       </ScrollView>

@@ -5,8 +5,11 @@ import {
   StyleSheet,
   Animated,
   TouchableOpacity,
+  Text,
 } from "react-native";
-import BasicStylesPage from "../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../cssStyles/Basic_Style";
+import Svg, { Circle, Defs, Mask, Rect } from "react-native-svg";
+import * as Animatable from "react-native-animatable";
 
 const CustomInTextField = ({ label, style, value, onChangeText }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -205,6 +208,7 @@ const stylesFormTextArea = StyleSheet.create({
   inputText: {
     fontSize: 16,
     padding: 5,
+    paddingTop: 12,
   },
   label: {
     position: "absolute",
@@ -214,8 +218,79 @@ const stylesFormTextArea = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
   },
 });
+const CustomCheckBox = ({ label, style, onChange, value }) => {
+  const [isChecked, setIsChecked] = useState(value);
 
-const CustomCheckBox = ({ label, style, value, onChangeText }) => {};
-const stylesFormCheckBox = StyleSheet.create({});
+  const toggleCheckbox = () => {
+    const newValue = !isChecked;
+    setIsChecked(newValue);
 
-export { CustomInTextField, CustomInTextArea };
+    // Llama a la función onChange y pasa el estado actual
+    if (onChange) {
+      onChange(newValue);
+    }
+  };
+
+  return (
+    <TouchableOpacity onPress={toggleCheckbox} style={style}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            width: 24,
+            height: 24,
+            borderRadius: 12,
+            borderWidth: 2,
+            borderColor: BasicStylesPage.color4,
+            marginRight: 10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <Animatable.View
+            animation={isChecked ? "bounceIn" : "fadeOut"}
+            duration={300}
+            style={{
+              width: 24,
+              height: 24,
+              borderRadius: 12,
+              borderWidth: 2,
+              borderColor: isChecked
+                ? BasicStylesPage.color2
+                : BasicStylesPage.color0,
+              backgroundColor: isChecked
+                ? BasicStylesPage.color4
+                : "transparent",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <Svg width={24} height={24}>
+              <Circle
+                cx={12}
+                cy={12}
+                r={10}
+                fill="transparent"
+                stroke={BasicStylesPage.color2}
+                strokeWidth="2"
+              />
+              {isChecked && (
+                <Circle cx={12} cy={12} r={7} fill={BasicStylesPage.color2} />
+              )}
+            </Svg>
+          </Animatable.View>
+        </View>
+
+        <Text
+          style={{
+            fontSize: 13,
+            color: BasicStylesPage.color1,
+            flex: 1,
+            width: (style && style.width) || "100%",
+            height: (style && style.height) || "100%",
+          }}>
+          {label}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export { CustomInTextField, CustomInTextArea, CustomCheckBox };

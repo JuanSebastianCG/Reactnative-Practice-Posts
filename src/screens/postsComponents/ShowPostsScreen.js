@@ -13,12 +13,17 @@ import {
   useGetData,
   useDeleteData,
   basicEndpoint,
-} from "../../../utils/useAxios";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+} from "../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+<<<<<<< HEAD:src/components/screens/posts/ShowPostsScreen.js
+=======
+import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
+import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+>>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/postsComponents/ShowPostsScreen.js
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
