@@ -16,9 +16,9 @@ export function usePostData() {
 
   const postData = useCallback(async (RelativeUrl, formData, headers, onComplete = () => {}) => {
     const url = `${basicEndpoint}${version}${RelativeUrl}`;
-    /* console.log("url", url);
+    console.log("url", url);
     console.log("formData", formData);
-    console.log("headers", headers); */
+    console.log("headers", headers); 
     try {
       setLoading(true);
       setError(null);

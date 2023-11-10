@@ -71,26 +71,24 @@ function RegisterScreen() {
     const headers = {
       "Content-Type": "application/json",
     };
-    const body = {
+
+    const formData = new FormData();
+    formData.append("firstname", userData.firstname);
+    formData.append("lastname", userData.lastname);
+    formData.append("email", userData.email);
+    formData.append("current_password", userData.current_password);
+    formData.append("role", userData.role);
+    formData.append("active", userData.active);
+
+/*     const body = {
       firstname: userData.firstname,
       lastname: userData.lastname,
       email: userData.email,
       current_password: userData.password,
       role: userData.role,
-      active:userData.active
-/*       isUnderage: userData.isUnderage,
-      acceptTerms: userData.acceptTerms,
-      typeOfDocument: userData.typeOfDocument,
-      documentNumber: userData.documentNumber, */
-     /*  name: userData.name,
-      email: userData.email,
-      password: userData.password,
-      isUnderage: userData.isUnderage,
-      acceptTerms: userData.acceptTerms,
-      typeOfDocument: userData.typeOfDocument,
-      documentNumber: userData.documentNumber, */
-    };
-    postData(url, headers, body, (response) => {
+      active:userData.active */
+
+    postData(url, headers, formData, (response) => {
       if (error || !response) {
         console.log(error);
         setLoginError(true);
