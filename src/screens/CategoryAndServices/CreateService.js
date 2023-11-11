@@ -200,7 +200,6 @@ function CreateServiceScreen() {
               onItemSlected={(item) => handleChange("categoryService", item)}
               placeholder={"Categoria"}
               styleLogo={{
-                BackgroundColor: BasicStylesPage.color2,
                 marginLeft: 2,
               }}
             />

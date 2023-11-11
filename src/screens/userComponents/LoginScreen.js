@@ -21,8 +21,8 @@ function LoginScreen() {
   const { postData, loading, error } = usePostData();
 
   const [userData, setUserData] = useState({
-    email: "test@test.com",
-    password: "user123",
+    email: "dispositivomoviles9@gmail.com",
+    password: "DispMov2023",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -34,13 +34,13 @@ function LoginScreen() {
   const [loginError, setLoginError] = useState(false);
 
   const handleSubmit = async () => {
-    const url = "/auth/login";
+    const url = "/user/login";
     const headers = {
       "Content-Type": "application/json",
     };
     const body = {
       email: userData.email,
-      current_password: userData.password,
+      password: userData.password,
     };
     postData(url,body, headers, (response) => {
       if (response != null) {

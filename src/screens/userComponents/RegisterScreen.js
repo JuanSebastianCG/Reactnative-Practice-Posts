@@ -37,14 +37,13 @@ function RegisterScreen() {
 
 
   const [userData, setUserData] = useState({
-    firstname: "Juan Sebastian test2",
-    lastname: "Cardenas",
-    email: "Juan@gmail.com",
-    password: "juan123",
-    role: "UsuarioTest",
+    firstname: "admin",
+    lastname: "admin",
+    email: "dispositivomoviles9@gmail.com",
+    password: "DispMov2023",
     acceptTerms: true,
-    active: true,
-    avatar: "https://example.com/avatar.jpg",
+    document_type: "CC",
+    document_number: "123456789",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -56,7 +55,7 @@ function RegisterScreen() {
   const [loginError, setLoginError] = useState(false);
   /* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
-    const url = "/auth/register";
+    const url = "/user";
     const headers = {
       "Content-Type": "application/json",
     };
@@ -64,10 +63,9 @@ function RegisterScreen() {
       firstname: userData.firstname,
       lastname: userData.lastname,
       email: userData.email,
-      current_password: userData.password,
-      role: userData.role,
-      active: userData.active,
-      avatar: userData.avatar,
+      password: userData.password,
+      document_type: userData.document_type,
+      document_number: userData.document_number,
     };
     
     postData(url, formData, headers , (response) => {
