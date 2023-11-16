@@ -275,14 +275,14 @@ const handleConfirm = () => {
            
            <CustomDropDown
               items={dataPostCategories}
-              label={"Categorias"}
-              onItemSlected={(item) => {
-                if (!filterCategories.includes(item)) {
-                  setFilterCategories([...filterCategories, item]);
-                  setDataPostCategory(item)
-                  handleChange("category",item)
-                  console.log(item)
-                }
+              generalStyle={styles.generalDropDown}
+              generalBorderStyle={styles.generalBorderDropDown}
+              itemStyle={{}}
+              fontInputStyle={{ color: BasicStylesPage.color4 }}
+              onItemSlected={(item) => handleChange("categoryService", item)}
+              placeholder={"Categoria"}
+              styleLogo={{
+                marginLeft: 2,
               }}
               showLastSelected={true}
             />

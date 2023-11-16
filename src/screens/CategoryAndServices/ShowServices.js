@@ -54,7 +54,7 @@ function ShowServicesScreen() {
     const intervalId = setInterval(() => {
       handleGetData();
       handleGetDataCategories();
-    }, 5000);
+    }, 10000);
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
@@ -176,11 +176,7 @@ function ShowServicesScreen() {
         </ScrollView>
         <TouchableOpacity
           style={styles.addButton}
-<<<<<<< HEAD:src/components/screens/Category/ShowServices.js
-          onPress={() => navigation.navigate("CreateService")}>
-=======
           onPress={() => navigation.navigate("CreateServiceScreen")}>
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/CategoryAndServices/ShowServices.js
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>
@@ -195,7 +191,7 @@ function Card({ Service, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={Service.photos} width={330} height={190} />
+        <CustomCarrousel data={Service.photos} width={330} height={190} automaticMove={false} />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{Service.name}</Text>
