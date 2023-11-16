@@ -15,7 +15,6 @@ import { Polygon, Svg } from "react-native-svg";
 import { CustomButton } from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
-<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
   CustomButton,
   CustomDropDown,
 } from "../../../public_styles/component_public_Styles/Basic_Components_F";
@@ -23,8 +22,7 @@ import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic
 import { CustomInTextField } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
 import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
 import { CustomErrorBanner } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
-import Checkbox from 'expo-checkbox';
-=======
+import {
   CustomCheckBox,
   CustomInTextField,
 } from "../../public/customComponent/Basic_FormComponents";
@@ -33,7 +31,6 @@ import {
   CustomErrorBanner,
   CustomTermsAndConditionsAlert,
 } from "../../public/customComponent/Basic_AlertComponent";
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
 
 /* utils */
 import { TokenUserManager } from "../../utils/asyncStorage";
@@ -41,39 +38,24 @@ import { usePostData } from "../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
-<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
   const goToPolicy = () => navigation.navigate("PolicyScreen");
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
   const [policyAccepted, setPolicyAccepted] = useState(false);
-=======
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
 
 
   const [userData, setUserData] = useState({
-<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
-    firstname:"",
-    lastname: "",
-    email: "",
-    current_password: "",
-    role: "user",
-    active: true,
-/*     typeOfDocument: [],
-    documentNumber: "", */
-=======
-    firstname: "Juan Sebastian test2",
-    lastname: "Cardenas",
-    email: "Juan@gmail.com",
-    password: "juan123",
-    role: "UsuarioTest",
+    firstname: "admin",
+    lastname: "admin",
+    email: "dispositivomoviles9@gmail.com",
+    password: "DispMov2023",
     acceptTerms: true,
     active: true,
     avatar: "https://example.com/avatar.jpg",
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -90,44 +72,16 @@ function RegisterScreen() {
   const [loginError, setLoginError] = useState(false);
   /* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
-    if (!policyAccepted) {
-      alert('Debes aceptar la política de privacidad para registrarte');
-      return;
-    }
-
     const url = "/auth/register";
     const headers = {
       "Content-Type": "application/json",
     };
-<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
-
-    const formData = new FormData();
-    formData.append("firstname", userData.firstname);
-    formData.append("lastname", userData.lastname);
-    formData.append("email", userData.email);
-    formData.append("current_password", userData.current_password);
-    formData.append("role", userData.role);
-    formData.append("active", userData.active);
-
-/*     const body = {
-=======
     const formData = {
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
       firstname: userData.firstname,
       lastname: userData.lastname,
       email: userData.email,
       current_password: userData.password,
       role: userData.role,
-<<<<<<< HEAD:src/components/screens/User/RegisterScreen.js
-      active:userData.active */
-
-    postData(url, headers, formData, (response) => {
-      if (error || !response) {
-        console.log(error);
-        setLoginError(true);
-      } else {
-        console.log(response);
-=======
       active: userData.active,
       avatar: userData.avatar,
     };
@@ -135,7 +89,6 @@ function RegisterScreen() {
     postData(url, formData, headers , (response) => {
       console.log(response);
       if (response) {
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/userComponents/RegisterScreen.js
         navigation.navigate("LoginScreen");
       } else {
         setLoginError(true);

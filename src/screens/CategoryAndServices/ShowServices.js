@@ -54,7 +54,7 @@ function ShowServicesScreen() {
     const intervalId = setInterval(() => {
       handleGetData();
       handleGetDataCategories();
-    }, 5000);
+    }, 10000);
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
@@ -191,7 +191,7 @@ function Card({ Service, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={Service.photos} width={330} height={190} />
+        <CustomCarrousel data={Service.photos} width={330} height={190} automaticMove={false} />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{Service.name}</Text>

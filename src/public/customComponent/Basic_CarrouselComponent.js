@@ -4,7 +4,7 @@ import { interpolate, useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 import BasicStylesPage from "../cssStyles/Basic_Style";
 
-function CustomCarrousel({ data = [], width = 350, height = 200 }) {
+function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove}) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const calculateIndex = (index) => {
@@ -24,12 +24,12 @@ function CustomCarrousel({ data = [], width = 350, height = 200 }) {
   return (
     <View style={styles.container}>
       <Carousel
-        autoPlay={true}
+        autoPlay={automaticMove}
         width={width}
         height={height}
         scrollAnimationDuration={1000}
         data={data}
-        autoPlayInterval={3000}
+        autoPlayInterval={(automaticMove)? 5000 : 0}
         onProgressChange={(_, absoluteProgress) =>
           calculateIndex(absoluteProgress)
         }
