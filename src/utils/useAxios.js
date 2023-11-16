@@ -104,3 +104,37 @@ export function useDeleteData() {
 
   return { deleteData, loading, error, data };
 }
+
+
+//========UPDATE================
+export function useUpdateData() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+
+  const updateData = useCallback(
+    async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
+      const url = `${basicEndpoint}${version}${especificUrl}`;
+      try {
+        setLoading(true);
+        setError(null);
+        const config = {
+          headers,
+          data: body,
+        };
+        const response = await axios.put(url, config);
+        setData(response.data);
+
+        onComplete(response.data);
+      } catch (err) {
+        console.error("Error making GET request:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  return { updateData, loading, error, data };
+}
