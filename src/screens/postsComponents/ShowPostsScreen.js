@@ -72,7 +72,6 @@ function ShowPostsScreen() {
   };
   const handleDelete = async (id) => {
     const url = `/posts/${id}`;
-    console.log("id:", id);
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     }

@@ -22,8 +22,40 @@ import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 
 import { useNavigation } from "@react-navigation/native";
 import { TokenUserManager } from "../../utils/asyncStorage";
+/* const mongoose = require('mongoose');
 
-function ShowPostsScreen() {
+const UserNotificationSchema = mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    message: {
+        type: String,
+        require: true,
+        trim: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    date: {
+        type: Date,
+        default: Date.now()
+    },
+    read: {
+        type: Boolean,
+        default: false
+    }
+
+});
+module.exports = mongoose.model('UserNotification', UserNotificationSchema);
+
+
+ */
+
+
+function NotificationScreen() {
   const { getData, loading, error, data } = useGetData();
   const { deleteData } = useDeleteData();
   const { updateData } = useUpdateData();
@@ -33,7 +65,7 @@ function ShowPostsScreen() {
   const [errorPost, setErrorPost] = useState(false);
 
   const navigation = useNavigation();
-  const [posts, setPosts] = useState([]);
+  const [dataArray, setDataArray] = useState([]);
 
   useEffect(() => {
     handleGetData();
@@ -41,7 +73,7 @@ function ShowPostsScreen() {
   }, [isDeleted, data]);
 
   const handleGetData = async () => {
-    const url = "/users";
+    const url = "/user/:id";
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -52,23 +84,33 @@ function ShowPostsScreen() {
           setErrorPost(true);
           return;
         }
-        setPosts(data);
+        setDataArray(data);
       },
       header
     );
   };
   const handleDelete = async (id) => {
-    const url = `/posts/${id}`;
+    const url = `/user/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
-    deleteData(
+    deleteData(url, (data) => {}, header);
+  };
+
+  const handleVerify = async (id) => {
+    const url = `/user/${id}`;
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    updateData(
       url,
+      { active: true },
       (data) => {
-        if (data) {
-          setPosts(posts.filter((post) => post._id !== id));
-          setIsDeleted(true);
+        if (error && !data) {
+          setErrorPost(true);
+          return;
         }
+        setIsDeleted(true);
       },
       header
     );
@@ -88,9 +130,13 @@ function ShowPostsScreen() {
               onConfirm={setErrorPost(false)}
             />
           )}
-          {posts.map((post, index) => (
+          {dataArray.map((dataUser, index) => (
             <View style={styles.cards} key={index}>
-              <Card post={post} handleDelete={handleDelete} />
+              <Card
+                post={dataUser}
+                handleDelete={handleDelete}
+                handleVerify={handleVerify}
+              />
             </View>
           ))}
         </ScrollView>
@@ -104,34 +150,43 @@ function ShowPostsScreen() {
   );
 }
 
-function Card({ post, handleDelete }) {
+function Card({ dataUser, handleDelete, handleVerify }) {
   return (
     <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
-      <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
-
-        <View style={styleCard.titleHeader}>
-          <Text style={styleCard.title}>{post.title}</Text>
+      <View style={styleCard.cardContent}>
+        <View style={styleCard.cardHeader}>
+          <Text style={styleCard.cardTitle}>
+            {dataUser.firstname + " " + dataUser.lastname}
+          </Text>
+          <Text style={styleCard.cardDate}>{dataUser.email}</Text>
         </View>
-      </View>
-      <View style={styleCard.cardBody}>
-        <TouchableOpacity
-          style={styleCard.deleteButton}
-          onPress={() => handleDelete(post._id)}>
-          <Icon name="trash-can" size={40} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styleCard.editButton}
-          onPress={() => handleDelete(post._id)}>
-          <Icon name="pencil" size={40} />
-        </TouchableOpacity>
-
-        <Text style={styleCard.subtitle}>{post.subtitle}</Text>
-        <Text style={styleCard.description}>{post.description}</Text>
+        <View style={styleCard.cardBody}>
+          <Text style={styleCard.cardText}>{dataUser.typeOfDocument}</Text>
+          <Text style={styleCard.cardText}>{dataUser.documentNumber}</Text>
+          <View style={styleCard.cardFooter}>
+            <TouchableOpacity
+              style={styleCard.deleteButton}
+              onPress={() => handleDelete(dataUser._id)}>
+              <Icon
+                name="trash-can-outline"
+                size={30}
+                color={BasicStylesPage.color0}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styleCard.editButton}
+              onPress={(state) => handleVerify(dataUser._id)}>
+              <Icon
+                name="account-check-outline"
+                size={30}
+                color={BasicStylesPage.color0}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -145,59 +200,7 @@ const styleCard = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: BasicStylesPage.color3 + 60,
   },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-  },
-  cardHeader: {
-    padding: 10,
-    flexDirection: "row",
-    borderTopColor: BasicStylesPage.color4 + 90,
-    borderTopWidth: 4,
-    borderBottomColor: BasicStylesPage.color4 + 90,
-    borderBottomWidth: 4,
-    height: 200,
-  },
-  cardCircle: {
-    position: "absolute",
-    alignSelf: "center",
-  },
-  titleHeader: {
-    backgroundColor: BasicStylesPage.color6,
-    position: "absolute",
-    marginTop: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 15,
-    paddingRight: 15,
-    alignItems: "flex-start",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: BasicStylesPage.color3,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: BasicStylesPage.color1,
-    fontStyle: "italic",
-  },
-  description: {
-    fontSize: 14,
-    color: BasicStylesPage.color5,
-  },
-  cardBody: {
-    padding: 10,
-    marginTop: 10,
-    height: 100,
-    borderBottomColor: BasicStylesPage.color2,
-    borderBottomWidth: 4,
-    borderLeftColor: BasicStylesPage.color2,
-    borderLeftWidth: 4,
-    borderRightColor: BasicStylesPage.color2,
-    borderRightWidth: 4,
-    borderRadius: 10,
-  },
+
   deleteButton: {
     position: "absolute",
     bottom: 10,
@@ -223,6 +226,37 @@ const styleCard = StyleSheet.create({
     justifyContent: "center",
     zIndex: 1,
     marginBottom: 70,
+  },
+  cardCircle: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+  },
+  cardContent: {
+    margin: 20,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    color: BasicStylesPage.color0,
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  cardDate: {
+    color: BasicStylesPage.color0,
+  },
+  cardBody: {
+    marginTop: 10,
+  },
+  cardText: {
+    color: BasicStylesPage.color0,
+  },
+  cardFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
   },
 });
 
@@ -260,4 +294,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ShowPostsScreen;
+export default NotificationScreen;

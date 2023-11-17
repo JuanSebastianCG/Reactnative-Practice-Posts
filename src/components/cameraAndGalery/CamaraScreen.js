@@ -34,7 +34,6 @@ export default function App() {
       try {
         setIsTakingPicture(true);
         const { uri } = await cameraRef.current.takePictureAsync();
-        console.log(uri)
       } catch (error) {
         console.error('Error al tomar la foto:', error);
       } finally {

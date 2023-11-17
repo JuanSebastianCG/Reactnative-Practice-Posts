@@ -14,25 +14,27 @@ export function usePostData() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const postData = useCallback(async (RelativeUrl, formData, headers, onComplete = () => {}) => {
-    const url = `${basicEndpoint}${version}${RelativeUrl}`;
-   /*  console.log("url", url);
+  const postData = useCallback(
+    async (RelativeUrl, formData, headers, onComplete = () => {}) => {
+      const url = `${basicEndpoint}${version}${RelativeUrl}`;
+      /*  console.log("url", url);
     console.log("formData", formData);
     console.log("headers", headers); */
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axios.post(url, formData, { headers });
-      setData(response);
-      onComplete(response);
-    } catch (error) {
-      console.error("Error making POST request:", error);
-      setError(error);
-      onComplete(null);
-    } finally {
-      setLoading(false);
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.post(url, formData, { headers });
+        setData(response);
+        onComplete(response);
+      } catch (error) {
+        console.error(error,error.response.data.errorBody);
+        setError(error.response.data.errorBody);
+        onComplete(null);
+      } finally {
+        setLoading(false);
+      }
     }
-  });
+  );
 
   return { postData, loading, error, data };
 }
@@ -57,11 +59,11 @@ export function useGetData() {
 
         const response = await axios.get(url, config);
         setData(response.data);
-
         onComplete(response.data);
       } catch (err) {
-        console.error("Error making GET request:", err);
-        setError(err);
+        console.error(error,error.response.data.errorBody);
+        setError(error.response.data.errorBody);
+        onComplete(null);
       } finally {
         setLoading(false);
       }
@@ -90,11 +92,12 @@ export function useDeleteData() {
         };
         const response = await axios.delete(url, config);
         setData(response.data);
-
         onComplete(response.data);
       } catch (err) {
-        console.error("Error making GET request:", err);
-        setError(err);
+        console.error(error,error.response.data.errorBody);
+        setError(error.response.data.errorBody);
+        onComplete(null);
+        
       } finally {
         setLoading(false);
       }
@@ -105,35 +108,29 @@ export function useDeleteData() {
   return { deleteData, loading, error, data };
 }
 
-
 //========UPDATE================
 export function useUpdateData() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const updateData = useCallback(
-    async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
-      const url = `${basicEndpoint}${version}${especificUrl}`;
+  const updateData =  useCallback(
+    async (RelativeUrl, formData, headers, onComplete = () => {}) => {
+      const url = `${basicEndpoint}${version}${RelativeUrl}`;
       try {
         setLoading(true);
         setError(null);
-        const config = {
-          headers,
-          data: body,
-        };
-        const response = await axios.put(url, config);
-        setData(response.data);
-
-        onComplete(response.data);
-      } catch (err) {
-        console.error("Error making GET request:", err);
-        setError(err);
+        const response = await axios.put(url, formData, { headers });
+        setData(response);
+        onComplete(response);
+      } catch (error) {
+        console.error(error,error.response.data.errorBody);
+        setError(error.response.data.errorBody);
+        onComplete(null);
       } finally {
         setLoading(false);
       }
-    },
-    []
+    }
   );
 
   return { updateData, loading, error, data };

@@ -2,12 +2,14 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
-import Tabbar from "../../components/indexComponentsBar/Tabbar"
+import Tabbar from "../../components/indexComponentsBar/Tabbar";
 import { Sidebar } from "../../components/indexComponentsBar/SideBarMenu";
 
 import HomeScreen from "../indexPages/HomeScreen";
 import LoginScreen from "../userComponents/LoginScreen";
 import RegisterScreen from "../userComponents/RegisterScreen";
+import ShowUsersScreen from "../userComponents/ShowUsersScreen";
+import NotificationScreen from "../userComponents/NotificationScreen";
 
 import ShowCategoryScreen from "../../screens/CategoryAndServices/ShowCategory";
 import ShowServicesScreen from "../../screens/CategoryAndServices/ShowServices";
@@ -27,6 +29,7 @@ function IndexTabbar() {
       <View style={{ flex: 1 }}>
         <Stack.Navigator
           initialRouteName="HomeScreen"
+          /* initialRouteName="ShowUsersScreen" */
           screenOptions={{
             headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
           }}>
@@ -35,9 +38,13 @@ function IndexTabbar() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+          <Stack.Screen name="ShowUsersScreen" component={ShowUsersScreen} />
 
-          <Stack.Screen name="CreateServiceScreen" component={CreateServiceScreen} />
-          
+          <Stack.Screen
+            name="CreateServiceScreen"
+            component={CreateServiceScreen}
+          />
+
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
@@ -51,6 +58,10 @@ function IndexTabbar() {
           <Stack.Screen
             name="CreateCategoryScreen"
             component={CreateCategoryScreen}
+          />
+          <Stack.Screen
+            name="NotificationScreen"
+            component={NotificationScreen}
           />
         </Stack.Navigator>
 

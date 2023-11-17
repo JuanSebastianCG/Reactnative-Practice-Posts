@@ -105,14 +105,10 @@ function CreatePostScreen() {
         type: image.type,
       });
     });
-    console.log("formData:", formData);
-
     postData(url, headers, formData, (data) => {
       if (error || !data) {
-        console.log("Error:", error);
         setError(true);
       } else {
-        console.log("Data:", data);
         navigation.navigate("ShowPostsScreen");
         setSuccess(true);
       }

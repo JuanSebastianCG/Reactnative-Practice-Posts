@@ -69,7 +69,6 @@ function RegisterScreen() {
     };
     
     postData(url, formData, headers , (response) => {
-      console.log(response);
       if (response) {
         navigation.navigate("LoginScreen");
       } else {

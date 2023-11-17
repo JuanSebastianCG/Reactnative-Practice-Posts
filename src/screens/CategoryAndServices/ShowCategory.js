@@ -59,15 +59,11 @@ function ShowCategoryScreen() {
     getData(
       url,
       (data) => {
-        if (error && !data) {
+        if (error || data == null) {
           setErrorPost(true);
           return;
         }
         setDataPost(data);
-      /*   for (let i = 0; i < data.length; i++) {
-          console.log(data[i]._id);
-        } */
-
       },
       header
     );

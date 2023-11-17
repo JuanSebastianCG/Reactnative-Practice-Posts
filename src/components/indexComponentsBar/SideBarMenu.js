@@ -9,14 +9,15 @@ import {
   ScrollView,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
-import BasicStylesPage from "../../public/cssStyles/Basic_Style";
-import { Dimensions } from "react-native";
 import { Circle, Svg } from "react-native-svg";
+import { useNavigation } from "@react-navigation/native";
+import { Dimensions } from "react-native";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+
 const { width, height } = Dimensions.get("window");
+import { TokenUserManager } from "../../utils/asyncStorage";
 
 const Sidebar = () => {
-  const navigation = useNavigation();
   const [isModalOpen, setModalOpen] = useState(false);
   const sidebarAnimation = useRef(new Animated.Value(-width * 0.7)).current;
 
@@ -59,6 +60,7 @@ const Sidebar = () => {
           size={50}
         />
       </TouchableOpacity>
+
       <Modal
         transparent={true}
         visible={isModalOpen}
@@ -67,6 +69,23 @@ const Sidebar = () => {
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
         <Animated.View style={[styles.modal, { left: sidebarAnimation }]}>
+          <Svg width="400" height="500" style={styleBody.cardCircle}>
+            <Circle
+              cx="200"
+              cy="160"
+              r="100"
+              fill={BasicStylesPage.color2 + 90}
+            />
+          </Svg>
+
+          <Svg width="400" height="500" style={styleBody.cardCircle}>
+            <Circle
+              cx="200"
+              cy="380"
+              r="70"
+              fill={BasicStylesPage.color2 + 90}
+            />
+          </Svg>
           <ScrollView style={styles.scrollView}>
             {/* cuerpo */}
             <SideBarBody closeSidebar={closeSidebar} />
@@ -124,16 +143,22 @@ const Dropdown = ({ title, titleIcon, items, closeSidebar }) => {
 
 const SideBarBody = ({ closeSidebar }) => {
   const navigation = useNavigation();
+  const { getInfoToken } = TokenUserManager();
+  const [adminRole, setAdminRole] = useState(false);
+
+  const getAdminRole = async () => {
+    const infoToken = await getInfoToken();
+    if (infoToken) setAdminRole(infoToken.role === "admin");
+  };
+
+  useEffect(() => {
+    getAdminRole();
+  }
+  , []);
+  
 
   return (
     <View style={styleBody.container}>
-      <Svg width="400" height="500" style={styleBody.cardCircle}>
-        <Circle cx="200" cy="160" r="100" fill={BasicStylesPage.color2 + 90} />
-      </Svg>
-
-      <Svg width="400" height="500" style={styleBody.cardCircle}>
-        <Circle cx="200" cy="380" r="70" fill={BasicStylesPage.color2 + 90} />
-      </Svg>
       <Text style={styleBody.sidebarItemTitle}>MENU</Text>
       <Dropdown
         title="Home"
@@ -169,6 +194,19 @@ const SideBarBody = ({ closeSidebar }) => {
         ]}
         closeSidebar={closeSidebar}
       />
+      {adminRole && (
+        <Dropdown
+          title="Admin"
+          titleIcon="shield-crown"
+          items={[
+            {
+              text: "Ver Usuarios",
+              onPress: () => navigation.navigate("ShowUsersScreen"),
+            },
+          ]}
+          closeSidebar={closeSidebar}
+        />
+      )}
     </View>
   );
 };
@@ -178,9 +216,8 @@ const styleBody = {
 
   container: {
     flex: 1,
-    backgroundColor: BasicStylesPage.color3,
+
     paddingTop: 20,
-    height: height * 0.6,
   },
   sidebarItem: {
     flexDirection: "row",
@@ -256,7 +293,7 @@ const styles = {
     width: 70,
   },
   scrollView: {
-    maxHeight: height * 0.65,
+    maxHeight: height * 0.7,
     marginTop: 10,
   },
   /* Resto de los estilos sin cambios */

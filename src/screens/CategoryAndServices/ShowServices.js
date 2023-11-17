@@ -97,7 +97,7 @@ function ShowServicesScreen() {
     getData(
       url,
       (data) => {
-        if (error && !data) {
+        if (error || data == null) {
           setErrorPost(true);
           return;
         }
@@ -106,7 +106,6 @@ function ShowServicesScreen() {
             filterCategories.includes(item.categoryService)
           );
         }
-        /* console.log(data); */
 
         for (let i = 0; i < data.length; i++) {
           uri = `${basicEndpoint}/${data[i].avatar}`;

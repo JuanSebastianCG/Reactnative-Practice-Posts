@@ -17,7 +17,7 @@ import { usePostData } from "../../utils/useAxios";
 
 function LoginScreen() {
   const navigation = useNavigation();
-  const { saveToken, getToken, deleteToken } = TokenUserManager();
+  const { saveToken, getToken, getInfoToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
 
   const [userData, setUserData] = useState({
@@ -42,12 +42,12 @@ function LoginScreen() {
       email: userData.email,
       password: userData.password,
     };
-    postData(url,body, headers, (response) => {
+    postData(url, body, headers, async (response) => {
       if (response != null) {
         const accessToken = response.data.access;
         saveToken(accessToken);
-        console.log("Token guardado: ", accessToken);
         navigation.navigate("HomeScreen");
+        /* console.log("Token: ", accessToken); */
       }
       if (error != null) {
         setLoginError(true);
