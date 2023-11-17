@@ -43,9 +43,9 @@ function CreatePostScreen() {
     setPostDataDB({ ...PostDataDB, [name]: value });
   };
   const [PostDataDB, setPostDataDB] = useState({
-    title: "",
-    subtitle: "",
-    description: "",
+    title: "post 1",
+    subtitle: "post 1",
+    description: "post 1",
     avatars: [],
   });
 
@@ -75,7 +75,7 @@ function CreatePostScreen() {
   const [successPost, setSuccess] = useState(false);
   const [errorPost, setError] = useState(false);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (
       !PostDataDB.title ||
       !PostDataDB.subtitle ||
@@ -103,9 +103,11 @@ function CreatePostScreen() {
         uri: image.uri,
         name: image.name,
         type: image.type,
+        
       });
     });
-    postData(url, headers, formData, (data) => {
+    console.log(formData);
+    postData(url, formData,headers, (data) => {
       if (error || !data) {
         setError(true);
       } else {

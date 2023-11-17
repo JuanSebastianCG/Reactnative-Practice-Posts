@@ -233,7 +233,7 @@ const CustomCheckBox = ({ label, style, onChange, value }) => {
 
   return (
     <TouchableOpacity onPress={toggleCheckbox} style={style}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center",height: 32 }}>
         <View
           style={{
             width: 24,
@@ -279,7 +279,6 @@ const CustomCheckBox = ({ label, style, onChange, value }) => {
         </View>
 
         <Text
-
           style={{
             fontSize: 13,
             flex: 1,

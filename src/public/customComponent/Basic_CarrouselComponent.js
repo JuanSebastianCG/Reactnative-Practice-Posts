@@ -4,8 +4,9 @@ import { interpolate, useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 import BasicStylesPage from "../cssStyles/Basic_Style";
 
-function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove}) {
+function CustomCarrousel({ data = [], width = 350, height = 200 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  console.log("currentIndex", data);
 
   const calculateIndex = (index) => {
     if (index > currentIndex - 0.5 || index < currentIndex - 0.5) {
@@ -24,12 +25,12 @@ function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove})
   return (
     <View style={styles.container}>
       <Carousel
-        autoPlay={automaticMove}
+        autoPlay={true}
         width={width}
         height={height}
         scrollAnimationDuration={1000}
         data={data}
-        autoPlayInterval={(automaticMove)? 5000 : 0}
+        autoPlayInterval={3000}
         onProgressChange={(_, absoluteProgress) =>
           calculateIndex(absoluteProgress)
         }
