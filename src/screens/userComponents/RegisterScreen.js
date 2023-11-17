@@ -42,8 +42,6 @@ function RegisterScreen() {
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
   const [policyAccepted, setPolicyAccepted] = useState(false);
-  const { saveToken, getToken, deleteToken } = TokenUserManager();
-  const { postData, loading, error } = usePostData();
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
 

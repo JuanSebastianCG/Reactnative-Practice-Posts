@@ -4,8 +4,8 @@ import axios from "axios";
 //export const basicEndpoint = "http://192.168.20.27:3001/api/v1"
 //export const basicEndpoint = "http://192.168.120.52:3000/api/v1"
 //export const basicEndpoint = "https://apis-backend-dm.up.railway.app/api/v1";
-
-export const basicEndpoint = "http://192.168.20.27:3000";
+// 172.20.10.13
+export const basicEndpoint = "http://192.168.119.117:3000";
 export const version = "/api/v1";
 
 /* ============= POST ========= */
