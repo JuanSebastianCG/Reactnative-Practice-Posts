@@ -56,6 +56,7 @@ function ShowPostsScreen() {
           setErrorPost(true);
           return;
         }
+        if (data == null) return;
         for (let i = 0; i < data.length; i++) {
           uri = `${imageEndpointApi[0]}/${data[i].avatar}`;
           data[i].avatars = data[i].avatars.map((avatar) => {
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 10,
+    bottom: 16,
     right: 15,
     width: 80,
     height: 80,

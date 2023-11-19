@@ -1,15 +1,16 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet, Image, View } from "react-native"; // Importa View para crear bordes redondeados
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity, StyleSheet, View } from "react-native"; // Importa View para crear bordes redondeados
+import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { useAuth } from "../../utils/authManager";
+import { UserNotification } from "../../Services/ApiServices/UserNotification";
+
 import { Polygon, Svg } from "react-native-svg";
 
 import BasicStylesPage from "../cssStyles/Basic_Style";
 import { Text } from "react-native";
-import { useGetData } from "../../utils/useAxios";
 
 export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
   const navigation = useNavigation();
@@ -48,17 +49,12 @@ export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
 export const CustomLogOutInButton = ({ onPress = () => {}, style }) => {
   const { deleteToken } = TokenUserManager();
   const navigation = useNavigation();
+  const { logged ,handleLoggin } = useAuth();
 
-  const { logged, handleLoggin } = useAuth();
-
-  useFocusEffect(
-    React.useCallback(() => {
-      handleLoggin();
-    }, [])
-  );
   const primaryStyle = style;
   const handleLogout = async () => {
     deleteToken();
+    handleLoggin();
     navigation.navigate("WelcomeScreen");
   };
   const handleLoIn = async () => {
@@ -108,48 +104,58 @@ const styles = StyleSheet.create({
   },
 });
 
-export default bellUserNotification = ({ style }) => {
-  const { logged, handleLoggin } = useAuth();
-  const { getData, error } = useGetData();
-  const { getToken } = TokenUserManager();
-  const [haveNotification, setHaveNotification] = React.useState(false);
-  const navigation = useNavigation();
-
-  const handleGetData = async () => {
-    const url = "/ifHaveNotification";
-    const header = {
-      Authorization: `Bearer ${await getToken()}`,
+export const BellUserNotification = ({ style, onPress }) => {
+  const { fetchUnreadNotification } = UserNotification();
+  const [hasUnreadNotification, setHasUnreadNotification] = useState(0);
+  const { logged } = useAuth();
+  useEffect(() => {
+    const fetch = async () => {
+      setHasUnreadNotification(await fetchUnreadNotification());
     };
-    getData(
-      url,
-      (data) => {
-        if (error && !data) return;
-        setHaveNotification(data);
-      },
-      header
-    );
-  };
-
+    if (logged) fetch();
+  }, []);
   return (
     <TouchableOpacity
+      
       style={{
         position: "absolute",
-        top: -20,
-        right: -20,
+        top: -30,
+        right: -40,
         borderRadius: 50,
-        padding: 15,
+        padding: 10,
         borderWidth: 3,
-        backgroundColor: BasicStylesPage.color3 + 30,
+        backgroundColor: BasicStylesPage.color3 + 99,
         borderColor: BasicStylesPage.color4,
       }}
-      onPress={() => {
-        logged
-          ? navigation.navigate("NotificationScreen")
-          : navigation.navigate("LoginScreen");
-      }}>
+      onPress={() => {onPress();}}>
+      
       <View>
         <Icon name="bell" size={50} color={BasicStylesPage.color0} />
       </View>
+
+      {hasUnreadNotification > 0 && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: -10,
+            backgroundColor: BasicStylesPage.color0,
+            borderRadius: 50,
+            width: 30,
+            height: 30,
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <Text
+            style={{
+              color: BasicStylesPage.color3,
+              fontSize: 13,
+              fontWeight: "bold",
+            }}>
+            {hasUnreadNotification}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

@@ -33,15 +33,7 @@ function ShowCategoryScreen() {
 
   useEffect(() => {
     handleGetData();
-    const intervalId = setInterval(() => {
-      handleGetData();
-    }, 5000);
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, []);
+  }, [handleDelete]);
 
   const handleError = () => {
     setErrorPost(false);

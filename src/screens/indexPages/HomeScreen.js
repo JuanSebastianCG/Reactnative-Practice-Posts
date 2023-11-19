@@ -66,7 +66,7 @@ function HomeScreen() {
       />
 
       <CustomButton
-        text="Ver Menu"
+        text="Ver Posts"
         onPress={goToShowPosts}
         buttonStyle={[
           styles.buttonContainer,

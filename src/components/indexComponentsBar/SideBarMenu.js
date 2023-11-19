@@ -17,11 +17,26 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 const { width, height } = Dimensions.get("window");
 import { TokenUserManager } from "../../utils/asyncStorage";
-import { CustomLogOutInButton } from "../../public/customComponent/Basic_PageInterface";
+import {
+  CustomLogOutInButton,
+  BellUserNotification,
+  CustomLogo,
+} from "../../public/customComponent/Basic_PageInterface";
+import { UserNotification } from "../../Services/ApiServices/UserNotification";
+import { useAuth } from "../../utils/authManager";
 
 const Sidebar = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const sidebarAnimation = useRef(new Animated.Value(-width * 0.9)).current;
+  const { logged } = useAuth();
+  const navigation = useNavigation();
+
+
+  const { fetchUnreadNotification } = UserNotification();
+  const [hasUnreadNotification, setHasUnreadNotification] = useState(0);
+  const fetchHasNotificationSet = async () => {
+    setHasUnreadNotification(await fetchUnreadNotification());
+  };
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
@@ -46,6 +61,7 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
+    if (logged) fetchHasNotificationSet();
     if (isModalOpen) {
       openSidebar();
     } else {
@@ -56,6 +72,30 @@ const Sidebar = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleModal} style={styles.logo}>
+        {hasUnreadNotification > 0 && (
+          <View
+            style={{
+              position: "absolute",
+              top: -10,
+              right: -10,
+              backgroundColor: BasicStylesPage.color0,
+              borderRadius: 50,
+              width: 30,
+              height: 30,
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <Text
+              style={{
+                color: BasicStylesPage.color3,
+                fontSize: 13,
+                fontWeight: "bold",
+              }}>
+              {hasUnreadNotification}
+            </Text>
+          </View>
+        )}
+
         <MaterialCommunityIcons
           name="menu"
           color={BasicStylesPage.color2}
@@ -76,8 +116,10 @@ const Sidebar = () => {
             <TouchableOpacity
               style={{ marginLeft: 20 }}
               onPress={() => {
+
                 closeSidebar();
                 toggleModal();
+                navigation.navigate("RegisterScreen");
               }}>
               <View>
                 <Icon
@@ -94,9 +136,13 @@ const Sidebar = () => {
               </View>
             </TouchableOpacity>
           </View>
-          {/* bell */}
-    
-
+          <BellUserNotification
+            onPress={() => {
+              closeSidebar();
+              navigation.navigate("NotificationScreen");
+            }}
+          />
+          <CustomLogo width={60} height={100} styleLogo={{ marginTop: 25 ,right: 30}} />
           <Svg width="200" height="260" style={styles.cardCircle}>
             <Circle
               cx="100"
@@ -229,8 +275,8 @@ const SideBarBody = ({ closeSidebar }) => {
   const [adminRole, setAdminRole] = useState(false);
 
   const getAdminRole = async () => {
-    const infoToken = await getInfoToken();
-    if (infoToken) setAdminRole(infoToken.role === "admin");
+    setAdminRole((await getInfoToken("role")) === "admin");
+    
   };
 
   useEffect(() => {
