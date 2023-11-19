@@ -9,6 +9,7 @@ import { Polygon, Svg } from "react-native-svg";
 
 import BasicStylesPage from "../cssStyles/Basic_Style";
 import { Text } from "react-native";
+import { useGetData } from "../../utils/useAxios";
 
 export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
     <TouchableOpacity
       style={[
         styleLogo,
-        { width: width, height: height, zIndex: 1, position: "absolute"},
+        { width: width, height: height, zIndex: 1, position: "absolute" },
       ]}
       onPress={() => navigation.navigate("WelcomeScreen")}>
       <Svg
@@ -44,7 +45,7 @@ export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
   );
 };
 
-export const CustomLogOutInButton = ({onPress = () => {}}) => {
+export const CustomLogOutInButton = ({ onPress = () => {}, style }) => {
   const { deleteToken } = TokenUserManager();
   const navigation = useNavigation();
 
@@ -55,7 +56,7 @@ export const CustomLogOutInButton = ({onPress = () => {}}) => {
       handleLoggin();
     }, [])
   );
-  const primaryStyle = styles.logoutContainer;
+  const primaryStyle = style;
   const handleLogout = async () => {
     deleteToken();
     navigation.navigate("WelcomeScreen");
@@ -65,18 +66,27 @@ export const CustomLogOutInButton = ({onPress = () => {}}) => {
   };
 
   return (
-    
-      <TouchableOpacity onPress={() => logged ? (handleLogout(), onPress()) : (handleLoIn(), onPress())}
-      style={[primaryStyle,{zIndex: 2}]}>
-        <View style={styles.logoLogout}>
-          {/* if login */}
-          <Icon name={logged ? "logout" : "login"} 
-          size={50} color={BasicStylesPage.color0} />
-          <Text style={{ color: BasicStylesPage.color0 , marginLeft: (logged ? 0 : 10)
-          }}>{logged ? "Logout" : "Login"}</Text>
-        </View>
-      </TouchableOpacity>
-    
+    <TouchableOpacity
+      onPress={() =>
+        logged ? (handleLogout(), onPress()) : (handleLoIn(), onPress())
+      }
+      style={[primaryStyle, { zIndex: 2 }]}>
+      <View style={styles.logoLogout}>
+        {/* if login */}
+        <Icon
+          name={logged ? "logout" : "login"}
+          size={50}
+          color={BasicStylesPage.color0}
+        />
+        <Text
+          style={{
+            color: BasicStylesPage.color0,
+            marginLeft: logged ? 0 : 10,
+          }}>
+          {logged ? "Logout" : "Login"}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -87,14 +97,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  logoutContainer: {
-    flexDirection: "row",
-    height: 70,
-    paddingHorizontal: 16,
-    borderRadius: 25,
-    top: 20,
-    position: "absolute",
-  },
   logoLogout: {
     width: "100%",
     height: "100%",
@@ -105,3 +107,49 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
+
+export default bellUserNotification = ({ style }) => {
+  const { logged, handleLoggin } = useAuth();
+  const { getData, error } = useGetData();
+  const { getToken } = TokenUserManager();
+  const [haveNotification, setHaveNotification] = React.useState(false);
+  const navigation = useNavigation();
+
+  const handleGetData = async () => {
+    const url = "/ifHaveNotification";
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    getData(
+      url,
+      (data) => {
+        if (error && !data) return;
+        setHaveNotification(data);
+      },
+      header
+    );
+  };
+
+  return (
+    <TouchableOpacity
+      style={{
+        position: "absolute",
+        top: -20,
+        right: -20,
+        borderRadius: 50,
+        padding: 15,
+        borderWidth: 3,
+        backgroundColor: BasicStylesPage.color3 + 30,
+        borderColor: BasicStylesPage.color4,
+      }}
+      onPress={() => {
+        logged
+          ? navigation.navigate("NotificationScreen")
+          : navigation.navigate("LoginScreen");
+      }}>
+      <View>
+        <Icon name="bell" size={50} color={BasicStylesPage.color0} />
+      </View>
+    </TouchableOpacity>
+  );
+};

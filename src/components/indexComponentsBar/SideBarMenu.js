@@ -13,6 +13,7 @@ import { Circle, Svg } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions } from "react-native";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 const { width, height } = Dimensions.get("window");
 import { TokenUserManager } from "../../utils/asyncStorage";
@@ -72,7 +73,30 @@ const Sidebar = () => {
         <Animated.View style={[styles.modal, { left: sidebarAnimation }]}>
           <View style={styles.tabarIcon}>
             <CustomLogOutInButton onPress={closeSidebar} />
+            <TouchableOpacity
+              style={{ marginLeft: 20 }}
+              onPress={() => {
+                closeSidebar();
+                toggleModal();
+              }}>
+              <View>
+                <Icon
+                  name="account-plus"
+                  size={50}
+                  color={BasicStylesPage.color0}
+                />
+                <Text
+                  style={{
+                    color: BasicStylesPage.color0,
+                  }}>
+                  Registrar
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
+          {/* bell */}
+    
+
           <Svg width="200" height="260" style={styles.cardCircle}>
             <Circle
               cx="100"
@@ -121,7 +145,7 @@ const styles = {
       height: 12,
     },
     shadowOpacity: 0.58,
-    shadowRadius: 16.00,
+    shadowRadius: 16.0,
     elevation: 24,
     zIndex: 2,
   },
@@ -135,13 +159,17 @@ const styles = {
     width: 65,
   },
   scrollView: {
-    marginTop: 60,
+    marginTop: 90,
     marginBottom: 20,
   },
   tabarIcon: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginTop: 0,
+    /* increase the space betwen elements */
+    position: "absolute",
+    marginTop: 30,
+    left: 20,
+    zIndex: 2,
   },
   cardCircle: {
     position: "absolute",
@@ -281,7 +309,7 @@ const styleBody = {
     color: BasicStylesPage.color1,
     textAlign: "center",
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   sidebarItemText: {
     marginLeft: 10,

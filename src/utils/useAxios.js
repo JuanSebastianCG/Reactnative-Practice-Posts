@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 
-//export const basicEndpoint = "http://192.168.20.27:3001/api/v1"
-//export const basicEndpoint = "http://192.168.120.52:3000/api/v1"
+//export const basicEndpointApi = "http://192.168.20.27:3001/api/v1"
+//export const basicEndpointApi = "http://192.168.120.52:3000/api/v1"
 
-export const basicEndpoint = "http://192.168.20.27:3000";
-//export const basicEndpoint = "https://apis-backend-dm.up.railway.app";
-export const version = "/api/v1";
+export const basicEndpointApi = ["http://192.168.20.27:3000",""];
+export const versionApi = ["/api/v1",""];
+export const imageEndpointApi = ["http://192.168.20.27:3000/api/v1"]
+//export const basicEndpointApi = "https://apis-backend-dm.up.railway.app";
 
 /* ============= POST ========= */
 export function usePostData() {
@@ -15,8 +16,8 @@ export function usePostData() {
   const [data, setData] = useState(null);
 
   const postData = useCallback(
-    async (RelativeUrl, formData, headers, onComplete = () => {}) => {
-      const url = `${basicEndpoint}${version}${RelativeUrl}`;
+    async (relativeUrl, formData, headers, onComplete = () => {},basiEndpointIndex = 0) => {
+      const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
       /*  console.log("url", url);
     console.log("formData", formData);
     console.log("headers", headers); */
@@ -27,8 +28,8 @@ export function usePostData() {
         setData(response);
         onComplete(response);
       } catch (error) {
-        console.error(error,error.response.data.errorBody);
-        setError(error.response.data.errorBody);
+        console.error(err.response.data.errorBody, err);
+        setError([err, err.response.data.errorBody]);
         onComplete(null);
       } finally {
         setLoading(false);
@@ -46,8 +47,10 @@ export function useGetData() {
   const [data, setData] = useState(null);
 
   const getData = useCallback(
-    async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
-      const url = `${basicEndpoint}${version}${especificUrl}`;
+    async (relativeUrl, onComplete = () => {}, headers = {}, body = null,basiEndpointIndex = 0) => {
+
+
+      const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
       try {
         setLoading(true);
         setError(null);
@@ -61,8 +64,8 @@ export function useGetData() {
         setData(response.data);
         onComplete(response.data);
       } catch (err) {
-        console.error(error,error.response.data.errorBody);
-        setError(error.response.data.errorBody);
+        console.error(err.response.data.errorBody, err);
+        setError([err, err.response.data.errorBody]);
         onComplete(null);
       } finally {
         setLoading(false);
@@ -81,8 +84,8 @@ export function useDeleteData() {
   const [data, setData] = useState(null);
 
   const deleteData = useCallback(
-    async (especificUrl, onComplete = () => {}, headers = {}, body = null) => {
-      const url = `${basicEndpoint}${version}${especificUrl}`;
+    async (relativeUrl, onComplete = () => {}, headers = {}, body = null,basiEndpointIndex = 0) => {
+      const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
       try {
         setLoading(true);
         setError(null);
@@ -94,10 +97,9 @@ export function useDeleteData() {
         setData(response.data);
         onComplete(response.data);
       } catch (err) {
-        console.error(error,error.response.data.errorBody);
-        setError(error.response.data.errorBody);
+        console.error(err.response.data.errorBody, err);
+        setError([err, err.response.data.errorBody]);
         onComplete(null);
-        
       } finally {
         setLoading(false);
       }
@@ -114,9 +116,10 @@ export function useUpdateData() {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const updateData =  useCallback(
-    async (RelativeUrl, formData, headers, onComplete = () => {}) => {
-      const url = `${basicEndpoint}${version}${RelativeUrl}`;
+  const updateData = useCallback(
+    async (relativeUrl, formData, headers, onComplete = () => {},basiEndpointIndex = 0) => {
+      const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
+      
       try {
         setLoading(true);
         setError(null);
@@ -124,8 +127,8 @@ export function useUpdateData() {
         setData(response);
         onComplete(response);
       } catch (error) {
-        console.error(error,error.response.data.errorBody);
-        setError(error.response.data.errorBody);
+        console.error(err.response.data.errorBody, err);
+        setError([err, err.response.data.errorBody]);
         onComplete(null);
       } finally {
         setLoading(false);
