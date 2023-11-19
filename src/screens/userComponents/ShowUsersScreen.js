@@ -69,12 +69,12 @@ function ShowUsersScreen() {
     );
   };
 
-  const handleVerify = async (id, state) => {
+  const handleVerify = async (id, state,userEmail) => {
     const url = `/user/verify/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
-    updateData(url, { active: state }, header, (data) => {});
+    updateData(url, { active: state,email: userEmail}, header, (data) => {});
   };
 
   return (
@@ -134,7 +134,7 @@ function Card({ dataUser, handleDelete, handleVerify }) {
         </View>
         <View style={styleCard.footer}>
           <CustomSwitch
-            onValueChange={(state) => handleVerify(dataUser._id, state)}
+            onValueChange={(state) => handleVerify(dataUser._id, state,dataUser.email)}
             value={dataUser.active}
             activeText="Activo"
             inActiveText="Inactivo"

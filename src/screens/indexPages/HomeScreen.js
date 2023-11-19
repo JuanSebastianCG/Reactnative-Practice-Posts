@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { Svg, Polygon } from "react-native-svg";
+import { Svg, Polygon, Circle } from "react-native-svg";
 import { StyleSheet, Platform } from "react-native";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import { CustomButton } from "../../public/customComponent/Basic_Components";
@@ -9,6 +9,7 @@ import {
   CustomLogo,
   CustomLogoutButton,
 } from "../../public/customComponent/Basic_PageInterface";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { useAuth } from "../../utils/authManager";
 
@@ -18,68 +19,60 @@ function HomeScreen() {
   const goToRegister = () => navigation.navigate("RegisterScreen");
   const goToLogin = () => navigation.navigate("LoginScreen");
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
-  const goToCreateServiceCategory = () => navigation.navigate("CreateCategoryScreen");
 
-  const { logged, handleLoggin } = useAuth();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      handleLoggin();
-    }, [])
-  );
 
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.scrollContent}
-      horizontal={false}
-      showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
       <Svg height={230} width={400} style={styles.footer}>
-        <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
+        <Polygon points="0,0 500,300 0,250" fill={BasicStylesPage.color0} />
       </Svg>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
       </Svg>
 
-      <CustomLogoutButton />
-      <CustomLogo styleLogo={styles.logoContainer} />
+      <Svg
+        width="400"
+        height="500"
+        style={{ position: "absolute", top: -70, right: -138 }}>
+        <Circle cx="200" cy="160" r="190" fill={BasicStylesPage.color2 + 99} />
+      </Svg>
+      <Svg
+        width="400"
+        height="500"
+        style={{ position: "absolute", top: -80, right: -130 }}>
+        <Circle cx="200" cy="160" r="100" fill={BasicStylesPage.color3} />
+      </Svg>
 
-      <Text style={styles.text_tittle}>Que Quieres Hacer?</Text>
-      <Text style={styles.text_tittlePoint}>...</Text>
+      <CustomLogo styleLogo={{ right: 15 ,top: 20}}  />
+
+      <Text style={styles.text_tittle}>¿Que Quieres Hacer?</Text>
 
       <CustomButton
-        text="Registrarse"
+        text="Registrarme"
         onPress={goToRegister}
         buttonStyle={styles.buttonContainer}
       />
       <CustomButton
-        text="Login"
+        text="Loguearme"
         onPress={goToLogin}
         buttonStyle={[
           styles.buttonContainer,
-          { paddingLeft: 32, paddingRight: 32 },
+          { paddingHorizontal: 18, },
         ]}
       />
-   
-        <CustomButton
-          text="Ver api"
-          onPress={goToShowPosts}
-          buttonStyle={[
-            styles.buttonContainer,
-            { paddingLeft: 26, paddingRight: 26 },
-          ]}
-        />
 
-        <CustomButton
-          text="Crear categoryService"
-          onPress={goToCreateServiceCategory}
-          buttonStyle={[
-            styles.buttonContainer,
-            { paddingLeft: 26, paddingRight: 26 },
-          ]}
-        />
-    
+      <CustomButton
+        text="Ver Menu"
+        onPress={goToShowPosts}
+        buttonStyle={[
+          styles.buttonContainer,
+          {paddingHorizontal: 20},
+        ]}
+      />
     </ScrollView>
   );
 }
@@ -89,10 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  logoContainer: {
-    top: 0,
-    left: 0,
-  },
+
   scrollContent: {
     alignItems: "center",
     paddingBottom: 0, // Adjust this value based on your content height
@@ -114,6 +104,7 @@ const styles = StyleSheet.create({
     fontWeight: BasicStylesPage.fontWeightTitle,
     fontFamily: BasicStylesPage.fontText,
     marginTop: 80,
+    marginBottom: 10,
   },
   text_tittlePoint: {
     color: BasicStylesPage.color1,

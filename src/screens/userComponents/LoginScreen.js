@@ -71,7 +71,7 @@ function LoginScreen() {
         <View style={styles.formContainer}>
           {/* Contenedor para el logotipo */}
           <View style={styles.loginLogo}>
-            <Icon name="account" size={60} color={BasicStylesPage.color0} />
+            <Icon name="account" size={65} color={BasicStylesPage.color0} />
           </View>
 
           <View style={styles.fieldContainer}>
