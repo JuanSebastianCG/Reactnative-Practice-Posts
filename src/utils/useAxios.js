@@ -117,24 +117,28 @@ export function useUpdateData() {
   const [data, setData] = useState(null);
 
   const updateData = useCallback(
-    async (relativeUrl, formData, headers, onComplete = () => {},basiEndpointIndex = 0) => {
+    async (relativeUrl, body, headers, onComplete = () => {},basiEndpointIndex = 0) => {
       const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
-      
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.put(url, formData, { headers });
-        setData(response);
-        onComplete(response);
-      } catch (error) {
+        const config = {
+          headers,
+        };
+        const response = await axios.put(url, body, config);
+        setData(response.data);
+        onComplete(response.data);
+      } catch (err) {
         console.error(err.response.data.errorBody, err);
         setError([err, err.response.data.errorBody]);
         onComplete(null);
       } finally {
         setLoading(false);
       }
-    }
+    },
+    []
   );
 
   return { updateData, loading, error, data };
 }
+

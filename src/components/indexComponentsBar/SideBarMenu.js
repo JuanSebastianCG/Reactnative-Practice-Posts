@@ -112,11 +112,11 @@ const Sidebar = () => {
         </TouchableWithoutFeedback>
         <Animated.View style={[styles.modal, { left: sidebarAnimation }]}>
           <View style={styles.tabarIcon}>
+            <CustomLogo width={60} height={80} styleLogo={{left: -75}}/> 
             <CustomLogOutInButton onPress={closeSidebar} />
             <TouchableOpacity
               style={{ marginLeft: 20 }}
               onPress={() => {
-
                 closeSidebar();
                 toggleModal();
                 navigation.navigate("RegisterScreen");
@@ -136,13 +136,13 @@ const Sidebar = () => {
               </View>
             </TouchableOpacity>
           </View>
+          {logged && (
           <BellUserNotification
             onPress={() => {
               closeSidebar();
               navigation.navigate("NotificationScreen");
             }}
-          />
-          <CustomLogo width={60} height={100} styleLogo={{ marginTop: 25 ,right: 30}} />
+          />)}
           <Svg width="200" height="260" style={styles.cardCircle}>
             <Circle
               cx="100"
@@ -205,7 +205,7 @@ const styles = {
     width: 65,
   },
   scrollView: {
-    marginTop: 90,
+    marginTop: 100,
     marginBottom: 20,
   },
   tabarIcon: {
@@ -214,7 +214,7 @@ const styles = {
     /* increase the space betwen elements */
     position: "absolute",
     marginTop: 30,
-    left: 20,
+    left: 90,
     zIndex: 2,
   },
   cardCircle: {
