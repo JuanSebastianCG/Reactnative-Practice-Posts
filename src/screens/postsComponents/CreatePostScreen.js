@@ -111,7 +111,6 @@ function CreatePostScreen() {
       if (error || !data) {
         setError(true);
       } else {
-        navigation.navigate("ShowPostsScreen");
         setSuccess(true);
       }
     });

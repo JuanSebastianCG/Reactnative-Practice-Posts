@@ -10,7 +10,10 @@ import { CustomButton } from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import { CustomInTextField } from "../../public/customComponent/Basic_FormComponents";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
-import { CustomErrorBanner, CustomSuccessAlert } from "../../public/customComponent/Basic_AlertComponent";
+import {
+  CustomErrorBanner,
+  CustomSuccessAlert,
+} from "../../public/customComponent/Basic_AlertComponent";
 /* utils */
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { usePostData } from "../../utils/useAxios";
@@ -33,6 +36,7 @@ function LoginScreen() {
   };
 
   const [loginError, setLoginError] = useState(false);
+  const [loginErrorMessage, setloginErrorMessage] = useState("");
 
   const handleSubmit = async () => {
     const url = "/user/login";
@@ -52,6 +56,8 @@ function LoginScreen() {
       }
       if (error != null) {
         setLoginError(true);
+        console.log("Error: ", error[1]);
+        setloginErrorMessage(error[1]+"");
       }
     });
   };
@@ -93,18 +99,21 @@ function LoginScreen() {
                 onChangeText={(text) => handleChange("password", text)}
               />
             </Stack>
-            {loginError && (
-              <CustomErrorBanner
-                text="No se pudo iniciar sesión. Por favor, verifique sus credenciales."
-                styleBanner={styles.errorBanner}
-                onChange={() => setLoginError(false)}
-              />
-            )}
+            <CustomErrorBanner
+              isVisible={loginError}
+              styleBanner={styles.errorBanner}
+              text={loginErrorMessage}
+              onChange={() => {
+                setLoginError(false);
+              }}
+            />
 
             <CustomSuccessAlert
               isVisible={successPost}
               message="Login exitoso!!"
-              onConfirm={() => {navigation.navigate("HomeScreen"), setSuccessPost(false)}}
+              onConfirm={() => {
+                navigation.navigate("HomeScreen"), setSuccessPost(false);
+              }}
             />
             <CustomButton
               text="Login"
@@ -119,12 +128,15 @@ function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  /* banner */
+
   scrollContainer: {
     flexGrow: 1,
   },
   errorBanner: {
     marginLeft: "10%",
     marginRight: "10%",
+    width: "80%",
   },
   footer: {
     position: "absolute",

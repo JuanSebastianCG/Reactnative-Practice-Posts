@@ -12,7 +12,7 @@ import { Polygon, Svg } from "react-native-svg";
 import BasicStylesPage from "../cssStyles/Basic_Style";
 import { Text } from "react-native";
 
-export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
+export const CustomLogo = ({ styleLogo, width = 110, height = 150 ,Color1Logo = BasicStylesPage.color1, Color2Logo = BasicStylesPage.color2}) => {
   const navigation = useNavigation();
 
   //0,150 101,0 200,150
@@ -34,13 +34,13 @@ export const CustomLogo = ({ styleLogo, width = 110, height = 150 }) => {
         height={height}
         width={width}
         style={{ position: "absolute", zIndex: 1 }}>
-        <Polygon points={points1} fill={BasicStylesPage.color1} />
+        <Polygon points={points1} fill={Color1Logo  } />
       </Svg>
       <Svg
         height={height}
         width={width}
         style={{ position: "absolute", zIndex: 2 }}>
-        <Polygon points={points2} fill={BasicStylesPage.color2} />
+        <Polygon points={points2} fill={Color2Logo } />
       </Svg>
     </TouchableOpacity>
   );

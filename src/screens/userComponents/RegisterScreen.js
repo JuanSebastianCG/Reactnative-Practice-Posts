@@ -12,7 +12,10 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import { CustomButton } from "../../public/customComponent/Basic_Components";
+import {
+  CustomButton,
+  CustomDropDown,
+} from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
   CustomCheckBox,
@@ -87,9 +90,11 @@ function RegisterScreen() {
 
         <View style={styles.formContainer}>
           <CustomLogo
-            styleLogo={{top: 0}}
+            styleLogo={{ top: 0 }}
             width={210}
             height={300}
+            Color1Logo={BasicStylesPage.color2}
+            Color2Logo={BasicStylesPage.color2}
           />
 
           <View style={styles.loginLogo}>
@@ -120,10 +125,38 @@ function RegisterScreen() {
               />
 
               <CustomInTextField
-                label="Password"
+                label="password"
                 style={styles.input}
                 value={userData.password}
-                onChangeText={(text) => handleChange("current_password", text)}
+                onChangeText={(text) => handleChange("password", text)}
+              />
+
+              <CustomDropDown
+                label="Tipo de documento"
+                value={userData.document_type}
+                items={[
+                  "DNI",
+                  "Pasaporte",
+                  "Carnet de conducir",
+                  "Carnet de identidad",
+                ]}
+                generalStyle={styles.generalDropDown}
+                generalBorderStyle={styles.generalBorderDropDown}
+                itemStyle={{}}
+                fontInputStyle={{ color: BasicStylesPage.color4 }}
+                onItemSlected={(item) => handleChange("document_type", item)}
+                placeholder={"Documento"}
+                styleLogo={{
+                  BackgroundColor: BasicStylesPage.color2,
+                  marginLeft: 2,
+                }}
+              />
+
+              <CustomInTextField
+                label="Número de documento"
+                style={[styles.input, { marginTop: 20 }]}
+                value={userData.document_number}
+                onChangeText={(text) => handleChange("document_number", text)}
               />
 
               <CustomCheckBox
@@ -195,7 +228,7 @@ const styles = StyleSheet.create({
     width: "85%",
     height: "70%",
     marginBottom: "30%",
-    marginTop: 20,
+    marginTop: 60,
     paddingTop: 40,
     alignItems: "center",
   },
@@ -214,7 +247,7 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 50,
     borderWidth: 4,
-    borderColor: BasicStylesPage.color3 ,
+    borderColor: BasicStylesPage.color3,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1,

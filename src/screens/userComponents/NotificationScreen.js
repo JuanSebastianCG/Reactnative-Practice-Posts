@@ -31,7 +31,6 @@ function ShowUsersScreen() {
   const [errorGet, setErrorGet] = useState(false);
 
   useEffect(() => {
-    handleReadAllNotifications();
     handleGetData();
   }, [handleGetData, handleDelete,handleReadAllNotifications]);
 
@@ -40,8 +39,14 @@ function ShowUsersScreen() {
     const unsubscribe = navigation.addListener("focus", () => {
       handleGetData();
     });
-    return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    // Cleanup function
+    return () => {
+      handleReadAllNotifications();
+    };
+  }, []);
   
 
   const handleGetData = async () => {
@@ -148,7 +153,7 @@ function Card({ dataUser, handleDelete, handleGetData }) {
 
         }}
         >
-        <View style={[styleCard.card, {backgroundColor: dataUser.read ? BasicStylesPage.color2+80 : BasicStylesPage.color2}]} 
+        <View style={[styleCard.card, {backgroundColor: dataUser.read ? BasicStylesPage.color2 : BasicStylesPage.color2+10}]} 
         key={dataUser._id}>
           <View style={styleCard.header}>
             <Text style={styleCard.cardTittle}>{dataUser.title}</Text>

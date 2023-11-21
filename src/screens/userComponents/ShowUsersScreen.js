@@ -47,8 +47,10 @@ function ShowUsersScreen() {
       (data) => {
         if (error || data == null) {
           setErrorGet(true);
+          
           return;
         }
+        data.ma
         setDataArray(data);
       },
       header

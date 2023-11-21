@@ -287,11 +287,11 @@ const SideBarBody = ({ closeSidebar }) => {
     <View style={styleBody.container}>
       <Text style={styleBody.sidebarItemTitle}>MENU</Text>
       <Dropdown
-        title="Home"
+        title="Menú"
         titleIcon="home"
         items={[
           {
-            text: "Menu",
+            text: "Menú",
             onPress: () => navigation.navigate("HomeScreen"),
           },
           {
