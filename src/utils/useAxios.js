@@ -4,9 +4,10 @@ import axios from "axios";
 //export const basicEndpointApi = "http://192.168.20.27:3001/api/v1"
 //export const basicEndpointApi = "http://192.168.120.52:3000/api/v1"
 
-export const basicEndpointApi = ["http://192.168.20.27:3000",""];
+//export const basicEndpointApi = ["https://apis-backend-dm.up.railway.app",""];
+export const basicEndpointApi = ["http://apis-backend-dm.up.railway.app",""];
 export const versionApi = ["/api/v1",""];
-export const imageEndpointApi = ["http://192.168.20.27:3000/api/v1"]
+export const imageEndpointApi = ["https://apis-backend-dm.up.railway.app/api/v1"]
 //export const basicEndpointApi = "https://apis-backend-dm.up.railway.app";
 
 /* ============= POST ========= */
@@ -28,8 +29,8 @@ export function usePostData() {
         setData(response);
         onComplete(response);
       } catch (error) {
-        console.error(err.response.data.errorBody, err);
-        setError([err, err.response.data.errorBody]);
+        console.error(error.response.data.errorBody, error);
+        setError([error, error.response.data.errorBody]);
         onComplete(null);
       } finally {
         setLoading(false);
@@ -63,9 +64,11 @@ export function useGetData() {
         const response = await axios.get(url, config);
         setData(response.data);
         onComplete(response.data);
-      } catch (err) {
-        console.error(err.response.data.errorBody, err);
-        setError([err, err.response.data.errorBody]);
+      } catch (error){
+
+        console.error(error.response.data.errorBody, error);
+        setError([error, error.response.data.errorBody]);
+
         onComplete(null);
       } finally {
         setLoading(false);

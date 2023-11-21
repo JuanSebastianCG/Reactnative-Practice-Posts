@@ -194,7 +194,7 @@ export function CustomErrorAlert({ message, onConfirm, isVisible }) {
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={onConfirm}>
                 <Icon
-                  name="step-backward-2"
+                  name="motion-play"
                   size={80}
                   color={BasicStylesPage.color0}
                 />
@@ -207,8 +207,9 @@ export function CustomErrorAlert({ message, onConfirm, isVisible }) {
   );
 }
 
-export const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
+export const CustomErrorBanner = ({ text, styleBanner, buttons, onChange ,isVisible = false}) => {
   return (
+    isVisible && (
     <View style={[stylesErrorBanner.errorBanner, styleBanner]}>
       <Text style={[stylesErrorBanner.errorText]}>{text}</Text>
       {buttons}
@@ -217,7 +218,7 @@ export const CustomErrorBanner = ({ text, styleBanner, buttons, onChange }) => {
         style={[stylesErrorBanner.errorButtonStyle]}>
         <Text style={[stylesErrorBanner.errorText]}>OK</Text>
       </TouchableOpacity>
-    </View>
+    </View>)
   );
 };
 
@@ -232,6 +233,7 @@ const stylesErrorBanner = StyleSheet.create({
   },
   errorText: {
     color: BasicStylesPage.colorWarning1,
+    textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
     zIndex: 1,
