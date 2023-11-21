@@ -48,12 +48,16 @@ const TokenUserManager = () => {
     }
   }
 
-  const getInfoToken = async () => {
+  const getInfoToken = async (nameId) => {
     try {
       const storedToken = await AsyncStorage.getItem("accessToken");
       if (storedToken !== null) {
         const decodedToken = jwtDecode(storedToken);
-        return decodedToken;
+        if (nameId) {
+          return decodedToken[nameId];
+        }else{
+          return decodedToken;
+        }
       } else {
         return null;
       }

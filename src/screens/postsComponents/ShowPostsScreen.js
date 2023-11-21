@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
   Text,
   TouchableOpacity,
 } from "react-native";
@@ -12,7 +11,7 @@ import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
   useDeleteData,
-  basicEndpoint,
+  imageEndpointApi,
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
 
@@ -57,30 +56,33 @@ function ShowPostsScreen() {
           setErrorPost(true);
           return;
         }
+        if (data == null) return;
         for (let i = 0; i < data.length; i++) {
-          uri = `${basicEndpoint}/${data[i].avatar}`;
+          uri = `${imageEndpointApi[0]}/${data[i].avatar}`;
           data[i].avatars = data[i].avatars.map((avatar) => {
-            return { uri: `${basicEndpoint}/${avatar}` };
+            return { uri: `${imageEndpointApi[0]}/${avatar}` };
           });
         }
         setPosts(data);
       },
       header
     );
-
-    //http://192.168.20.26:3000/api/v1/uploads/post/1697776043933-1fd0c384-43c2-4c48-8818-80ca2a166a9a.jpeg
   };
   const handleDelete = async (id) => {
     const url = `/posts/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
-    }
-    deleteData(url, (data) => {
-      if (data) {
-        setPosts(posts.filter((post) => post._id !== id));
-        setIsDeleted(true);
-      }
-    },header);
+    };
+    deleteData(
+      url,
+      (data) => {
+        if (data) {
+          setPosts(posts.filter((post) => post._id !== id));
+          setIsDeleted(true);
+        }
+      },
+      header
+    );
   };
 
   return (
@@ -242,7 +244,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 10,
+    bottom: 16,
     right: 15,
     width: 80,
     height: 80,

@@ -10,7 +10,7 @@ import { CustomButton } from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import { CustomInTextField } from "../../public/customComponent/Basic_FormComponents";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
-import { CustomErrorBanner } from "../../public/customComponent/Basic_AlertComponent";
+import { CustomErrorBanner, CustomSuccessAlert } from "../../public/customComponent/Basic_AlertComponent";
 /* utils */
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { usePostData } from "../../utils/useAxios";
@@ -19,6 +19,7 @@ function LoginScreen() {
   const navigation = useNavigation();
   const { saveToken, getToken, getInfoToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+  const [successPost, setSuccessPost] = useState(false);
 
   const [userData, setUserData] = useState({
     email: "dispositivomoviles9@gmail.com",
@@ -45,8 +46,8 @@ function LoginScreen() {
     postData(url, body, headers, async (response) => {
       if (response != null) {
         const accessToken = response.data.access;
+        setSuccessPost(true);
         saveToken(accessToken);
-        navigation.navigate("HomeScreen");
         /* console.log("Token: ", accessToken); */
       }
       if (error != null) {
@@ -71,7 +72,7 @@ function LoginScreen() {
         <View style={styles.formContainer}>
           {/* Contenedor para el logotipo */}
           <View style={styles.loginLogo}>
-            <Icon name="account" size={60} color={BasicStylesPage.color0} />
+            <Icon name="account" size={65} color={BasicStylesPage.color0} />
           </View>
 
           <View style={styles.fieldContainer}>
@@ -99,6 +100,12 @@ function LoginScreen() {
                 onChange={() => setLoginError(false)}
               />
             )}
+
+            <CustomSuccessAlert
+              isVisible={successPost}
+              message="Login exitoso!!"
+              onConfirm={() => {navigation.navigate("HomeScreen"), setSuccessPost(false)}}
+            />
             <CustomButton
               text="Login"
               onPress={handleSubmit}

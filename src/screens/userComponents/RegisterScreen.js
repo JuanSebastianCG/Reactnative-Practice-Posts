@@ -34,8 +34,6 @@ function RegisterScreen() {
   const { postData, loading, error } = usePostData();
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
-
-
   const [userData, setUserData] = useState({
     firstname: "admin",
     lastname: "admin",
@@ -67,15 +65,14 @@ function RegisterScreen() {
       document_type: userData.document_type,
       document_number: userData.document_number,
     };
-    
-    postData(url, formData, headers , (response) => {
+
+    postData(url, formData, headers, (response) => {
       if (response) {
         navigation.navigate("LoginScreen");
       } else {
         setLoginError(true);
       }
     });
-
   };
 
   return (
@@ -87,14 +84,16 @@ function RegisterScreen() {
         <Svg height="340" width="700" style={styles.footer}>
           <Polygon points="0,0 800,280 0,500" fill={BasicStylesPage.color0} />
         </Svg>
-        <View>
-          <CustomLogo styleLogo={styles.logoContainer} />
-        </View>
 
         <View style={styles.formContainer}>
-          {/* Contenedor para el logotipo */}
+          <CustomLogo
+            styleLogo={{top: 0}}
+            width={210}
+            height={300}
+          />
+
           <View style={styles.loginLogo}>
-            <Icon name="account" size={60} color={BasicStylesPage.color0} />
+            <Icon name="account" size={65} color={BasicStylesPage.color0} />
           </View>
 
           <View style={styles.fieldContainer}>
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
     borderRadius: 60,
     width: "85%",
-    height: "80%",
+    height: "70%",
     marginBottom: "30%",
     marginTop: 20,
     paddingTop: 40,
@@ -209,23 +208,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  logoContainer: {
-    position: "absolute",
-    top: 0, // Alinea el componente en la parte superior
-    right: 0, // Alinea el componente en la esquina derecha
-    width: 120,
-    height: 120,
-  },
-
   loginLogo: {
-    marginTop: 90,
+    marginTop: 95,
     width: 120,
     height: 120,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: BasicStylesPage.color0,
+    borderRadius: 50,
+    borderWidth: 4,
+    borderColor: BasicStylesPage.color3 ,
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 1,
   },
   inputDropDown: {
     marginBottom: 16,

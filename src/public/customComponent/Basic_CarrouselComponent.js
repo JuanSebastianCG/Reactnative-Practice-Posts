@@ -6,7 +6,6 @@ import BasicStylesPage from "../cssStyles/Basic_Style";
 
 function CustomCarrousel({ data = [], width = 350, height = 200 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  console.log("currentIndex", data);
 
   const calculateIndex = (index) => {
     if (index > currentIndex - 0.5 || index < currentIndex - 0.5) {

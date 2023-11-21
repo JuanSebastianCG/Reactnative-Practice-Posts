@@ -51,14 +51,7 @@ function ShowServicesScreen() {
   useEffect(() => {
     handleGetData();
     handleGetDataCategories();
-    const intervalId = setInterval(() => {
-      handleGetData();
-      handleGetDataCategories();
-    }, 10000);
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [filterCategories]);
+  }, [filterCategories, handleDelete]);
 
   const handleError = () => {
     setErrorPost(false);

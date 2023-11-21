@@ -6,114 +6,83 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  Animated,
 } from "react-native";
-import { Circle, Svg } from "react-native-svg";
-import {
-  useGetData,
-  useDeleteData,
-  useUpdateData,
-  basicEndpoint,
-} from "../../utils/useAxios";
+import { useGetData, useDeleteData, useUpdateData } from "../../utils/useAxios";
 
-import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
+import { Swipeable } from 'react-native-gesture-handler';
+
 import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 
 import { useNavigation } from "@react-navigation/native";
 import { TokenUserManager } from "../../utils/asyncStorage";
-/* const mongoose = require('mongoose');
 
-const UserNotificationSchema = mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    message: {
-        type: String,
-        require: true,
-        trim: true
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    date: {
-        type: Date,
-        default: Date.now()
-    },
-    read: {
-        type: Boolean,
-        default: false
-    }
-
-});
-module.exports = mongoose.model('UserNotification', UserNotificationSchema);
-
-
- */
-
-
-function NotificationScreen() {
-  const { getData, loading, error, data } = useGetData();
+function ShowUsersScreen() {
+  const { getData, error } = useGetData();
   const { deleteData } = useDeleteData();
   const { updateData } = useUpdateData();
-  const { getToken } = TokenUserManager();
-
-  const [isDeleted, setIsDeleted] = useState(false);
-  const [errorPost, setErrorPost] = useState(false);
+  const { getToken, getInfoToken } = TokenUserManager();
 
   const navigation = useNavigation();
+  const [isDeleted, setIsDeleted] = useState(false);
   const [dataArray, setDataArray] = useState([]);
+  const [errorGet, setErrorGet] = useState(false);
 
   useEffect(() => {
+    handleReadAllNotifications();
     handleGetData();
-    setIsDeleted(false);
-  }, [isDeleted, data]);
+  }, [handleGetData, handleDelete,handleReadAllNotifications]);
+
+  /* every time the page open */
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      handleGetData();
+    });
+    return unsubscribe;
+  }, [navigation]);
+  
 
   const handleGetData = async () => {
-    const url = "/user/:id";
+    const userId = await getInfoToken("user_id");
+    const url = "/user/notification/" + userId;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
     getData(
       url,
       (data) => {
-        if (error && !data) {
-          setErrorPost(true);
+        if (error || data == null) {
+          setErrorGet(true);
           return;
         }
+        /* set form date */
+
+        for (let i = 0; i < data.length; i++) {
+          data[i].date = new Date(data[i].date).toLocaleString();
+        }
+
         setDataArray(data);
       },
       header
     );
   };
   const handleDelete = async (id) => {
-    const url = `/user/${id}`;
+    const url = `/user/notification/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
     deleteData(url, (data) => {}, header);
   };
 
-  const handleVerify = async (id) => {
-    const url = `/user/${id}`;
+  const handleReadAllNotifications = async () => {
+    const userId = await getInfoToken("user_id");
+    const url = `/user/notification/markAllAsRead/${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
-    updateData(
-      url,
-      { active: true },
-      (data) => {
-        if (error && !data) {
-          setErrorPost(true);
-          return;
-        }
-        setIsDeleted(true);
-      },
-      header
-    );
+    updateData(url, {}, header, (data) => {});
   };
 
   return (
@@ -122,141 +91,122 @@ function NotificationScreen() {
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
-          {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
-          {error && (
-            <CustomErrorAlert
-              isVisible={true}
-              message="¿estas logueado  0.0?  "
-              onConfirm={setErrorPost(false)}
-            />
-          )}
+          <CustomErrorAlert
+            isVisible={errorGet}
+            message="¿estas logueado  0.0?"
+            onConfirm={() => {
+              setErrorGet(false);
+              navigation.navigate("LoginScreen");
+            }}
+          />
           {dataArray.map((dataUser, index) => (
             <View style={styles.cards} key={index}>
-              <Card
-                post={dataUser}
-                handleDelete={handleDelete}
-                handleVerify={handleVerify}
-              />
+              <Card dataUser={dataUser} handleDelete={handleDelete} handleGetData={handleGetData} />
             </View>
           ))}
         </ScrollView>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => navigation.navigate("CreatePostScreen")}>
-          <Icon name="plus" size={60} />
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-function Card({ dataUser, handleDelete, handleVerify }) {
+function Card({ dataUser, handleDelete, handleGetData }) {
+  const renderRightActions = (progress, dragX) => {
+    const trans = dragX.interpolate({
+      inputRange: [-100, 0, 50, 100],
+      outputRange: [0, 0, 0, 1],
+    });
+
+    return (
+      <Animated.View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: BasicStylesPage.colorWarning1,
+          justifyContent: 'flex-end',
+        }}>
+        <Animated.View
+          style={{
+            paddingHorizontal: 10,
+            transform: [{ translateX: trans }],
+          }}>
+          <Icon name="trash-can-outline" style={styleCard.cardIcon} color={BasicStylesPage.color3} size={45} />
+        </Animated.View>
+
+      </Animated.View>
+    );
+  };
+
   return (
-    <View style={styleCard.card} key={post._id}>
-      <Svg width="400" height="500" style={styleCard.cardCircle}>
-        <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
-      </Svg>
-      <View style={styleCard.cardContent}>
-        <View style={styleCard.cardHeader}>
-          <Text style={styleCard.cardTitle}>
-            {dataUser.firstname + " " + dataUser.lastname}
-          </Text>
-          <Text style={styleCard.cardDate}>{dataUser.email}</Text>
-        </View>
-        <View style={styleCard.cardBody}>
-          <Text style={styleCard.cardText}>{dataUser.typeOfDocument}</Text>
-          <Text style={styleCard.cardText}>{dataUser.documentNumber}</Text>
-          <View style={styleCard.cardFooter}>
-            <TouchableOpacity
-              style={styleCard.deleteButton}
-              onPress={() => handleDelete(dataUser._id)}>
-              <Icon
-                name="trash-can-outline"
-                size={30}
-                color={BasicStylesPage.color0}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styleCard.editButton}
-              onPress={(state) => handleVerify(dataUser._id)}>
-              <Icon
-                name="account-check-outline"
-                size={30}
-                color={BasicStylesPage.color0}
-              />
-            </TouchableOpacity>
+    <View style={styleCard.containerCard}>
+      <Swipeable
+        renderRightActions={renderRightActions}
+        onSwipeableRightOpen={() => {
+          handleDelete(dataUser._id)
+          handleGetData();
+
+        }}
+        >
+        <View style={[styleCard.card, {backgroundColor: dataUser.read ? BasicStylesPage.color2+80 : BasicStylesPage.color2}]} 
+        key={dataUser._id}>
+          <View style={styleCard.header}>
+            <Text style={styleCard.cardTittle}>{dataUser.title}</Text>
+          </View>
+          <View style={styleCard.body}>
+            <Text style={styleCard.cardText}>{dataUser.message}</Text>
+          </View>
+          {/* date */}
+          <View style={styleCard.footer}>
+            <Text style={styleCard.cardText}>{dataUser.date}</Text>
           </View>
         </View>
-      </View>
+      </Swipeable>
     </View>
   );
 }
 
-const styleCard = StyleSheet.create({
-  card: {
-    marginBottom: 10,
-    marginLeft: "2%",
-    width: "96%",
-    borderRadius: 10,
-    backgroundColor: BasicStylesPage.color3 + 60,
-  },
 
-  deleteButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 80,
-    width: 50,
-    height: 50,
-    backgroundColor: BasicStylesPage.color4 + 95,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-    marginBottom: 70,
+const styleCard = StyleSheet.create({
+  containerCard : {
+    margin: 2,
   },
-  editButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 15,
-    width: 60,
-    height: 60,
-    backgroundColor: BasicStylesPage.color4 + 95,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-    marginBottom: 70,
+  card: {
+    borderColor: BasicStylesPage.color4+10,
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 10,
+    marginLeft: "2%",
+    marginRight: "2%",
+    width: "96%",
   },
-  cardCircle: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-  },
-  cardContent: {
-    margin: 20,
-  },
-  cardHeader: {
+  header: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
-  cardTitle: {
-    color: BasicStylesPage.color0,
-    fontWeight: "bold",
-    fontSize: 30,
+  body: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  cardDate: {
-    color: BasicStylesPage.color0,
-  },
-  cardBody: {
-    marginTop: 10,
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   cardText: {
     color: BasicStylesPage.color0,
+    fontSize: 18,
+    fontWeight: "bold",
   },
-  cardFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
+  cardIcon: {
+    right: 10,
+  },
+  cardTittle: {
+    color: BasicStylesPage.color0,
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
 
@@ -264,19 +214,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     position: "relative",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 15,
-    width: 80,
-    height: 80,
-    backgroundColor: BasicStylesPage.color4 + 80,
-    borderRadius: 60,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-    marginBottom: 70,
   },
   container: {
     flex: 1,
@@ -286,7 +223,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flexGrow: 1,
     justifyContent: "flex-start",
-    marginTop: 50,
+    paddingTop: 50,
     paddingBottom: 150,
   },
   cards: {
@@ -294,4 +231,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotificationScreen;
+export default ShowUsersScreen;

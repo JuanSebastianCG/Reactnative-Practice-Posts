@@ -13,13 +13,30 @@ import { Circle, Svg } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions } from "react-native";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 const { width, height } = Dimensions.get("window");
 import { TokenUserManager } from "../../utils/asyncStorage";
+import {
+  CustomLogOutInButton,
+  BellUserNotification,
+  CustomLogo,
+} from "../../public/customComponent/Basic_PageInterface";
+import { UserNotification } from "../../Services/ApiServices/UserNotification";
+import { useAuth } from "../../utils/authManager";
 
 const Sidebar = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const sidebarAnimation = useRef(new Animated.Value(-width * 0.7)).current;
+  const sidebarAnimation = useRef(new Animated.Value(-width * 0.9)).current;
+  const { logged } = useAuth();
+  const navigation = useNavigation();
+
+
+  const { fetchUnreadNotification } = UserNotification();
+  const [hasUnreadNotification, setHasUnreadNotification] = useState(0);
+  const fetchHasNotificationSet = async () => {
+    setHasUnreadNotification(await fetchUnreadNotification());
+  };
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
@@ -44,6 +61,7 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
+    if (logged) fetchHasNotificationSet();
     if (isModalOpen) {
       openSidebar();
     } else {
@@ -54,6 +72,30 @@ const Sidebar = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleModal} style={styles.logo}>
+        {hasUnreadNotification > 0 && (
+          <View
+            style={{
+              position: "absolute",
+              top: -10,
+              right: -10,
+              backgroundColor: BasicStylesPage.color0,
+              borderRadius: 50,
+              width: 30,
+              height: 30,
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <Text
+              style={{
+                color: BasicStylesPage.color3,
+                fontSize: 13,
+                fontWeight: "bold",
+              }}>
+              {hasUnreadNotification}
+            </Text>
+          </View>
+        )}
+
         <MaterialCommunityIcons
           name="menu"
           color={BasicStylesPage.color2}
@@ -69,24 +111,58 @@ const Sidebar = () => {
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
         <Animated.View style={[styles.modal, { left: sidebarAnimation }]}>
-          <Svg width="400" height="500" style={styleBody.cardCircle}>
+          <View style={styles.tabarIcon}>
+            <CustomLogo width={60} height={80} styleLogo={{left: -75}}/> 
+            <CustomLogOutInButton onPress={closeSidebar} />
+            <TouchableOpacity
+              style={{ marginLeft: 20 }}
+              onPress={() => {
+                closeSidebar();
+                toggleModal();
+                navigation.navigate("RegisterScreen");
+              }}>
+              <View>
+                <Icon
+                  name="account-plus"
+                  size={50}
+                  color={BasicStylesPage.color0}
+                />
+                <Text
+                  style={{
+                    color: BasicStylesPage.color0,
+                  }}>
+                  Registrar
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          {logged && (
+          <BellUserNotification
+            onPress={() => {
+              closeSidebar();
+              navigation.navigate("NotificationScreen");
+            }}
+          />)}
+          <Svg width="200" height="260" style={styles.cardCircle}>
             <Circle
-              cx="200"
+              cx="100"
               cy="160"
               r="100"
               fill={BasicStylesPage.color2 + 90}
             />
           </Svg>
 
-          <Svg width="400" height="500" style={styleBody.cardCircle}>
+          <Svg width="200" height="500" style={styles.cardCircle}>
             <Circle
-              cx="200"
+              cx="100"
               cy="380"
               r="70"
               fill={BasicStylesPage.color2 + 90}
             />
           </Svg>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={false}>
             {/* cuerpo */}
             <SideBarBody closeSidebar={closeSidebar} />
           </ScrollView>
@@ -95,6 +171,58 @@ const Sidebar = () => {
     </View>
   );
 };
+
+const styles = {
+  container: {
+    flexDirection: "row",
+  },
+  modal: {
+    position: "absolute",
+    top: height * 0.1,
+    width: width * 0.66,
+    height: height * 0.75,
+    borderRadius: 12,
+    backgroundColor: BasicStylesPage.color3,
+    shadowColor: BasicStylesPage.color0,
+    borderRightWidth: 3,
+    borderRightColor: BasicStylesPage.color4,
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+    elevation: 24,
+    zIndex: 2,
+  },
+  modalOverlay: {
+    flex: 1,
+  },
+  logo: {
+    padding: 10,
+    backgroundColor: BasicStylesPage.color1,
+    borderTopRightRadius: 25,
+    width: 65,
+  },
+  scrollView: {
+    marginTop: 100,
+    marginBottom: 20,
+  },
+  tabarIcon: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    /* increase the space betwen elements */
+    position: "absolute",
+    marginTop: 30,
+    left: 90,
+    zIndex: 2,
+  },
+  cardCircle: {
+    position: "absolute",
+    alignSelf: "center",
+  },
+};
+
 /* ===================================================================================== */
 const DropdownItem = ({ icon, text, onPress }) => {
   return (
@@ -147,15 +275,13 @@ const SideBarBody = ({ closeSidebar }) => {
   const [adminRole, setAdminRole] = useState(false);
 
   const getAdminRole = async () => {
-    const infoToken = await getInfoToken();
-    if (infoToken) setAdminRole(infoToken.role === "admin");
+    setAdminRole((await getInfoToken("role")) === "admin");
+    
   };
 
   useEffect(() => {
     getAdminRole();
-  }
-  , []);
-  
+  }, []);
 
   return (
     <View style={styleBody.container}>
@@ -165,22 +291,18 @@ const SideBarBody = ({ closeSidebar }) => {
         titleIcon="home"
         items={[
           {
-            text: "Home",
+            text: "Menu",
             onPress: () => navigation.navigate("HomeScreen"),
           },
           {
-            text: "login",
-            onPress: () => navigation.navigate("LoginScreen"),
-          },
-          {
-            text: "Register",
-            onPress: () => navigation.navigate("RegisterScreen"),
+            text: "ver Api ",
+            onPress: () => navigation.navigate("HomeScreen"),
           },
         ]}
         closeSidebar={closeSidebar}
       />
       <Dropdown
-        title="Categorias"
+        title="Categorias y Servicios"
         titleIcon="shape"
         items={[
           {
@@ -227,12 +349,13 @@ const styleBody = {
     borderLeftColor: BasicStylesPage.color4,
     width: "80%",
   },
+
   sidebarItemTitle: {
     fontSize: 26,
     color: BasicStylesPage.color1,
     textAlign: "center",
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   sidebarItemText: {
     marginLeft: 10,
@@ -258,45 +381,6 @@ const styleBody = {
     color: BasicStylesPage.color1,
     fontSize: 18,
   },
-  cardCircle: {
-    position: "absolute",
-    alignSelf: "center",
-  },
-};
-
-const styles = {
-  container: {
-    flexDirection: "row",
-  },
-  modal: {
-    position: "absolute",
-    top: height * 0.15,
-    width: width * 0.64,
-    height: height * 0.7,
-    borderRadius: 12,
-    backgroundColor: BasicStylesPage.color3,
-    borderRightColor: BasicStylesPage.color1,
-    borderBottomColor: BasicStylesPage.color1,
-    borderTopColor: BasicStylesPage.color1,
-    borderRightWidth: width * 0.01,
-    borderBottomWidth: width * 0.01,
-    borderTopWidth: width * 0.01,
-  },
-  modalOverlay: {
-    flex: 1,
-  },
-  logo: {
-    padding: 10,
-    backgroundColor: BasicStylesPage.color1,
-    borderTopRightRadius: 25,
-    paddingLeft: 20,
-    width: 70,
-  },
-  scrollView: {
-    maxHeight: height * 0.7,
-    marginTop: 10,
-  },
-  /* Resto de los estilos sin cambios */
 };
 
 export { Sidebar };
