@@ -35,12 +35,12 @@ function HomeScreen() {
       horizontal={false}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
-      <Svg height={230} width={400} style={styles.footer}>
+ {/*      <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,0 400,200 0,250" fill={BasicStylesPage.color0} />
       </Svg>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
-      </Svg>
+      </Svg> */}
 
       <CustomLogoutButton />
       <CustomLogo styleLogo={styles.logoContainer} />
