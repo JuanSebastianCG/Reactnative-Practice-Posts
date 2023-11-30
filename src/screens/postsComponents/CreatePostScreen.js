@@ -37,7 +37,7 @@ function CreatePostScreen() {
   const { getToken } = TokenUserManager();
 
   //api
-  const { postData,  error  } = usePostData();
+  const { postData, error } = usePostData();
 
   const handleChange = (name, value) => {
     setPostDataDB({ ...PostDataDB, [name]: value });
@@ -46,7 +46,7 @@ function CreatePostScreen() {
     title: "post 1",
     subtitle: "post 1",
     description: "post 1",
-    avatars: [],
+    photos: [],
   });
 
   //image picker and photo
@@ -55,7 +55,7 @@ function CreatePostScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          photos: [...PostDataDB.photos, image],
         });
     },
   });
@@ -65,7 +65,7 @@ function CreatePostScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          photos: [...PostDataDB.photos, image],
         });
     },
   });
@@ -80,34 +80,33 @@ function CreatePostScreen() {
       !PostDataDB.title ||
       !PostDataDB.subtitle ||
       !PostDataDB.description ||
-      !PostDataDB.avatars
+      !PostDataDB.photos
     ) {
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
     const url = "/posts";
-    const token =  async () => await getToken()
+    const token = async () => await getToken();
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
-       Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
-    
+
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
-    PostDataDB.avatars.forEach((image, index) => {
-      formData.append("avatars", {
+    PostDataDB.photos.forEach((image, index) => {
+      formData.append("photos", {
         uri: image.uri,
         name: image.name,
         type: image.type,
-        
       });
     });
     console.log(formData);
-    postData(url, formData,headers, (data) => {
+    postData(url, formData, headers, (data) => {
       if (error || !data) {
         setError(true);
       } else {
@@ -143,8 +142,16 @@ function CreatePostScreen() {
 
             <View>
               <View style={styles.imageContainer}>
-                {PostDataDB.avatars.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatars} />
+                {PostDataDB.photos.length > 0 && (
+                  <CustomCarrousel
+                    data={PostDataDB.photos}
+                    renderItem={(index) => (
+                      <Image
+                        source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQWFO09gBW0ACb8x9AB9dpiwDD-MTbqHTP3IgOKVPtmHta6OS12beUwNBRVD2SfEDZhGY&usqp=CAU" }}
+                        style={styles.image}
+                      />
+                    )}
+                  />
                 )}
               </View>
               <BasicIconImagePicker buttonStyle={styles.imgPiker} />

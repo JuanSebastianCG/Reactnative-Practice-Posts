@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import {
@@ -122,7 +123,18 @@ function Card({ post, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
+        <CustomCarrousel data={post.avatars} 
+          renderItem={(index) => (
+              <Image
+              style={styleCard.avatarImage}
+              source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQWFO09gBW0ACb8x9AB9dpiwDD-MTbqHTP3IgOKVPtmHta6OS12beUwNBRVD2SfEDZhGY&usqp=CAU"}}
+            />
+
+          )}
+
+        
+        
+        width={330} height={190} />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>

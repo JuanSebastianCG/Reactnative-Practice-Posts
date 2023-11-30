@@ -59,7 +59,7 @@ export default function App() {
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
           {/* <Text style={styles.text}>Flip Camera</Text> */}
-           <Icon name="camera-flip" /* style={width: 30px } *//> 
+           <Icon name="camera-flip" /* style={width: 30px } */ size={60} color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={takePicture}>
           {<Text style={styles.text}>Take Picture</Text>}
