@@ -5,7 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Text,
 } from "react-native";
+/* import Video from "react-native-video"; */
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../utils/useAxios";
@@ -19,7 +21,7 @@ import {
 } from "../../public/customComponent/Basic_FormComponents";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import {
-  ImagePickerComponent,
+  MediaPickerComponent,
   ImagePhotoPickerComponent,
 } from "../../components/cameraAndGalery/CamaraGaleryPicker.js";
 import {
@@ -46,16 +48,17 @@ function CreatePostScreen() {
     title: "post 1",
     subtitle: "post 1",
     description: "post 1",
-    photos: [],
+    media: [],
   });
 
   //image picker and photo
-  const { BasicIconImagePicker } = ImagePickerComponent({
+  const { BasicIconMediaPicker } = MediaPickerComponent({
     onComplete: (image) => {
+      console.log(image);
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          photos: [...PostDataDB.photos, image],
+          media: [...PostDataDB.media, image],
         });
     },
   });
@@ -65,7 +68,7 @@ function CreatePostScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          photos: [...PostDataDB.photos, image],
+          media: [...PostDataDB.media, image],
         });
     },
   });
@@ -80,7 +83,7 @@ function CreatePostScreen() {
       !PostDataDB.title ||
       !PostDataDB.subtitle ||
       !PostDataDB.description ||
-      !PostDataDB.photos
+      !PostDataDB.media
     ) {
       setError(true);
       setShowConfirmationModal(false);
@@ -98,8 +101,8 @@ function CreatePostScreen() {
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
-    PostDataDB.photos.forEach((image, index) => {
-      formData.append("photos", {
+    PostDataDB.media.forEach((image, index) => {
+      formData.append("media", {
         uri: image.uri,
         name: image.name,
         type: image.type,
@@ -142,19 +145,29 @@ function CreatePostScreen() {
 
             <View>
               <View style={styles.imageContainer}>
-                {PostDataDB.photos.length > 0 && (
+                {PostDataDB.media.length > 0 && (
                   <CustomCarrousel
-                    data={PostDataDB.photos}
-                    renderItem={(index) => (
-                      <Image
-                        source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQWFO09gBW0ACb8x9AB9dpiwDD-MTbqHTP3IgOKVPtmHta6OS12beUwNBRVD2SfEDZhGY&usqp=CAU" }}
-                        style={styles.image}
-                      />
-                    )}
+                    data={PostDataDB.media}
+                    renderItem={(index) =>
+                      PostDataDB.media[index].type == "video/mp4" ? (
+                        {/* <Video
+                          source={{ uri: PostDataDB.media[index].uri }}
+                          resizeMode="cover"
+                          repeat={true}
+                          paused={true}
+                        /> */}
+                      ) : (
+                        /* image */
+                        <Image
+                          style={styles.image}
+                          source={{ uri: PostDataDB.media[index].uri }}
+                        />
+                      )
+                    }
                   />
                 )}
               </View>
-              <BasicIconImagePicker buttonStyle={styles.imgPiker} />
+              <BasicIconMediaPicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
 

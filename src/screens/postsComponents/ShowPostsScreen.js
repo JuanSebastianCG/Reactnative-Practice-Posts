@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+/* import Video from "react-native-video"; */
+
 import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
@@ -88,6 +90,23 @@ function ShowPostsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* <Video
+        source={{
+          uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+        }}
+        ref={(ref) => {
+          this.player = ref;
+        }}
+        onBuffer={this.onBuffer}
+        onError={this.videoError}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        }}
+      /> */}
       <View style={styles.mainContainer}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
@@ -123,18 +142,10 @@ function Card({ post, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} 
-          renderItem={(index) => (
-              <Image
-              style={styleCard.avatarImage}
-              source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQWFO09gBW0ACb8x9AB9dpiwDD-MTbqHTP3IgOKVPtmHta6OS12beUwNBRVD2SfEDZhGY&usqp=CAU"}}
-            />
-
-          )}
-
-        
-        
-        width={330} height={190} />
+        <CustomCarrousel
+          data={post.avatars}
+          renderItem={(index) => <Text>hola</Text>}
+        />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
