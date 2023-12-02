@@ -7,7 +7,7 @@ import {
   Image,
   Text,
 } from "react-native";
-/* import Video from "react-native-video"; */
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../utils/useAxios";
@@ -96,19 +96,27 @@ function CreatePostScreen() {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     };
-
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
     PostDataDB.media.forEach((image, index) => {
-      formData.append("media", {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
-      });
+      if (image.type == "video/mp4") {
+        formData.append("videos", {
+          name: `video${index}.mp4`,
+          type: image.type,
+          uri: image.uri,
+        });
+      }
+      if (image.type == "image/jpeg") {
+        formData.append("photos", {
+          name: `image${index}.jpg`,
+          type: image.type,
+          uri: image.uri,
+        });
+      }
     });
-    console.log(formData);
+    console.log(PostDataDB);
     postData(url, formData, headers, (data) => {
       if (error || !data) {
         setError(true);
@@ -150,12 +158,11 @@ function CreatePostScreen() {
                     data={PostDataDB.media}
                     renderItem={(index) =>
                       PostDataDB.media[index].type == "video/mp4" ? (
-                        {/* <Video
-                          source={{ uri: PostDataDB.media[index].uri }}
-                          resizeMode="cover"
-                          repeat={true}
-                          paused={true}
-                        /> */}
+                        /* video */
+                        <VideoPlayer
+                          uri_Video={PostDataDB.media[index].uri}
+                          focus={true}
+                        />
                       ) : (
                         /* image */
                         <Image

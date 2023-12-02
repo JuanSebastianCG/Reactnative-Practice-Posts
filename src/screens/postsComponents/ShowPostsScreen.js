@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-/* import Video from "react-native-video"; */
 
 import { Circle, Svg } from "react-native-svg";
 import {
@@ -23,6 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
 import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
@@ -56,16 +56,29 @@ function ShowPostsScreen() {
       url,
       (data) => {
         if (error && !data) {
-          setErrorPost(true);
+          console.log(error[1]);
+          if (error[1] == "jwt expired") {
+            setErrorPost(true);
+          }
           return;
         }
-        if (data == null) return;
         for (let i = 0; i < data.length; i++) {
-          uri = `${imageEndpointApi[0]}/${data[i].avatar}`;
-          data[i].avatars = data[i].avatars.map((avatar) => {
-            return { uri: `${imageEndpointApi[0]}/${avatar}` };
+          /* add camp media to data */
+          /* add images */
+          photos = data[i].photos.map((photo) => {
+            return {
+              uri: `${imageEndpointApi}/${photo}`,
+            };
           });
+          /* add videos */
+          videos = data[i].videos.map((video) => {
+            return {
+              uri: `${imageEndpointApi}/${video}`,
+            };
+          });
+          data[i].media = [...photos, ...videos];
         }
+
         setPosts(data);
       },
       header
@@ -90,35 +103,18 @@ function ShowPostsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Video
-        source={{
-          uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-        }}
-        ref={(ref) => {
-          this.player = ref;
-        }}
-        onBuffer={this.onBuffer}
-        onError={this.videoError}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-        }}
-      /> */}
       <View style={styles.mainContainer}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
           {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
-          {error && (
-            <CustomErrorAlert
-              isVisible={true}
-              message="¿estas logueado  0.0?  "
-              onConfirm={handleError}
-            />
-          )}
+
+          <CustomErrorAlert
+            isVisible={errorPost}
+            message="¿estas logueado  0.0?  "
+            onConfirm={handleError}
+          />
+
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
               <Card post={post} handleDelete={handleDelete} />
@@ -143,8 +139,21 @@ function Card({ post, handleDelete }) {
       </Svg>
       <View style={styleCard.cardHeader}>
         <CustomCarrousel
-          data={post.avatars}
-          renderItem={(index) => <Text>hola</Text>}
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleCard.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
         />
 
         <View style={styleCard.titleHeader}>

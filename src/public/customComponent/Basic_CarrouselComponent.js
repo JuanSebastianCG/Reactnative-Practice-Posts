@@ -27,7 +27,7 @@ function CustomCarrousel({ data = [], width = 350, height = 200 ,renderItem = ()
         height={height}
         scrollAnimationDuration={1000}
         data={data}
-        autoPlayInterval={3000}
+        autoPlayInterval={10000}
         onProgressChange={(_, absoluteProgress) =>
           calculateIndex(absoluteProgress)
         }
