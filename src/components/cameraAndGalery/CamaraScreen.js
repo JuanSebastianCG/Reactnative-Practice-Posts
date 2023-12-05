@@ -38,8 +38,11 @@ export default function App() {
       try {
         setIsTakingPicture(true);
         const { uri } = await cameraRef.current.takePictureAsync();
+<<<<<<< HEAD
         setCapturedImageUri(uri);
         console.log(uri)
+=======
+>>>>>>> 80f6e9b56647a3ad98d600febbfdfe63e90df12f
       } catch (error) {
         console.error('Error al tomar la foto:', error);
       } finally {
@@ -104,8 +107,13 @@ export default function App() {
     <Camera style={styles.camera} type={type} ref={cameraRef}>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+<<<<<<< HEAD
           <Text style={styles.text}>Flip Camera</Text> 
           {/*  <Icon name="camera-flip"  style={width: 30px } />  */}
+=======
+          {/* <Text style={styles.text}>Flip Camera</Text> */}
+           <Icon name="camera-flip" /* style={width: 30px } */ size={60} color="white" />
+>>>>>>> 80f6e9b56647a3ad98d600febbfdfe63e90df12f
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={takePicture}>
           {<Text style={styles.text}>Take Picture</Text>}

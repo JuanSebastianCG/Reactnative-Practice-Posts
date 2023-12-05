@@ -107,8 +107,6 @@ function CreateServiceScreen() {
     });
 
     postData("/admin/services/new-service", formData, headers, (data) => {
-      console.log("datos de respuesta", data);
-      console.log("error de respuesta", error);
       if (error || data == null) {
         setError(true);
         setShowConfirmationModal(false);

@@ -2,7 +2,6 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react"; // Importa 'useEffect'
 import {
   View,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
   Keyboard, // Importa 'Keyboard'
@@ -54,7 +53,7 @@ const Tabbar = () => {
             name="home-circle"
             color={
               activeTab === "Home"
-                ? BasicStylesPage.color2
+                ? BasicStylesPage.color0
                 : BasicStylesPage.color2
             }
             size={50}

@@ -4,26 +4,25 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
   Text,
   TouchableOpacity,
+  Image,
 } from "react-native";
+
 import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
   useDeleteData,
-  basicEndpoint,
+  imageEndpointApi,
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-<<<<<<< HEAD:src/components/screens/posts/ShowPostsScreen.js
-=======
 import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
 import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/postsComponents/ShowPostsScreen.js
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
@@ -51,16 +50,44 @@ function ShowPostsScreen() {
   };
 
   const handleGetData = async () => {
-    const url = "https://apis-backend-dm.up.railway.app/api/v1/posts";
-    getData(url, (data) => {
-      // Actualiza el estado con la lista de posts
-      setPosts(data);
-    });
-  };
+    const url = "/posts";
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    getData(
+      url,
+      (data) => {
+        if (error && !data) {
+          console.log(error[1]);
+          if (error[1] == "jwt expired") {
+            setErrorPost(true);
+          }
+          return;
+        }
+        for (let i = 0; i < data.length; i++) {
+          /* add camp media to data */
+          /* add images */
+          photos = data[i].photos.map((photo) => {
+            return {
+              uri: `${imageEndpointApi}/${photo}`,
+            };
+          });
+          /* add videos */
+          videos = data[i].videos.map((video) => {
+            return {
+              uri: `${imageEndpointApi}/${video}`,
+            };
+          });
+          data[i].media = [...photos, ...videos];
+        }
 
+        setPosts(data);
+      },
+      header
+    );
+  };
   const handleDelete = async (id) => {
     const url = `/posts/${id}`;
-    console.log("id:", id);
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     }
@@ -69,15 +96,23 @@ function ShowPostsScreen() {
         setPosts(posts.filter((post) => post._id !== id));
         setIsDeleted(true);
       }
-    });
-  }
+    },header);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {loading && <ActivityIndicator size="large" color="#FF5733" />}
-          {error && <Text>Error: {error.message}</Text>}
+      <View style={styles.mainContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          scrollIndicatorInsets={{ bottom: 300 }}>
+          {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
+          {error && (
+            <CustomErrorAlert
+              isVisible={true}
+              message="¿estas logueado  0.0?  "
+              onConfirm={handleError}
+            />
+          )}
           {posts.map((post, index) => (
             <View style={styles.cards}>
               <Card key={index} post={post} handleDelete={handleDelete} />
@@ -104,6 +139,8 @@ function Card({ post , handleDelete}) {
         <Circle cx="200" cy="160" r="140" fill="rgba(255, 136, 136, 0.1)" />
       </Svg>
       <View style={styleCard.cardHeader}>
+        <CustomCarrousel data={post.avatars} width={330} height={190} />
+
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
         </View>
@@ -200,12 +237,12 @@ const styleCard = StyleSheet.create({
 const styles = StyleSheet.create({
   addButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
-    width: 100,
-    height: 60,
-    backgroundColor: "#FF5733",
-    borderRadius: 30,
+    bottom: 10,
+    right: 15,
+    width: 80,
+    height: 80,
+    backgroundColor: BasicStylesPage.color4 + 80,
+    borderRadius: 60,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 60,
