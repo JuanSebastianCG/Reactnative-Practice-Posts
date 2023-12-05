@@ -23,6 +23,8 @@ import CreatePostScreen from "../postsComponents/CreatePostScreen";
 import { AuthProvider } from "../../utils/authManager";
 import UpdatePostScreen from "../postsComponents/UpdatePostScreen";
 
+import {useAuth} from "../../utils/authManager"
+
 const Stack = createStackNavigator();
 
 function IndexTabbar() {

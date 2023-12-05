@@ -33,8 +33,9 @@ import { TokenUserManager } from "../../utils/asyncStorage";
 import {
     useGetData,
     useDeleteData,
-    basicEndpoint,
+    imageEndpointApi,
   } from "../../utils/useAxios";
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer.js";
 
 function UpdatePostScreen() {
     const route = useRoute();
@@ -76,10 +77,20 @@ const [posts, setPosts] = useState([]);
           return;
         }
         for (let i = 0; i < data.length; i++) {
-          uri = `${basicEndpoint}/${data[i].avatar}`;
-          data[i].avatars = data[i].avatars.map((avatar) => {
-            return { uri: `${basicEndpoint}/${avatar}` };
+          /* add camp media to data */
+          /* add images */
+          photos = data[i].photos.map((photo) => {
+            return {
+              uri: `${imageEndpointApi}/${photo}`,
+            };
           });
+          /* add videos */
+          videos = data[i].videos.map((video) => {
+            return {
+              uri: `${imageEndpointApi}/${video}`,
+            };
+          });
+          data[i].media = [...photos, ...videos];
         }
   
         
@@ -90,7 +101,7 @@ const [posts, setPosts] = useState([]);
             title: postEncontrado.title || "",
             subtitle: postEncontrado.subtitle || "",
             description: postEncontrado.description || "",
-            avatars: postEncontrado.avatars || [],
+            media: postEncontrado.media || [],
         });
         } else {
         console.log(`No se encontró ningún post con el id ${id}`);
@@ -121,7 +132,9 @@ const [posts, setPosts] = useState([]);
   }, [PostDataDB]); */
 
   //image picker and photo
-  const { BasicIconImagePicker } = ImagePickerComponent({
+
+
+  /* const { BasicIconImagePicker } = ImagePickerComponent({
     onComplete: (image) => {
       if (image)
         
@@ -130,7 +143,7 @@ const [posts, setPosts] = useState([]);
           avatars: [...PostDataDB.avatars, image],
         });
     },
-  });
+  }); */
 
   const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
     onComplete: (image) => {
@@ -152,7 +165,7 @@ const [posts, setPosts] = useState([]);
       !PostDataDB.title ||
       !PostDataDB.subtitle ||
       !PostDataDB.description ||
-      !PostDataDB.avatars
+      !PostDataDB.media
     ) {
       setError(true);
       setShowConfirmationModal(false);
@@ -218,11 +231,27 @@ const [posts, setPosts] = useState([]);
 
             <View>
               <View style={styles.imageContainer}>
-                {PostDataDB.avatars.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatars} />
-                )}
+                
+                  <CustomCarrousel
+                  data={PostDataDB.media}
+                  renderItem={(index, focused) => {
+                    return (
+                      <View style={{ width: "100%", height: "100%" }}>
+                        {PostDataDB.media[index].uri.includes(".mp4") ? (
+                          <VideoPlayer uri_Video={PostDataDB.media[index].uri} />
+                        ) : (
+                          <Image
+                            source={{ uri: PostDataDB.media[index].uri }}
+                            style={styleCard.avatarImage}
+                          />
+                        )}
+                      </View>
+                    );
+                  }}
+                />
+                
               </View>
-              <BasicIconImagePicker buttonStyle={styles.imgPiker} />
+              {/* <BasicIconImagePicker buttonStyle={styles.imgPiker} /> */}
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
 
@@ -364,6 +393,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
     marginBottom: 70,
   },
+});
+
+const styleCard = StyleSheet.create({
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+  },
+  
 });
 
 export default UpdatePostScreen;

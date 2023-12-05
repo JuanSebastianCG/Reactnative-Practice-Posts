@@ -1,12 +1,15 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 
-//export const basicEndpoint = "http://192.168.120.52:3000"
-//export const basicEndpoint = "https://apis-backend-dm.up.railway.app/api/v1";
-export const basicEndpoint = "http://192.168.1.62:3000"
-//export const basicEndpoint = "http://192.168.98.158:3000"
-//export const basicEndpoint = "http://192.168.20.27:3000";
-export const version = "/api/v1";
+//export const basicEndpointApi = "http://192.168.20.27:3001/api/v1"
+//export const basicEndpointApi = "http://192.168.120.52:3000/api/v1"
+
+//export const basicEndpointApi = ["https://apis-backend-dm.up.railway.app",""];
+//export const basicEndpointApi = ["http://192.168.20.27:3001",""];
+export const basicEndpointApi = ["http://192.168.1.62:3001"]
+export const versionApi = ["/api/v1",""];
+export const imageEndpointApi = [basicEndpointApi[0]+versionApi[0]];
+//export const basicEndpointApi = "https://apis-backend-dm.up.railway.app";
 
 /* ============= POST ========= */
 export function usePostData() {
@@ -142,4 +145,3 @@ export function useUpdateData() {
 
   return { updateData, loading, error, data };
 }
-

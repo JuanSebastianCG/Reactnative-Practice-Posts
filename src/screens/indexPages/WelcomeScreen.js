@@ -5,6 +5,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
+  Image
 } from "react-native";
 import {Svg,  Polygon , Circle} from "react-native-svg";
 import { Text, Stack } from "@react-native-material/core";
@@ -18,10 +19,12 @@ import { TokenUserManager } from "../../utils/asyncStorage";
 import {
   useGetData,
   useDeleteData,
-  basicEndpoint,
+  basicEndpointApi,
+  imageEndpointApi
 } from "../../utils/useAxios";
 import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
 import Carousel from "react-native-reanimated-carousel";
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
 function WelcomeScreen() {
   const navigation = useNavigation();
@@ -42,20 +45,34 @@ function WelcomeScreen() {
       Authorization: `Bearer ${await getToken()}`,
     };
     getData(
+      
       url,
       (data) => {
+        
         if (!data) {
           console.log("error obteniendo post")
           return;
-        }
-        for (let i = 0; i < data.length; i++) {
-          uri = `${basicEndpoint}/${data[i].avatar}`;
-          data[i].avatars = data[i].avatars.map((avatar) => {
-            return { uri: `${basicEndpoint}/${avatar}` };
-          });
-        }
+        }else{
+          
+          for (let i = 0; i < data.length; i++) {
+            
+            photos = data[i].photos.map((photo) => {
+              return {
+                uri: `${imageEndpointApi}/${photo}`,
+  
+              };
+            });
+            
+            /* add videos */
+            videos = data[i].videos.map((video) => {
+              return {
+                uri: `${imageEndpointApi}/${video}`,
+              };
+            });
+            data[i].media = [...photos, ...videos];
+          }
         setPosts(data);
-        
+      }
         
       },
       header
@@ -110,7 +127,23 @@ function Card({ post }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
+      <CustomCarrousel
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleCard.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
+        />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
