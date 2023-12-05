@@ -231,7 +231,7 @@ const CustomCheckBox = ({ label, style, onChange, value }) => {
 
   return (
     <TouchableOpacity onPress={toggleCheckbox} style={style}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center",height: 32 }}>
         <View
           style={{
             width: 24,
@@ -279,10 +279,7 @@ const CustomCheckBox = ({ label, style, onChange, value }) => {
         <Text
           style={{
             fontSize: 13,
-            color: BasicStylesPage.color1,
             flex: 1,
-            width: (style && style.width) || "100%",
-            height: (style && style.height) || "100%",
           }}>
           {label}
         </Text>
@@ -290,5 +287,91 @@ const CustomCheckBox = ({ label, style, onChange, value }) => {
     </TouchableOpacity>
   );
 };
+//switch
+const CustomSwitch = ({
+  value,
+  onValueChange,
+  activeText,
+  inActiveText,
+  style,
+}) => {
+  const [valueState, setValueState] = useState(value);
+  const [animValue] = useState(new Animated.Value(valueState ? 1 : 0));
 
-export { CustomInTextField, CustomInTextArea, CustomCheckBox };
+  const stylesSwitch = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    background: {
+      height: style?.height || 30,
+      width: style?.width || 50,
+      borderRadius: 15,
+      justifyContent: "center",
+      paddingHorizontal: 5,
+    },
+    button: {
+      height: 22,
+      width: 24,
+      borderRadius: 15,
+      backgroundColor: BasicStylesPage.color3,
+    },
+    text: {
+      marginHorizontal: 10,
+      backgroundColor: (valueState && BasicStylesPage.color4+20) || BasicStylesPage.color1+10,
+      borderRadius: 10,
+
+      padding: 8,
+    },
+    activeText: {
+      color: BasicStylesPage.color4,
+    },
+    inactiveText: {
+      color: BasicStylesPage.color1,
+    },
+  });
+
+  const toggleSwitch = () => {
+    Animated.timing(animValue, {
+      toValue: valueState ? 0 : 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      setValueState(!valueState);
+    });
+
+    onValueChange(!valueState);
+  };
+
+  const backgroundColor = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [BasicStylesPage.color1, BasicStylesPage.color4],
+  });
+
+  const translateX = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, (style?.width || 50) - 34],
+  });
+
+  const containerStyle = [stylesSwitch.container, style];
+
+  return (
+    <TouchableOpacity style={containerStyle} onPress={toggleSwitch}>
+      <Animated.View
+        style={[stylesSwitch.background, { backgroundColor: backgroundColor }]}>
+        <Animated.View
+          style={[stylesSwitch.button, { transform: [{ translateX }] }]}
+        />
+      </Animated.View>
+      <Text
+        style={[
+          stylesSwitch.text,
+          valueState ? stylesSwitch.activeText : stylesSwitch.inactiveText,
+        ]}>
+        {valueState ? activeText : inActiveText}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+export { CustomInTextField, CustomInTextArea, CustomCheckBox, CustomSwitch };

@@ -33,15 +33,7 @@ function ShowCategoryScreen() {
 
   useEffect(() => {
     handleGetData();
-    const intervalId = setInterval(() => {
-      handleGetData();
-    }, 5000);
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, []);
+  }, [handleDelete]);
 
   const handleError = () => {
     setErrorPost(false);
@@ -59,15 +51,11 @@ function ShowCategoryScreen() {
     getData(
       url,
       (data) => {
-        if (error && !data) {
+        if (error || data == null) {
           setErrorPost(true);
           return;
         }
         setDataPost(data);
-      /*   for (let i = 0; i < data.length; i++) {
-          console.log(data[i]._id);
-        } */
-
       },
       header
     );

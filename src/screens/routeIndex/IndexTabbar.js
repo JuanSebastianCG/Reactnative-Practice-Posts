@@ -2,12 +2,14 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { View, StyleSheet } from "react-native"; // Usé react-native en lugar de native-base
 
-import Tabbar from "../../components/indexComponentsBar/Tabbar"
+import Tabbar from "../../components/indexComponentsBar/Tabbar";
 import { Sidebar } from "../../components/indexComponentsBar/SideBarMenu";
 
 import HomeScreen from "../indexPages/HomeScreen";
 import LoginScreen from "../userComponents/LoginScreen";
 import RegisterScreen from "../userComponents/RegisterScreen";
+import ShowUsersScreen from "../userComponents/ShowUsersScreen";
+import NotificationScreen from "../userComponents/NotificationScreen";
 
 
 import ShowCategoryScreen from "../../screens/CategoryAndServices/ShowCategory";
@@ -24,6 +26,8 @@ import UpdatePostScreen from "../postsComponents/UpdatePostScreen";
 const Stack = createStackNavigator();
 
 function IndexTabbar() {
+  const { handleLoggin } = useAuth();
+
   return (
     <AuthProvider>
       <View style={{ flex: 1 }}>
@@ -40,29 +44,31 @@ function IndexTabbar() {
           <Stack.Screen name="CreateService" component={CreateServiceScreen} />
           <Stack.Screen name="UpdatePostScreen" component={UpdatePostScreen} />
 
-          <Stack.Screen name="CreateServiceScreen" component={CreateServiceScreen} />
-          
-          <Stack.Screen
-            name="ShowServicesScreen"
-            component={ShowServicesScreen}
-            initialParams={{ categoryName: "" }}
-            options={({ route }) => ({ title: route.params.categoryName })}
-          />
-          <Stack.Screen
-            name="ShowCategoryScreen"
-            component={ShowCategoryScreen}
-          />
-          <Stack.Screen
-            name="CreateCategoryScreen"
-            component={CreateCategoryScreen}
-          />
-        </Stack.Navigator>
+        <Stack.Screen
+          name="ShowServicesScreen"
+          component={ShowServicesScreen}
+          initialParams={{ categoryName: "" }}
+          options={({ route }) => ({ title: route.params.categoryName })}
+        />
+        <Stack.Screen
+          name="ShowCategoryScreen"
+          component={ShowCategoryScreen}
+        />
+        <Stack.Screen
+          name="CreateCategoryScreen"
+          component={CreateCategoryScreen}
+        />
+        <Stack.Screen
+          name="NotificationScreen"
+          component={NotificationScreen}
+        />
+      </Stack.Navigator>
 
-        <Tabbar />
-        <View style={styles.sideBarOverlay}>
-          <Sidebar />
-        </View>
+      <Tabbar />
+      <View style={styles.sideBarOverlay}>
+        <Sidebar />
       </View>
+    </View>
     </AuthProvider>
   );
 }

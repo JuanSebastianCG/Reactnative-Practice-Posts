@@ -4,17 +4,17 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
   Text,
   TouchableOpacity,
   Modal,
   Button
 } from "react-native";
+
 import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
   useDeleteData,
-  basicEndpoint,
+  imageEndpointApi,
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
 
@@ -28,7 +28,7 @@ import { CustomButton } from "../../public/customComponent/Basic_Components";
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
   const [isDeleted, setIsDeleted] = useState(false);
-  const { getToken } = TokenUserManager();
+  const { getToken, getInfoToken } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
   
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
@@ -37,6 +37,12 @@ function ShowPostsScreen() {
   const navigation = useNavigation();
   const gotToLogin = () => navigation.navigate("LoginScreen");
   const [posts, setPosts] = useState([]);
+  const [userId, setUserId] = useState("");
+
+  const getUserId = async () => {
+    setUserId((await getInfoToken("_id")));
+    
+  };
 
   useEffect(() => {
     handleGetData();
@@ -57,34 +63,49 @@ function ShowPostsScreen() {
       url,
       (data) => {
         if (error && !data) {
-          setErrorPost(true);
+          console.log(error[1]);
+          if (error[1] == "jwt expired") {
+            setErrorPost(true);
+          }
           return;
         }
         for (let i = 0; i < data.length; i++) {
-          uri = `${basicEndpoint}/${data[i].avatar}`;
-          data[i].avatars = data[i].avatars.map((avatar) => {
-            return { uri: `${basicEndpoint}/${avatar}` };
+          /* add camp media to data */
+          /* add images */
+          photos = data[i].photos.map((photo) => {
+            return {
+              uri: `${imageEndpointApi}/${photo}`,
+            };
           });
+          /* add videos */
+          videos = data[i].videos.map((video) => {
+            return {
+              uri: `${imageEndpointApi}/${video}`,
+            };
+          });
+          data[i].media = [...photos, ...videos];
         }
+
         setPosts(data);
       },
       header
     );
-
-    //http://192.168.20.26:3000/api/v1/uploads/post/1697776043933-1fd0c384-43c2-4c48-8818-80ca2a166a9a.jpeg
   };
   const handleDelete = async (id) => {
     const url = `/posts/${id}`;
-    console.log("id:", id);
     const header = {
       Authorization: `Bearer ${await getToken()}`,
-    }
-    deleteData(url, (data) => {
-      if (data) {
-        setPosts(posts.filter((post) => post._id !== id));
-        setIsDeleted(true);
-      }
-    },header);
+    };
+    deleteData(
+      url,
+      (data) => {
+        if (data) {
+          setPosts(posts.filter((post) => post._id !== id));
+          setIsDeleted(true);
+        }
+      },
+      header
+    );
   };
 
   return (
@@ -94,13 +115,13 @@ function ShowPostsScreen() {
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
           {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
-          {error && (
-            <CustomErrorAlert
-              isVisible={true}
-              message="¿estas logueado  0.0?  "
-              onConfirm={handleError}
-            />
-          )}
+
+          <CustomErrorAlert
+            isVisible={errorPost}
+            message="¿estas logueado  0.0?  "
+            onConfirm={handleError}
+          />
+
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
               <Card post={post} handleDelete={handleDelete} />
@@ -129,7 +150,23 @@ function Card({ post, handleDelete }) {
         <Circle cx="200" cy="160" r="70" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
+        <CustomCarrousel
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleCard.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
+        />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
@@ -344,7 +381,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 10,
+    bottom: 16,
     right: 15,
     width: 80,
     height: 80,

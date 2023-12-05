@@ -4,7 +4,7 @@ import { interpolate, useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 import BasicStylesPage from "../cssStyles/Basic_Style";
 
-function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove}) {
+function CustomCarrousel({ data = [], width = 350, height = 200 ,renderItem = () => {}}) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const calculateIndex = (index) => {
@@ -12,9 +12,7 @@ function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove})
       if (index + 1 > data.length) {
         setCurrentIndex(0);
       } else if (currentIndex == 0 && index > data.length - 1 ) {
-    
         setCurrentIndex(data.length - 1);
-       
 
       } else {
         setCurrentIndex(Math.round(index));
@@ -24,12 +22,12 @@ function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove})
   return (
     <View style={styles.container}>
       <Carousel
-        autoPlay={automaticMove}
+        autoPlay={true}
         width={width}
         height={height}
         scrollAnimationDuration={1000}
         data={data}
-        autoPlayInterval={(automaticMove)? 5000 : 0}
+        autoPlayInterval={10000}
         onProgressChange={(_, absoluteProgress) =>
           calculateIndex(absoluteProgress)
         }
@@ -39,20 +37,21 @@ function CustomCarrousel({ data = [], width = 350, height = 200 ,automaticMove})
           const translateX = interpolate(value, [-1, 0, 1], [-300, 0, 300]);
           const opacity = interpolate(value, [-1, 0, 1], [0.5, 1, 0.5]);
           const scale = interpolate(value, [-1, 0, 1], [1.25, 1, 0.25]);
-
           return {
-            /* transform: [{ scale }, { translateX }], */
             transform: [{ translateX }],
             zIndex,
             opacity,
           };
         }}
         renderItem={({ index }) => (
-          <View>
-            <Image source={{ uri: data[index].uri }} style={styles.image} />
+          <View style={{ width, height }}>
+            {renderItem(index)}
           </View>
+
         )}
       />
+
+      {/*  pagination */}
       <View style={styles.pagination}>
         {data.map((_, index) => (
           <View

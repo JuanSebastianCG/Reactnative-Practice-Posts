@@ -12,7 +12,10 @@ import { Stack } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Polygon, Svg } from "react-native-svg";
-import { CustomButton } from "../../public/customComponent/Basic_Components";
+import {
+  CustomButton,
+  CustomDropDown,
+} from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
   CustomCheckBox,
@@ -33,8 +36,6 @@ function RegisterScreen() {
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
-
-
 
   const [userData, setUserData] = useState({
     firstname: "admin",
@@ -67,16 +68,14 @@ function RegisterScreen() {
       document_type: userData.document_type,
       document_number: userData.document_number,
     };
-    
-    postData(url, formData, headers , (response) => {
-      console.log(response);
+
+    postData(url, formData, headers, (response) => {
       if (response) {
         navigation.navigate("LoginScreen");
       } else {
         setLoginError(true);
       }
     });
-
   };
 
   return (
@@ -88,14 +87,18 @@ function RegisterScreen() {
         <Svg height="340" width="700" style={styles.footer}>
           <Polygon points="0,0 800,280 0,500" fill={BasicStylesPage.color0} />
         </Svg>
-        <View>
-          <CustomLogo styleLogo={styles.logoContainer} />
-        </View>
 
         <View style={styles.formContainer}>
-          {/* Contenedor para el logotipo */}
+          <CustomLogo
+            styleLogo={{ top: 0 }}
+            width={210}
+            height={300}
+            Color1Logo={BasicStylesPage.color2}
+            Color2Logo={BasicStylesPage.color2}
+          />
+
           <View style={styles.loginLogo}>
-            <Icon name="account" size={60} color={BasicStylesPage.color0} />
+            <Icon name="account" size={65} color={BasicStylesPage.color0} />
           </View>
 
           <View style={styles.fieldContainer}>
@@ -122,10 +125,37 @@ function RegisterScreen() {
               />
 
               <CustomInTextField
-                label="Password"
+                label="password"
                 style={styles.input}
                 value={userData.password}
-                onChangeText={(text) => handleChange("current_password", text)}
+                onChangeText={(text) => handleChange("password", text)}
+              />
+
+              <CustomDropDown
+                label="Tipo de documento"
+                value={userData.document_type}
+                items={[
+                  "DNI",
+                  "Pasaporte",
+                  "Carnet de conducir",
+                  "Carnet de identidad",
+                ]}
+                generalStyle={styles.generalDropDown}
+                generalBorderStyle={styles.generalBorderDropDown}
+                itemStyle={{}}
+                fontInputStyle={{ color: BasicStylesPage.color4 }}
+                onItemSlected={(item) => handleChange("document_type", item)}
+                placeholder={"Documento"}
+                styleLogo={{
+                  marginLeft: 2,
+                }}
+              />
+
+              <CustomInTextField
+                label="Número de documento"
+                style={[styles.input, { marginTop: 20 }]}
+                value={userData.document_number}
+                onChangeText={(text) => handleChange("document_number", text)}
               />
 
               <CustomCheckBox
@@ -195,9 +225,9 @@ const styles = StyleSheet.create({
     backgroundColor: BasicStylesPage.color3,
     borderRadius: 60,
     width: "85%",
-    height: "80%",
+    height: "70%",
     marginBottom: "30%",
-    marginTop: 20,
+    marginTop: 60,
     paddingTop: 40,
     alignItems: "center",
   },
@@ -210,23 +240,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  logoContainer: {
-    position: "absolute",
-    top: 0, // Alinea el componente en la parte superior
-    right: 0, // Alinea el componente en la esquina derecha
-    width: 120,
-    height: 120,
-  },
-
   loginLogo: {
-    marginTop: 90,
+    marginTop: 95,
     width: 120,
     height: 120,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: BasicStylesPage.color0,
+    borderRadius: 50,
+    borderWidth: 4,
+    borderColor: BasicStylesPage.color3,
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 1,
   },
   inputDropDown: {
     marginBottom: 16,
