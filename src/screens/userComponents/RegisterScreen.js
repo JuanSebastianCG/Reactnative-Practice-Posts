@@ -147,7 +147,6 @@ function RegisterScreen() {
                 onItemSlected={(item) => handleChange("document_type", item)}
                 placeholder={"Documento"}
                 styleLogo={{
-                  BackgroundColor: BasicStylesPage.color2,
                   marginLeft: 2,
                 }}
               />

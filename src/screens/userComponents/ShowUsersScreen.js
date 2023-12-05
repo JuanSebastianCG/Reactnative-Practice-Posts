@@ -35,7 +35,7 @@ function ShowUsersScreen() {
 
   useEffect(() => {
     handleGetData();
-  }, [handleGetData]);
+  }, [handleGetData,handleDelete]);
 
   const handleGetData = async () => {
     const url = "/user";

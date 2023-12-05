@@ -5,7 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Text,
 } from "react-native";
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../utils/useAxios";
@@ -19,7 +21,7 @@ import {
 } from "../../public/customComponent/Basic_FormComponents";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import {
-  ImagePickerComponent,
+  MediaPickerComponent,
   ImagePhotoPickerComponent,
 } from "../../components/cameraAndGalery/CamaraGaleryPicker.js";
 import {
@@ -37,7 +39,7 @@ function CreatePostScreen() {
   const { getToken } = TokenUserManager();
 
   //api
-  const { postData,  error  } = usePostData();
+  const { postData, error } = usePostData();
 
   const handleChange = (name, value) => {
     setPostDataDB({ ...PostDataDB, [name]: value });
@@ -46,16 +48,17 @@ function CreatePostScreen() {
     title: "post 1",
     subtitle: "post 1",
     description: "post 1",
-    avatars: [],
+    media: [],
   });
 
   //image picker and photo
-  const { BasicIconImagePicker } = ImagePickerComponent({
+  const { BasicIconMediaPicker } = MediaPickerComponent({
     onComplete: (image) => {
+      console.log(image);
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          media: [...PostDataDB.media, image],
         });
     },
   });
@@ -65,7 +68,7 @@ function CreatePostScreen() {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          media: [...PostDataDB.media, image],
         });
     },
   });
@@ -80,34 +83,41 @@ function CreatePostScreen() {
       !PostDataDB.title ||
       !PostDataDB.subtitle ||
       !PostDataDB.description ||
-      !PostDataDB.avatars
+      !PostDataDB.media
     ) {
       setError(true);
       setShowConfirmationModal(false);
       return;
     }
     const url = "/posts";
-    const token =  async () => await getToken()
+    const token = async () => await getToken();
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
-       Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
-    
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
-    PostDataDB.avatars.forEach((image, index) => {
-      formData.append("avatars", {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
-        
-      });
+    PostDataDB.media.forEach((image, index) => {
+      if (image.type == "video/mp4") {
+        formData.append("videos", {
+          name: `video${index}.mp4`,
+          type: image.type,
+          uri: image.uri,
+        });
+      }
+      if (image.type == "image/jpeg") {
+        formData.append("photos", {
+          name: `image${index}.jpg`,
+          type: image.type,
+          uri: image.uri,
+        });
+      }
     });
-    console.log(formData);
-    postData(url, formData,headers, (data) => {
+    console.log(PostDataDB);
+    postData(url, formData, headers, (data) => {
       if (error || !data) {
         setError(true);
       } else {
@@ -143,11 +153,28 @@ function CreatePostScreen() {
 
             <View>
               <View style={styles.imageContainer}>
-                {PostDataDB.avatars.length > 0 && (
-                  <CustomCarrousel data={PostDataDB.avatars} />
+                {PostDataDB.media.length > 0 && (
+                  <CustomCarrousel
+                    data={PostDataDB.media}
+                    renderItem={(index) =>
+                      PostDataDB.media[index].type == "video/mp4" ? (
+                        /* video */
+                        <VideoPlayer
+                          uri_Video={PostDataDB.media[index].uri}
+                          focus={true}
+                        />
+                      ) : (
+                        /* image */
+                        <Image
+                          style={styles.image}
+                          source={{ uri: PostDataDB.media[index].uri }}
+                        />
+                      )
+                    }
+                  />
                 )}
               </View>
-              <BasicIconImagePicker buttonStyle={styles.imgPiker} />
+              <BasicIconMediaPicker buttonStyle={styles.imgPiker} />
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
 

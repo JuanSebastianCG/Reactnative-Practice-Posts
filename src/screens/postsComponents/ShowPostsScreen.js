@@ -6,7 +6,9 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  Image,
 } from "react-native";
+
 import { Circle, Svg } from "react-native-svg";
 import {
   useGetData,
@@ -20,6 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
 import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
@@ -53,16 +56,29 @@ function ShowPostsScreen() {
       url,
       (data) => {
         if (error && !data) {
-          setErrorPost(true);
+          console.log(error[1]);
+          if (error[1] == "jwt expired") {
+            setErrorPost(true);
+          }
           return;
         }
-        if (data == null) return;
         for (let i = 0; i < data.length; i++) {
-          uri = `${imageEndpointApi[0]}/${data[i].avatar}`;
-          data[i].avatars = data[i].avatars.map((avatar) => {
-            return { uri: `${imageEndpointApi[0]}/${avatar}` };
+          /* add camp media to data */
+          /* add images */
+          photos = data[i].photos.map((photo) => {
+            return {
+              uri: `${imageEndpointApi}/${photo}`,
+            };
           });
+          /* add videos */
+          videos = data[i].videos.map((video) => {
+            return {
+              uri: `${imageEndpointApi}/${video}`,
+            };
+          });
+          data[i].media = [...photos, ...videos];
         }
+
         setPosts(data);
       },
       header
@@ -92,13 +108,13 @@ function ShowPostsScreen() {
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
           {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
-          {error && (
-            <CustomErrorAlert
-              isVisible={true}
-              message="¿estas logueado  0.0?  "
-              onConfirm={handleError}
-            />
-          )}
+
+          <CustomErrorAlert
+            isVisible={errorPost}
+            message="¿estas logueado  0.0?  "
+            onConfirm={handleError}
+          />
+
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
               <Card post={post} handleDelete={handleDelete} />
@@ -122,7 +138,23 @@ function Card({ post, handleDelete }) {
         <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
+        <CustomCarrousel
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleCard.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
+        />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>

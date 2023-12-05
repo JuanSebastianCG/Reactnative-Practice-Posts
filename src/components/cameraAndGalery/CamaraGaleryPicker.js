@@ -8,58 +8,59 @@ import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import { CustomButton } from "../../public/customComponent/Basic_Components";
 
 
+export function MediaPickerComponent({ onComplete = () => {} }) {
+  const [mediaData, setMediaData] = useState(null);
 
-export function ImagePickerComponent({ onComplete = () => {} }) {
-  const [imageData, setImageData] = useState(null);
-
-  const pickImage = async () => {
+  const pickMedia = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    data = null;
+
+    let data = null;
+
     if (!result.canceled) {
       const localUri = result.assets[0].uri;
       const filename = localUri.split("/").pop();
       const match = /\.(\w+)$/.exec(filename);
-      const type = match ? `image/${match[1]}` : `image`;
+      const type = match ? `${result.assets[0].type}/${match[1]}` : result.assets[0].type;
       data = {
         uri: localUri,
         name: filename,
         type,
       };
     }
-    setImageData(data);
+
+    setMediaData(data);
     onComplete(data);
   };
 
   const BasicViewPicker = ({ buttonStyle, positionStyle }) => (
     <View style={positionStyle}>
       <CustomButton
-        text="Seleccionar Imagen"
-        onPress={pickImage}
+        text="Seleccionar Archivo"
+        onPress={pickMedia}
         buttonStyle={buttonStyle}
       />
     </View>
   );
 
-  const BasicIconImagePicker = ({ buttonStyle }) => (
+  const BasicIconMediaPicker = ({ buttonStyle }) => (
     <View style={buttonStyle}>
-      <TouchableOpacity onPress={pickImage}>
-        <Icon name="image-edit" size={55} color={BasicStylesPage.color0} />
+      <TouchableOpacity onPress={pickMedia}>
+        <Icon name="file" size={55} color={BasicStylesPage.color0} />
       </TouchableOpacity>
     </View>
   );
 
   return {
-    imageData,
+    mediaData,
     BasicViewPicker,
-    BasicIconImagePicker,
+    BasicIconMediaPicker,
   };
 }
-
 export function ImagePhotoPickerComponent({ onComplete = () => {} }) {
   const [imageDataPhoto, setImageDataPhoto] = useState(null);
 

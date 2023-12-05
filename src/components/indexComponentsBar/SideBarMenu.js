@@ -285,9 +285,9 @@ const SideBarBody = ({ closeSidebar }) => {
 
   return (
     <View style={styleBody.container}>
-      <Text style={styleBody.sidebarItemTitle}>MENU</Text>
+      <Text style={styleBody.sidebarItemTitle}>MENÚ</Text>
       <Dropdown
-        title="Menú"
+        title="Inicio"
         titleIcon="home"
         items={[
           {
