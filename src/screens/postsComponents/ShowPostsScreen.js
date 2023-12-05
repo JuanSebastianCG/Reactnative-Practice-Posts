@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
+  Modal,
+  Button
 } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import {
@@ -21,13 +23,14 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
 import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
   const [isDeleted, setIsDeleted] = useState(false);
   const { getToken } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
-
+  
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
 
@@ -116,33 +119,77 @@ function ShowPostsScreen() {
 }
 
 function Card({ post, handleDelete }) {
+  const [isLiked, setLiked] = useState(false);
+  const [modalVisible, setModalVisible] = useState([]);
+  const navigation = useNavigation();
+
   return (
     <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
-        <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
+        <Circle cx="200" cy="160" r="70" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
         <CustomCarrousel data={post.avatars} width={330} height={190} />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
+          
         </View>
-      </View>
-      <View style={styleCard.cardBody}>
+
         <TouchableOpacity
-          style={styleCard.deleteButton}
-          onPress={() => handleDelete(post._id)}>
-          <Icon name="trash-can" size={40} />
+          style={styleCard.likeButton}
+          onPress={() => setLiked((isLiked) => !isLiked)}>
+          <Icon name={isLiked ? "heart" : "heart-outline"}
+                size={32}
+                color={isLiked ? "red" : "black"}/>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styleCard.editButton}
-          onPress={() => handleDelete(post._id)}>
-          <Icon name="pencil" size={40} />
+          style={styleCard.moreButton}
+          onPress={()=>setModalVisible(true)}>
+          <Text>ver mas</Text>    
         </TouchableOpacity>
 
-        <Text style={styleCard.subtitle}>{post.subtitle}</Text>
-        <Text style={styleCard.description}>{post.description}</Text>
+        <Modal visible={modalVisible} 
+          onrequestClose={()=>setModalVisible(false)}
+          animation="slide"
+          >
+              
+          <View style={styleCard.cardHeader}>
+          <CustomCarrousel data={post.avatars} width={330} height={190} />
+
+          <View style={styleCard.titleHeader}>
+            <Text style={styleCard.title}>{post.title}</Text>
+          </View>
+          
+        </View>
+        <View style={styleCard.cardBody}>
+          <TouchableOpacity
+            style={styleCard.deleteButton}
+            onPress={() => handleDelete(post._id)}>
+            <Icon name="trash-can" size={40} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styleCard.editButton}
+            onPress={() =>{setModalVisible(false); navigation.navigate("UpdatePostScreen",{ id: post._id });} }>
+            <Icon name="pencil" size={40} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styleCard.likeButtonModal}
+            onPress={() => setLiked((isLiked) => !isLiked)}>
+            <Icon name={isLiked ? "heart" : "heart-outline"}
+                  size={32}
+                  color={isLiked ? "red" : "black"}/>
+          </TouchableOpacity>
+                
+            <Text style={styleCard.subtitle}>{post.subtitle}</Text>
+            <Text style={styleCard.description}>{post.description}</Text>
+                <CustomButton text="salir" onPress={()=>setModalVisible(false)} buttonStyle={styles.button}></CustomButton>  
+            </View>
+            
+        </Modal>
       </View>
     </View>
   );
@@ -235,6 +282,59 @@ const styleCard = StyleSheet.create({
     zIndex: 1,
     marginBottom: 70,
   },
+  likeButtonModal: {
+    position: "absolute",
+    bottom: 10,
+    right: 250,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginBottom:70
+  },
+  likeButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 250,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  moreButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 40,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginTop: 80,
+  },
+  
+  button: {
+    padding: 10,
+    marginTop: 8,
+    backgroundColor: BasicStylesPage.color4 + 95,
+  },
+  modalContainer:{
+    flex:1,
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+    width:200,
+    height:150,
+    marginLeft:100
+},
 });
 
 const styles = StyleSheet.create({

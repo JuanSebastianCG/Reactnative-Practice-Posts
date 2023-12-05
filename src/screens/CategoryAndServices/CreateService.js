@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Checkbox } from "react-native-paper";
-import { CustomLogo } from "../../../public_styles/component_public_Styles/Basic_PageInterface";
+import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";
 import {
   SafeAreaView,
   View,
@@ -14,19 +14,19 @@ import {
   useGetData,
   useDeleteData,
   basicEndpoint,
-} from "../../../utils/useAxios";
-import { TokenUserManager } from "../../../utils/asyncStorage";
+} from "../../utils/useAxios";
+import { TokenUserManager } from "../../utils/asyncStorage";
 
-import BasicStylesPage from "../../../public_styles/css_public_Styles/Basic_Style";
+import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { CustomCarrousel } from "../../../public_styles/component_public_Styles/Basic_CarrouselComponent";
+import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselComponent";
 import {
   CustomDropDown,
   CustomShowMultipleTag,
   CustomTag,
   CustomButton
-} from "../../../public_styles/component_public_Styles/Basic_Components_F";
+} from "../../public/customComponent/Basic_Components.js";
 
 import {
   useNavigation,
@@ -36,17 +36,17 @@ import {
 import {
     CustomInTextField,
     CustomInTextArea,
-  } from "../../../public_styles/component_public_Styles/Basic_FormComponents_F";
+  } from "../../public/customComponent/Basic_FormComponents.js";
 
   import {
     ImagePickerComponent,
     ImagePhotoPickerComponent,
-  } from "../../../public_styles/component_public_Styles/Basic_ImageComponent";
+  } from "../../components/cameraAndGalery/CamaraGaleryPicker.js";
   import {
     CustomSuccessAlert,
     CustomAlertConfirmation,
     CustomErrorBanner
-  } from "../../../public_styles/component_public_Styles/Basic_AlertComponent";
+  } from "../../public/customComponent/Basic_AlertComponent";
 import { Input } from "react-native-elements";
 
   

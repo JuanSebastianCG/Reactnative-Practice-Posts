@@ -9,13 +9,7 @@ import HomeScreen from "../indexPages/HomeScreen";
 import LoginScreen from "../userComponents/LoginScreen";
 import RegisterScreen from "../userComponents/RegisterScreen";
 
-<<<<<<< HEAD:src/components/IndexTabbar.js
-import ShowPostsScreen from "./screens/posts/ShowPostsScreen";
-import CreatePostScreen from "./screens/posts/CreatePostScreen";
-import CreateCategoryScreen from "./screens/Category/CreateCategory";
-import { AuthProvider } from "../utils/authManager";
-import CreateService from "./screens/Category/CreateService";
-=======
+
 import ShowCategoryScreen from "../../screens/CategoryAndServices/ShowCategory";
 import ShowServicesScreen from "../../screens/CategoryAndServices/ShowServices";
 import CreateCategoryScreen from "../../screens/CategoryAndServices/CreateCategory";
@@ -25,7 +19,7 @@ import ShowPostsScreen from "../postsComponents/ShowPostsScreen";
 import CreatePostScreen from "../postsComponents/CreatePostScreen";
 
 import { AuthProvider } from "../../utils/authManager";
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/routeIndex/IndexTabbar.js
+import UpdatePostScreen from "../postsComponents/UpdatePostScreen";
 
 const Stack = createStackNavigator();
 
@@ -43,13 +37,11 @@ function IndexTabbar() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
           <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-<<<<<<< HEAD:src/components/IndexTabbar.js
-          <Stack.Screen name="CreateService" component={CreateService} />
-=======
+          <Stack.Screen name="CreateService" component={CreateServiceScreen} />
+          <Stack.Screen name="UpdatePostScreen" component={UpdatePostScreen} />
 
           <Stack.Screen name="CreateServiceScreen" component={CreateServiceScreen} />
           
->>>>>>> 724ea5ecd9352d0df5c914e32d20bcf187b4e9c1:src/screens/routeIndex/IndexTabbar.js
           <Stack.Screen
             name="ShowServicesScreen"
             component={ShowServicesScreen}
