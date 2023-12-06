@@ -27,20 +27,7 @@ function IndexTabbar() {
   const { handleLoggin } = useAuth();
 
   return (
-    <AuthProvider>
-      {/* <View style={{ flex: 1 }}>
-        <Stack.Navigator
-          initialRouteName="HomeScreen"
-          screenOptions={{
-            headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
-          }}>
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          {/* <Stack.Screen name="CamaraScreen" component={CamaraScreen} /> 
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
-          <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-    <View style={{ flex: 1 }}> */}
+    <View style={{ flex: 1 }}>
       <Stack.Navigator
         initialRouteName="HomeScreen"
         /* initialRouteName="ShowUsersScreen" */
@@ -64,10 +51,6 @@ function IndexTabbar() {
           component={CreateServiceScreen}
         />
 
-        <Tabbar />
-        <View style={styles.sideBarOverlay}>
-          <Sidebar />
-        </View>
         <Stack.Screen
           name="ShowServicesScreen"
           component={ShowServicesScreen}
@@ -92,7 +75,7 @@ function IndexTabbar() {
       <View style={styles.sideBarOverlay}>
         <Sidebar />
       </View>
-      </AuthProvider>
+    </View>
   );
 }
 

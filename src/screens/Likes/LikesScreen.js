@@ -16,7 +16,6 @@ import {
   imageEndpointApi,
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
-import { CustomButton } from "../../public/customComponent/Basic_Components";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -30,9 +29,6 @@ function ShowPostsScreen() {
   const [isDeleted, setIsDeleted] = useState(false);
   const { getToken } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
-  const [buttonLike, setBottonLike] =useState(false);
-  const { getInfoToken } = TokenUserManager();
-  const [userId, setIdUser] = useState(false);
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
@@ -41,11 +37,6 @@ function ShowPostsScreen() {
 
   // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
-
-  const getIdUser = async () => {
-    setIdUser((await getInfoToken("_id")));
-    
-  };
 
 
   useEffect(() => {
@@ -58,50 +49,7 @@ function ShowPostsScreen() {
     gotToLogin();
   };
 
-  const getAdminRole = async () => {
-    setAdminRole((await getInfoToken("_id")));
-    
-  };
-
-  const handleGetData = async () => {
-    const url = "/posts";
-    const header = {
-      Authorization: `Bearer ${await getToken()}`,
-    };
-    getData(
-      url,
-      (data) => {
-        if (error && !data) {
-          console.log(error[1]);
-          if (error[1] == "jwt expired") {
-            setErrorPost(true);
-          }
-          return;
-        }
-        for (let i = 0; i < data.length; i++) {
-          /* add camp media to data */
-          /* add images */
-          photos = data[i].photos.map((photo) => {
-            return {
-              uri: `${imageEndpointApi}/${photo}`,
-            };
-          });
-          /* add videos */
-          videos = data[i].videos.map((video) => {
-            return {
-              uri: `${imageEndpointApi}/${video}`,
-            };
-          });
-          data[i].media = [...photos, ...videos];
-        }
-
-        setPosts(data);
-      },
-      header
-    );
-  };
-
-  const handleGetFavoriteData = async (userId) => {
+  const handleGetData = async (userId) => {
     const url = `/like/usersLikes${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -138,7 +86,6 @@ function ShowPostsScreen() {
       header
     );
   };
-
   const handleDelete = async (id) => {
     const url = `/posts/${id}`;
     const header = {
@@ -155,7 +102,6 @@ function ShowPostsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
@@ -174,18 +120,14 @@ function ShowPostsScreen() {
             
           ))}
         </ScrollView>
-        <CustomButton
-        text="Ver Favoritos"
-        onPress={setBottonLike(true)}
-        buttonStyle={styles.buttonContainer}
-      />
+
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate("CreatePostScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>      
-          
+
     </SafeAreaView>
   );
 }

@@ -12,8 +12,6 @@ import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 import { useNavigation } from "@react-navigation/native";
 import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
-import ImagePickerExample from "../ImagePickerScreen";
-import Camara from "../CamaraScreen";
 
 import { CustomButton } from "../../public/customComponent/Basic_Components";
 import { CustomLogo } from "../../public/customComponent/Basic_PageInterface";

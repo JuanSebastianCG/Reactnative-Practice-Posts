@@ -49,7 +49,7 @@ function HomeScreen() {
 
       <CustomLogo styleLogo={{ right: 15 ,top: 20}}  />
 
-      <Text style={styles.text_tittle}>¿Que Quieres Hacer?</Text>
+      {/* <Text style={styles.text_tittle}>¿Que Quieres Hacer?</Text> */}
 
       <CustomButton
         text="Registrarme"
