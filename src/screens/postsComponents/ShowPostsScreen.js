@@ -16,6 +16,7 @@ import {
   useGetData,
   useDeleteData,
   imageEndpointApi,
+  usePostData
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
 
@@ -39,12 +40,15 @@ function ShowPostsScreen() {
   const navigation = useNavigation();
   const gotToLogin = () => navigation.navigate("LoginScreen");
   const [posts, setPosts] = useState([]);
+  const { postData, errorPostLike } = usePostData();
+
   const [userId, setUserId] = useState("");
 
   const getUserId = async () => {
     setUserId((await getInfoToken("_id")));
     
   };
+  
 
   useEffect(() => {
     handleGetData();
@@ -112,6 +116,34 @@ function ShowPostsScreen() {
     );
   };
 
+
+  const handleLike= async (postId)=>{
+    try {
+      await getUserId()
+      const url = "/likes";
+      const token = async () => await getToken();
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      };
+      const formData = new FormData();
+      formData.append("user",userId);
+      formData.append("post", postId);
+    console.log(formData)
+      postData(url, formData, headers, (data) => {
+        if (error || !data) {
+          console.log("error l subir el like")
+        } else {
+          console.log("success al registrar el like");
+        }
+      });
+    } catch (error) {
+      console.error("Error al procesar el like:", error);
+    }
+
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
@@ -128,7 +160,7 @@ function ShowPostsScreen() {
 
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
-              <Card post={post} handleDelete={handleDelete} />
+              <Card post={post} handleDelete={handleDelete} handleLike={handleLike} />
             </View>
           ))}
         </ScrollView>
@@ -143,7 +175,7 @@ function ShowPostsScreen() {
   );
 }
 
-function Card({ post, handleDelete }) {
+function Card({ post, handleDelete, handleLike }) {
   const [isLiked, setLiked] = useState(false);
   const [modalVisible, setModalVisible] = useState([]);
   const navigation = useNavigation();
@@ -179,7 +211,7 @@ function Card({ post, handleDelete }) {
 
         <TouchableOpacity
           style={styleCard.likeButton}
-          onPress={() => setLiked((isLiked) => !isLiked)}>
+          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? console.log("error"): handleLike(post._id) }}>
           <Icon name={isLiked ? "heart" : "heart-outline"}
                 size={32}
                 color={isLiked ? "red" : "black"}/>
@@ -235,7 +267,7 @@ function Card({ post, handleDelete }) {
 
           <TouchableOpacity
             style={styleCard.likeButtonModal}
-            onPress={() => setLiked((isLiked) => !isLiked)}>
+            onPress={() =>{ setLiked((isLiked) => !isLiked);  isLiked? console.log("error"): handleLike(post._id) }}>
             <Icon name={isLiked ? "heart" : "heart-outline"}
                   size={32}
                   color={isLiked ? "red" : "black"}/>

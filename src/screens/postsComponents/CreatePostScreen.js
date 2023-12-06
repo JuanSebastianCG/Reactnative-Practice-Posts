@@ -55,14 +55,16 @@ function CreatePostScreen() {
   const { BasicIconMediaPicker } = MediaPickerComponent({
     onComplete: (image) => {
       console.log(image);
-      if (image)
-        
-      ({
+      if (image) {
+        setPostDataDB({
           ...PostDataDB,
           media: [...PostDataDB.media, image],
         });
+        console.log(PostDataDB.media);
+      }
     },
   });
+  
 
   const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
     onComplete: (image) => {

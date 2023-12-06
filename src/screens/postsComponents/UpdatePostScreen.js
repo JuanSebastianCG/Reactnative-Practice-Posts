@@ -8,7 +8,6 @@ import {
 } from "react-native";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { usePostData } from "../../utils/useAxios";
 import { Polygon, Svg } from "react-native-svg";
 
 import { CustomButton } from "../../public/customComponent/Basic_Components";
@@ -33,7 +32,9 @@ import { TokenUserManager } from "../../utils/asyncStorage";
 import {
     useGetData,
     useDeleteData,
+    useUpdateData,
     imageEndpointApi,
+    usePostData
   } from "../../utils/useAxios";
 import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer.js";
 
@@ -45,6 +46,7 @@ const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
   const { getToken } = TokenUserManager();
+  const{updateData, loadingUpdate, errorUpdate, dataUpdate } = useUpdateData();
 
   //api
   const { postData,  error  } = usePostData();
@@ -57,6 +59,7 @@ const [posts, setPosts] = useState([]);
     subtitle: "",
     description: "",
     avatars: [],
+    media:[]
   });
 
   useEffect(() => {
@@ -114,25 +117,6 @@ const [posts, setPosts] = useState([]);
   };
 
 
-  /* useEffect(() => {
-
-    try {
-        if (PostDataDB) {
-            setPostDataDB({
-              title: PostDataDB.title || "",
-              subtitle: PostDataDB.subtitle || "",
-              description: PostDataDB.description || "",
-              avatars: PostDataDB.avatars || [],
-            });
-          }
-    } catch (error) {
-        console.log("error al traer el PostDataDB")
-        console.error(error)
-    }
-  }, [PostDataDB]); */
-
-  //image picker and photo
-
 
   /* const { BasicIconImagePicker } = ImagePickerComponent({
     onComplete: (image) => {
@@ -171,34 +155,41 @@ const [posts, setPosts] = useState([]);
       setShowConfirmationModal(false);
       return;
     }
-    const url = `/posts/${id}`;
+    const url = `/posts/edit/${id}`;
     const token =  async () => await getToken()
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
        Authorization: `Bearer ${token}`,
     };
-    
+  
+
     const formData = new FormData();
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
-    PostDataDB.avatars.forEach((image, index) => {
-      formData.append("avatars", {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
-      });
-    });
-    console.log("formData:", formData);
 
-    postData(url, headers, formData, (data) => {
+    PostDataDB.media.forEach((image, index) => {
+      if (PostDataDB.media[index].uri.includes(".mp4")) {
+        formData.append("videos", {
+          name: `video${index}.mp4`,
+          type: image.type,
+          uri: image.uri,
+        });
+      }
+      if (PostDataDB.media[index].uri.includes(".jpg")) {
+        formData.append("photos", {
+          name: `image${index}.jpg`,
+          type: image.type,
+          uri: image.uri,
+        });
+      }
+    });
+    
+    updateData(url, formData, headers, (data) => {
       if (error || !data) {
-        console.log("Error:", error);
         setError(true);
       } else {
-        console.log("Data:", data);
-        navigation.navigate("ShowPostsScreen");
         setSuccess(true);
       }
     });

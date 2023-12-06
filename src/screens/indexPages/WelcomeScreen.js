@@ -83,7 +83,7 @@ function WelcomeScreen() {
 
   return (
     <Stack spacing={4} style={styles.container}>
-      <CustomLogo width={120} height={200} styleLogo={styles.logoContainer} />
+      <CustomLogo width={120} height={250} styleLogo={styles.logoContainer} />
 
       <View style={{marginTop: "55%"}}>
         <Text style={styles.text_tittle}>Welcome to Apis </Text>
@@ -156,6 +156,7 @@ function Card({ post }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems:"center"
   },
 
   footer: {
@@ -215,6 +216,7 @@ const styleCard = StyleSheet.create({
     borderBottomColor: BasicStylesPage.color4 + 90,
     borderBottomWidth: 4,
     height: 200,
+    alignItems:"center",
   },
   cardCircle: {
     position: "absolute",
