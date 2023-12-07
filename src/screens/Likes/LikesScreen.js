@@ -16,6 +16,7 @@ import {
   imageEndpointApi,
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
+import { CustomButton } from "../../public/customComponent/Basic_Components";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -29,28 +30,47 @@ function ShowPostsScreen() {
   const [isDeleted, setIsDeleted] = useState(false);
   const { getToken } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
+  const [buttonLike, setBottonLike] =useState(false);
+  const { getInfoToken } = TokenUserManager();
+  const [userId, setIdUser] = useState(false);
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
 
   const navigation = useNavigation();
-
+  const gotToLogin = () => navigation.navigate("LoginScreen");
+  
   // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
 
+  const getIdUser = async () => {
+    setIdUser((await getInfoToken("_id")));
+  };
 
   useEffect(() => {
     handleGetData();
     setIsDeleted(false);
-  }, [isDeleted, data]);
+  }, [/* isDeleted, data */]);
+
+/*   useEffect(() => {
+    getIdUser(); 
+     if(buttonLike==false){
+      handleGetData();
+    }else{
+      handleGetFavoriteData(userId);
+    } 
+     handleGetData(); 
+     setIsDeleted(false); 
+  }, [isDeleted, data]); */
 
   const handleError = () => {
     setErrorPost(false);
     gotToLogin();
   };
 
-  const handleGetData = async (userId) => {
-    const url = `/like/usersLikes${userId}`;
+  const handleGetData = async () => {
+    const userId = getIdUser();
+    const url = `/like/usersLikess/${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -86,7 +106,24 @@ function ShowPostsScreen() {
       header
     );
   };
+
+  const getLikeByUserIdAndPostId = async (userId, postId) => {
+    try {
+      const url = `/likes/user/${userId}/post/${postId}`;
+      const header = {
+        Authorization: `Bearer ${await getToken()}`,
+      };
+      const response = await getData(url, null, header);
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener el like:", error);
+      throw error;
+    }
+  };
+  
+
   const handleDelete = async (id) => {
+    const id = getLikeByUserIdAndPostId()
     const url = `/posts/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -102,6 +139,7 @@ function ShowPostsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
+
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
@@ -120,14 +158,13 @@ function ShowPostsScreen() {
             
           ))}
         </ScrollView>
-
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate("CreatePostScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
       </View>      
-
+          
     </SafeAreaView>
   );
 }
@@ -154,6 +191,7 @@ function Card({ post , handleDelete}) {
 
         <Text style={styleCard.subtitle}>{post.subtitle}</Text>
         <Text style={styleCard.description}>{post.description}</Text>
+        
       </View>
       {/* <View style={styleCard.cardFooter}>
         <Text style={styleCard.description}>{post.avatar}</Text>

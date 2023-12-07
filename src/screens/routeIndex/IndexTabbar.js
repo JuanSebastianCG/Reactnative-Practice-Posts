@@ -9,6 +9,8 @@ import HomeScreen from "../indexPages/HomeScreen";
 import LoginScreen from "../userComponents/LoginScreen";
 import RegisterScreen from "../userComponents/RegisterScreen";
 import ShowUsersScreen from "../userComponents/ShowUsersScreen";
+import ShowUsersFavorites from "../Favorites/FavoritesScreen";
+import ShowUsersLikes from "../Likes/LikesScreen";
 import NotificationScreen from "../userComponents/NotificationScreen";
 
 import ShowCategoryScreen from "../../screens/CategoryAndServices/ShowCategory";
@@ -45,6 +47,8 @@ function IndexTabbar() {
         <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
         <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
         <Stack.Screen name="ShowUsersScreen" component={ShowUsersScreen} />
+        <Stack.Screen name="ShowUsersLikes" component={ShowUsersLikes} />
+        <Stack.Screen name="ShowUsersFavorites" component={ShowUsersFavorites} />
 
         <Stack.Screen
           name="CreateServiceScreen"

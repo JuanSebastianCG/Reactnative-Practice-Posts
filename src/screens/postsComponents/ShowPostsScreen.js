@@ -38,7 +38,7 @@ function ShowPostsScreen() {
     useDeleteData();
 
   const navigation = useNavigation();
-
+  const gotToLogin = () => navigation.navigate("LoginScreen");
   // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
 
@@ -46,27 +46,27 @@ function ShowPostsScreen() {
     setIdUser((await getInfoToken("_id")));
   };
 
-
   useEffect(() => {
-    getIdUser();
-    if(buttonLike==false){
+    handleGetData();
+    setIsDeleted(false);
+  }, [/* isDeleted, data */]);
+
+/*   useEffect(() => {
+    getIdUser(); 
+     if(buttonLike==false){
       handleGetData();
     }else{
       handleGetFavoriteData(userId);
-    }
-    /* handleGetData(); */
-    setIsDeleted(false);
-  }, [isDeleted, data]);
+    } 
+     handleGetData(); 
+     setIsDeleted(false); 
+  }, [isDeleted, data]); */
 
   const handleError = () => {
     setErrorPost(false);
     gotToLogin();
   };
 
-  const getAdminRole = async () => {
-    setAdminRole((await getInfoToken("_id")));
-    
-  };
 
   const handleGetData = async () => {
     const url = "/posts";
@@ -181,6 +181,11 @@ function ShowPostsScreen() {
         </ScrollView>
         <CustomButton
         text="Ver Favoritos"
+        onPress={setBottonLike(true)}
+        buttonStyle={styles.buttonContainer}
+      />
+      <CustomButton
+        text="Ver Likes"
         onPress={setBottonLike(true)}
         buttonStyle={styles.buttonContainer}
       />

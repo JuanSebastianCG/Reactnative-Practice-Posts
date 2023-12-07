@@ -316,6 +316,21 @@ const SideBarBody = ({ closeSidebar }) => {
         ]}
         closeSidebar={closeSidebar}
       />
+      <Dropdown
+          title="Colecciones"
+          titleIcon="shape"
+          items={[
+            {
+              text: "Ver Favoritos",
+              onPress: () => navigation.navigate("ShowUsersFavorites"),
+            },
+            {
+              text: "Ver Likes",
+              onPress: () => navigation.navigate("ShowUsersLikes"),
+            },
+          ]}
+          closeSidebar={closeSidebar}
+        />
       {adminRole && (
         <Dropdown
           title="Admin"
