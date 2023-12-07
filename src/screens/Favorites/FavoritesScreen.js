@@ -32,7 +32,8 @@ function ShowPostsScreen() {
   const [errorPost, setErrorPost] = useState(false);
   const [buttonLike, setBottonLike] =useState(false);
   const { getInfoToken } = TokenUserManager();
-  const [userId, setIdUser] = useState(false);
+  const { getInfoToken2 } = TokenUserManager();
+/*   const [userId, setIdUser] = useState(false); */
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
@@ -42,25 +43,14 @@ function ShowPostsScreen() {
   // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
 
-  const getIdUser = async () => {
-    setIdUser((await getInfoToken("_id")));
-  };
+
 
   useEffect(() => {
     handleGetData();
     setIsDeleted(false);
   }, [/* isDeleted, data */]);
 
-/*   useEffect(() => {
-    getIdUser(); 
-     if(buttonLike==false){
-      handleGetData();
-    }else{
-      handleGetFavoriteData(userId);
-    } 
-     handleGetData(); 
-     setIsDeleted(false); 
-  }, [isDeleted, data]); */
+
 
   const handleError = () => {
     setErrorPost(false);
@@ -68,7 +58,11 @@ function ShowPostsScreen() {
   };
 
   const handleGetData = async () => {
-    const userId = getIdUser();
+/*     const token = await getToken();
+    console.log("Token:", token);
+    await AsyncStorage.setItem("user_token", token); */
+    const userId = await getInfoToken2("user_id");
+
     const url = `/favorite/usersFavorites/${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,

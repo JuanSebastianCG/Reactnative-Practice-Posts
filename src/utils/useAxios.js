@@ -5,7 +5,7 @@ import axios from "axios";
 //export const basicEndpointApi = "http://192.168.120.52:3000/api/v1"
 
 //export const basicEndpointApi = ["https://apis-backend-dm.up.railway.app",""];
-export const basicEndpointApi = ["http://192.168.80.18:3001",""];
+export const basicEndpointApi = ["http://192.168.0.3:3001",""];
 export const versionApi = ["/api/v1",""];
 export const imageEndpointApi = [basicEndpointApi[0]+versionApi[0]];
 //export const basicEndpointApi = "https://apis-backend-dm.up.railway.app";

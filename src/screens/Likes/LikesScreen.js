@@ -24,6 +24,8 @@ import { CustomCarrousel } from "../../public/customComponent/Basic_CarrouselCom
 import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertComponent";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
@@ -32,36 +34,28 @@ function ShowPostsScreen() {
   const [errorPost, setErrorPost] = useState(false);
   const [buttonLike, setBottonLike] =useState(false);
   const { getInfoToken } = TokenUserManager();
-  const [userId, setIdUser] = useState(false);
+  const { getInfoToken2 } = TokenUserManager();
+/*   const [userId, setIdUser] = useState(false); */
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
 
   const navigation = useNavigation();
   const gotToLogin = () => navigation.navigate("LoginScreen");
+
+
   
   // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
 
-  const getIdUser = async () => {
-    setIdUser((await getInfoToken("_id")));
-  };
+
 
   useEffect(() => {
+   
     handleGetData();
     setIsDeleted(false);
   }, [/* isDeleted, data */]);
 
-/*   useEffect(() => {
-    getIdUser(); 
-     if(buttonLike==false){
-      handleGetData();
-    }else{
-      handleGetFavoriteData(userId);
-    } 
-     handleGetData(); 
-     setIsDeleted(false); 
-  }, [isDeleted, data]); */
 
   const handleError = () => {
     setErrorPost(false);
@@ -69,8 +63,20 @@ function ShowPostsScreen() {
   };
 
   const handleGetData = async () => {
-    const userId = getIdUser();
-    const url = `/like/usersLikess/${userId}`;
+    const token = await getToken();
+    console.log("Token:", token);
+    await AsyncStorage.setItem("user_token", token);
+    const userId = await getInfoToken2("user_id");
+
+   /*  console.log("UserId:", userId); */
+
+    if (!userId) {
+      console.log("UserId es null o undefined");
+      // Manejar el caso en el que userId sea null o undefined
+      return;
+}
+    console.log("UserId:", userId);
+    const url = `/like/usersLikes/${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -107,7 +113,8 @@ function ShowPostsScreen() {
     );
   };
 
-  const getLikeByUserIdAndPostId = async (userId, postId) => {
+  const getLikeByUserIdAndPostId = async (postId) => {
+    const userId = await getInfoToken2("user_id");
     try {
       const url = `/likes/user/${userId}/post/${postId}`;
       const header = {
@@ -122,8 +129,8 @@ function ShowPostsScreen() {
   };
   
 
-  const handleDelete = async (id) => {
-    const id = getLikeByUserIdAndPostId()
+  const handleDelete = async () => {
+     const id = getLikeByUserIdAndPostId() 
     const url = `/posts/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,

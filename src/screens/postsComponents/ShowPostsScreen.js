@@ -25,6 +25,7 @@ import { CustomErrorAlert } from "../../public/customComponent/Basic_AlertCompon
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 
+
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
   const [isDeleted, setIsDeleted] = useState(false);

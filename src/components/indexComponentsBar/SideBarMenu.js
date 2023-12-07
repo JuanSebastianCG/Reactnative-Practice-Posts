@@ -272,15 +272,22 @@ const Dropdown = ({ title, titleIcon, items, closeSidebar }) => {
 const SideBarBody = ({ closeSidebar }) => {
   const navigation = useNavigation();
   const { getInfoToken } = TokenUserManager();
+  const { getInfoToken2 } = TokenUserManager();
   const [adminRole, setAdminRole] = useState(false);
+  const [userId, setIdUser] = useState(false);
 
   const getAdminRole = async () => {
     setAdminRole((await getInfoToken("role")) === "admin");
     
   };
+  const getIdUser = async () => {
+    setIdUser(await getInfoToken2("user_id")) ;
+    
+  };
 
   useEffect(() => {
     getAdminRole();
+    getIdUser();
   }, []);
 
   return (
@@ -316,7 +323,7 @@ const SideBarBody = ({ closeSidebar }) => {
         ]}
         closeSidebar={closeSidebar}
       />
-      <Dropdown
+      {userId && (<Dropdown
           title="Colecciones"
           titleIcon="shape"
           items={[
@@ -331,6 +338,7 @@ const SideBarBody = ({ closeSidebar }) => {
           ]}
           closeSidebar={closeSidebar}
         />
+        )}
       {adminRole && (
         <Dropdown
           title="Admin"

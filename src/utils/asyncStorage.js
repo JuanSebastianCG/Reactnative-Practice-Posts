@@ -67,7 +67,23 @@ const TokenUserManager = () => {
     }
   };
 
-  return { saveToken, getToken, deleteToken, getInfoToken };
+  const getInfoToken2 = async () => {
+    try {
+      const storedToken = await AsyncStorage.getItem("accessToken");
+      if (storedToken !== null) {
+        const decodedToken = jwtDecode(storedToken);
+        console.log("Token decodificado:", decodedToken); // Agrega esta línea para imprimir el token decodificado
+        return decodedToken.user_id;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("Error al acceder al token desde AsyncStorage:", error);
+      return null;
+    }
+  };
+
+  return { saveToken, getToken, deleteToken, getInfoToken, getInfoToken2 };
 };
 
 export {TokenUserManager};
