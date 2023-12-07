@@ -169,9 +169,9 @@ const [posts, setPosts] = useState([]);
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     };
-    
-  
+
     const formData = new FormData();
+    formData.append("id", id)
     formData.append("lastImages", lastImages)
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
@@ -193,7 +193,19 @@ const [posts, setPosts] = useState([]);
         });
       }
     });
+
+   /*  const body = {
+      title: formData._parts[1][1],
+      subtitle: formData._parts[2][1],
+      description: formData._parts[3][1],
+      photos: formData._parts[4][1],
+      videos: formData._parts[5][1],
+      lastImages: formData._parts[0][1]
+    };
     
+
+    console.log(body) */
+    console.log(formData)
     updateData(url, formData, headers, (data) => {
       if (error || !data) {
         setError(true);

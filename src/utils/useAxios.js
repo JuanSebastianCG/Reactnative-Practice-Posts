@@ -122,7 +122,7 @@ export function useUpdateData() {
   const [data, setData] = useState(null);
 
   const updateData = useCallback(
-    async (relativeUrl, body, headers, onComplete = () => {},basiEndpointIndex = 0) => {
+    async (relativeUrl, formData, headers, onComplete = () => {},basiEndpointIndex = 0) => {
       const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
 
       try {
@@ -130,16 +130,16 @@ export function useUpdateData() {
         setError(null);
         const config = {
           headers,
-          data:body
         };
-        const response = await axios.put(url, {...config});
+        console.log(formData)
+        const response = await axios.put(url, formData, config);
         console.log("este es el response",response)
         setData(response.data);
         onComplete(response.data);
-      } catch (err) {
-        console.log("este es el error ",err)
-        console.error(err.response.data.errorBody, err);
-        setError([err, err.response.data.errorBody]);
+      } catch (error) {
+        console.log("este es el error ",error.response.data)
+        console.error(error.response.data.errorBody, error);
+        setError([error, error.response.data.errorBody]);
         onComplete(null);
       } finally {
         setLoading(false);

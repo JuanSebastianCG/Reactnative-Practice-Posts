@@ -53,6 +53,7 @@ function ShowPostsScreen() {
   useEffect(() => {
     handleGetData();
     getUserId()
+    handleGetLikes()
     setIsDeleted(false);
   }, [isDeleted, data]);
 
@@ -117,6 +118,37 @@ function ShowPostsScreen() {
       header
     );
   };
+
+  const handleGetLikes = async () => {
+    const url = "/likes";
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    getData(
+      url,
+      (data) => {
+        if (error && !data) {
+          console.log(error[1]);
+          if (error[1] == "jwt expired") {
+            setErrorPost(true);
+          }
+          return;
+        }
+        if(data){
+          console.log(data)
+          data.forEach(item => {
+            if(item.postId === userId){
+              findPost()
+            }
+          });
+        }
+       
+      },
+      header
+    );
+  };
+
+
 
 
   const handleLike= async (postId)=>{

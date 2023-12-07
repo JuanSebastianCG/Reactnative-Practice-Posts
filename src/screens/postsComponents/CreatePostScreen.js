@@ -120,6 +120,7 @@ function CreatePostScreen() {
       }
     });
     console.log(PostDataDB);
+    console.log(formData)
     postData(url, formData, headers, (data) => {
       if (error || !data) {
         setError(true);
