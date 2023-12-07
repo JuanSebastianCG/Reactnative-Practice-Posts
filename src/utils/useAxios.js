@@ -113,6 +113,7 @@ export function useDeleteData() {
   );
 
   return { deleteData, loading, error, data };
+
 }
 
 //========UPDATE================

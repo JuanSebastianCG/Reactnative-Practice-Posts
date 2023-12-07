@@ -198,13 +198,13 @@ function CreatePostScreen() {
               onChangeText={(text) => handleChange("description", text)}
             />
 
-            {errorPost && (
-              <CustomErrorBanner
-                text="No se pudo crear el post. Por favor, verifique sus credenciales."
-                styleBanner={styles.errorBanner}
-                onChange={() => setError(false)}
+              <CustomInTextField
+                label="Avatar"
+                style={styles.input}
+                placeholder="Avatar"
+                value={PostDataDB.avatar}
+                onChangeText={(text) => handleChange("avatar", text)}
               />
-            )}
 
             <CustomButton
               text="Enviar"

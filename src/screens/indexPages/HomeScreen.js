@@ -32,7 +32,7 @@ function HomeScreen() {
       </Svg>
       <Svg height={230} width={400} style={styles.footer}>
         <Polygon points="0,60 190,200 0,200" fill={BasicStylesPage.color2} />
-      </Svg>
+      </Svg> 
 
       <Svg
         width="400"
@@ -49,7 +49,7 @@ function HomeScreen() {
 
       <CustomLogo styleLogo={{ right: 15 ,top: 20}}  />
 
-      <Text style={styles.text_tittle}>¿Que Quieres Hacer?</Text>
+      {/* <Text style={styles.text_tittle}>¿Que Quieres Hacer?</Text> */}
 
       <CustomButton
         text="Registrarme"

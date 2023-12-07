@@ -33,8 +33,10 @@ import { usePostData } from "../../utils/useAxios";
 
 function RegisterScreen() {
   const navigation = useNavigation();
+  const goToPolicy = () => navigation.navigate("PolicyScreen");
   const { saveToken, getToken, deleteToken } = TokenUserManager();
   const { postData, loading, error } = usePostData();
+  const [policyAccepted, setPolicyAccepted] = useState(false);
   const [termsAndConditionsAlert, setTermsAndConditionsAlert] = useState(false);
 
   const [userData, setUserData] = useState({
@@ -43,8 +45,8 @@ function RegisterScreen() {
     email: "dispositivomoviles9@gmail.com",
     password: "DispMov2023",
     acceptTerms: true,
-    document_type: "CC",
-    document_number: "123456789",
+    active: true,
+    avatar: "https://example.com/avatar.jpg",
   });
   const handleChange = (name, value) => {
     setUserData({
@@ -53,10 +55,15 @@ function RegisterScreen() {
     });
   };
 
+  
+  const handleCheckboxChange = () => {
+    setPolicyAccepted(!policyAccepted);
+  };
+
   const [loginError, setLoginError] = useState(false);
   /* http://mantenimientoandino.co:3000/api/v1/auth/register */
   const handleSubmit = async () => {
-    const url = "/user";
+    const url = "/auth/register";
     const headers = {
       "Content-Type": "application/json",
     };
@@ -64,9 +71,10 @@ function RegisterScreen() {
       firstname: userData.firstname,
       lastname: userData.lastname,
       email: userData.email,
-      password: userData.password,
-      document_type: userData.document_type,
-      document_number: userData.document_number,
+      current_password: userData.password,
+      role: userData.role,
+      active: userData.active,
+      avatar: userData.avatar,
     };
 
     postData(url, formData, headers, (response) => {
@@ -180,6 +188,12 @@ function RegisterScreen() {
                 onChange={() => setLoginError(false)}
               />
             )}
+
+          <View style={styles.checkboxContainer}>
+            <Checkbox value={policyAccepted} onValueChange={handleCheckboxChange} />
+            <Text style={styles.checkboxLabel}>He leído y Acepto la política de privacidad</Text>
+          </View>
+
             <CustomButton
               text="Login"
               onPress={handleSubmit}

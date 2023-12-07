@@ -9,6 +9,8 @@ import HomeScreen from "../indexPages/HomeScreen";
 import LoginScreen from "../userComponents/LoginScreen";
 import RegisterScreen from "../userComponents/RegisterScreen";
 import ShowUsersScreen from "../userComponents/ShowUsersScreen";
+import ShowUsersFavorites from "../Favorites/FavoritesScreen";
+import ShowUsersLikes from "../Likes/LikesScreen";
 import NotificationScreen from "../userComponents/NotificationScreen";
 
 
@@ -24,6 +26,7 @@ import { AuthProvider } from "../../utils/authManager";
 import UpdatePostScreen from "../postsComponents/UpdatePostScreen";
 
 import {useAuth} from "../../utils/authManager"
+import UpdatePostScreen from "../postsComponents/UpdatePostScreen";
 
 const Stack = createStackNavigator();
 
@@ -31,20 +34,32 @@ function IndexTabbar() {
   const { handleLoggin } = useAuth();
 
   return (
-    <AuthProvider>
-      <View style={{ flex: 1 }}>
-        <Stack.Navigator
-          initialRouteName="HomeScreen"
-          screenOptions={{
-            headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
-          }}>
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
-          <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
-          <Stack.Screen name="CreateService" component={CreateServiceScreen} />
-          <Stack.Screen name="UpdatePostScreen" component={UpdatePostScreen} />
+    <View style={{ flex: 1 }}>
+      <Stack.Navigator
+        initialRouteName="HomeScreen"
+        /* initialRouteName="ShowUsersScreen" */
+        screenListeners={{
+          focus: () => {
+            handleLoggin();
+          },
+        }}
+        screenOptions={{
+          headerMode: "none", // Establecer headerMode en "none" para ocultar la barra de navegación
+        }}>
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <Stack.Screen name="ShowPostsScreen" component={ShowPostsScreen} />
+        <Stack.Screen name="CreatePostScreen" component={CreatePostScreen} />
+        <Stack.Screen name="ShowUsersScreen" component={ShowUsersScreen} />
+        <Stack.Screen name="ShowUsersLikes" component={ShowUsersLikes} />
+        <Stack.Screen name="ShowUsersFavorites" component={ShowUsersFavorites} />
+        <Stack.Screen name="UpdatePostScreen" component={UpdatePostScreen} />
+        <Stack.Screen
+          name="CreateServiceScreen"
+          component={CreateServiceScreen}
+        />
+
 
         <Stack.Screen
           name="ShowServicesScreen"
@@ -71,7 +86,7 @@ function IndexTabbar() {
         <Sidebar />
       </View>
     </View>
-    </AuthProvider>
+    
   );
 }
 

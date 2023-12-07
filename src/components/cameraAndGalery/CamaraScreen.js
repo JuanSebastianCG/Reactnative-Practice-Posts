@@ -1,14 +1,18 @@
 import { Camera, CameraType } from 'expo-camera';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useState, useRef  } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'; 
+import { Button, StyleSheet, Text, TouchableOpacity, View , Image} from 'react-native'; 
+import { Card } from 'react-native-paper'; 
+/* import * as MediaLibrary from 'expo-media-library'; */
 
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [isTakingPicture, setIsTakingPicture] = useState(false);
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const cameraRef = useRef(null);
+  const [capturedImageUri, setCapturedImageUri] = useState(null);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -42,6 +46,46 @@ export default function App() {
     }
   }
 
+  if (capturedImageUri) {
+    let sharePic = () => {
+      shareAsync(capturedImageUri).then(() => {
+        setCapturedImageUri(undefined);
+      });
+    };
+
+    let savePhoto = () => {
+      MediaLibrary.saveToLibraryAsync(capturedImageUri).then(() => {
+        setCapturedImageUri(undefined);
+      });
+    };
+
+    return (
+        <View style={styles.cardContainer}>
+            <View style={styles.centeredCard}>
+                <Card style={styles.card}>
+                    <Card.Cover source={{ uri: capturedImageUri }} />
+                </Card>
+        </View>
+        <Button title="Discard" onPress={() => setCapturedImageUri(undefined)} />
+        <Button title="Save" /* onPress={savePhoto} */ /> 
+        </View>
+/*         <View style={styles.cardContainer}>
+        <Card>
+          <Card.Cover source={{ uri: capturedImageUri }} /> 
+        </Card>
+        <Button title="Discard" onPress={() => setCapturedImageUri(undefined)} />
+      </View> */
+
+/*       <SafeAreaView style={styles.container}>
+        
+        <Image style={styles.preview} source={{ uri: capturedImageUri }} />
+         <Button title="Share" onPress={sharePic} />
+        {hasMediaLibraryPermission ? <Button title="Save" onPress={savePhoto} /> : undefined} 
+        <Button title="Discard" onPress={() => setCapturedImageUri(undefined)} /> 
+      </SafeAreaView> */
+    );
+  }
+
   return (
 /*     <View style={styles.container}>
       <Camera style={styles.camera} type={type}>
@@ -67,6 +111,9 @@ export default function App() {
         </TouchableOpacity>
       </View>
     </Camera>
+{/*     <View style={styles.imageContainer}>
+          <Image source={{ uri: capturedImageUri }} style={styles.image}  />
+        </View> */}
   </View>
   );
 }
@@ -94,5 +141,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+  },
+  preview: {
+    alignSelf: 'stretch',
+    flex: 1
+  },
+  cardContainer: {
+    alignItems: 'center', 
+    marginTop: 100,
+  },
+  centeredCard: {
+    alignItems: 'center', 
+  },
+  card: {
+    width: 200, 
+    height: 200, 
   },
 });
