@@ -44,12 +44,17 @@ function ShowPostsScreen() {
 
   const getIdUser = async () => {
     setIdUser((await getInfoToken("_id")));
-    
   };
 
 
   useEffect(() => {
-    handleGetData();
+    getIdUser();
+    if(buttonLike==false){
+      handleGetData();
+    }else{
+      handleGetFavoriteData(userId);
+    }
+    /* handleGetData(); */
     setIsDeleted(false);
   }, [isDeleted, data]);
 
@@ -102,7 +107,7 @@ function ShowPostsScreen() {
   };
 
   const handleGetFavoriteData = async (userId) => {
-    const url = `/like/usersLikes${userId}`;
+    const url = `/favorite/usersFavorites/${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
