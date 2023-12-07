@@ -19,7 +19,7 @@ import {
   usePostData
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
-import { CustomButton } from "../../public/customComponent/Basic_Components";
+
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -79,47 +79,6 @@ function ShowPostsScreen() {
 
   const handleGetData = async () => {
     const url = "/posts";
-    const header = {
-      Authorization: `Bearer ${await getToken()}`,
-    };
-    getData(
-      url,
-      (data) => {
-        if (error && !data) {
-          console.log(error[1]);
-          if (error[1] == "jwt expired") {
-            setErrorPost(true);
-          }
-          return;
-        }
-        if(data){
-          for (let i = 0; i < data.length; i++) {
-            /* add camp media to data */
-            /* add images */
-            photos = data[i].photos.map((photo) => {
-              return {
-                uri: `${imageEndpointApi}/${photo}`,
-              };
-            });
-            /* add videos */
-            videos = data[i].videos.map((video) => {
-              return {
-                uri: `${imageEndpointApi}/${video}`,
-              };
-            });
-            data[i].media = [...photos, ...videos];
-          }
-          setPosts(data);
-          
-      }
-       
-      },
-      header
-    );
-  };
-
-  const handleGetFavoriteData = async (userId) => {
-    const url = `/favorite/usersFavorites/${userId}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     };
@@ -228,9 +187,9 @@ function ShowPostsScreen() {
         if(data){
           console.log(data)
           data.forEach(item => {
-            if(item.postId === userId){
-              findPost()
-            }
+            /* if(item.postId === postId){
+             console.log(postId)
+            } */
           });
         }
        
@@ -270,42 +229,29 @@ function ShowPostsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
           {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
-          {error && (
-            <CustomErrorAlert
-              isVisible={true}
-              message="¿estas logueado  0.0?  "
-              onConfirm={handleError}
-            />
-          )}
+
+          <CustomErrorAlert
+            isVisible={errorPost}
+            message="¿estas logueado  0.0?  "
+            onConfirm={handleError}
+          />
+
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
               <Card post={post} handleDelete={handleDelete} handleLike={handleLike} />
             </View>
-            
           ))}
         </ScrollView>
-        <CustomButton
-        text="Ver Favoritos"
-        onPress={setBottonLike(true)}
-        buttonStyle={styles.buttonContainer}
-      />
-      <CustomButton
-        text="Ver Likes"
-        onPress={setBottonLike(true)}
-        buttonStyle={styles.buttonContainer}
-      />
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate("CreatePostScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
-      </View>      
-          
+      </View>
     </SafeAreaView>
     
   );
@@ -322,7 +268,23 @@ function Card({ post, handleDelete, handleLike }) {
         <Circle cx="200" cy="160" r="120" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
+        <CustomCarrousel
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleCard.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
+        />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
@@ -396,13 +358,10 @@ function Card({ post, handleDelete, handleLike }) {
             <Text style={styleModal.subtitle}>{post.subtitle}</Text>
             <Text style={styleModal.description}>{post.description}</Text>
                 <CustomButton text="salir" onPress={()=>setModalVisible(false)} buttonStyle={styles.button}></CustomButton>  
-      </View>
+            </View>
             
         </Modal>
-      
-      {/* <View style={styleCard.cardFooter}>
-        <Text style={styleCard.description}>{post.avatar}</Text>
-      </View> */}
+      </View>
     </View>
   );
 }
@@ -516,41 +475,6 @@ const styleCard = StyleSheet.create({
 },
 });
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    position: "relative",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 16,
-    right: 15,
-    width: 80,
-    height: 80,
-    backgroundColor: BasicStylesPage.color4 + 80,
-    borderRadius: 60,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-    marginBottom: 70,
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    marginTop: 50,
-    paddingBottom: 150,
-  },
-  cards: {
-    marginBottom: 20,
-  },
-});
-
-
 
 const styleModal = StyleSheet.create({
   card: {
@@ -573,6 +497,19 @@ const styleModal = StyleSheet.create({
     borderBottomWidth: 4,
     height: 400,
   },
+  cardBody: {
+    padding: 10,
+    marginTop: 10,
+    height: 100,
+    borderBottomColor: BasicStylesPage.color2,
+    borderBottomWidth: 4,
+    borderLeftColor: BasicStylesPage.color2,
+    borderLeftWidth: 4,
+    borderRightColor: BasicStylesPage.color2,
+    borderRightWidth: 4,
+    borderRadius: 10,
+  },
+  
   cardCircle: {
     position: "absolute",
     alignSelf: "center",
@@ -593,12 +530,13 @@ const styleModal = StyleSheet.create({
     color: "#FFF",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 36,
     color: "red",
     fontStyle: "italic",
+    alignContent:"center"
   },
   description: {
-    fontSize: 14,
+    fontSize: 24,
     color: BasicStylesPage.color5,
   },
   button: {
@@ -643,9 +581,21 @@ const styleModal = StyleSheet.create({
     zIndex: 1,
     marginBottom: 70,
   },
+  likeButtonModal: {
+    position: "absolute",
+    bottom: 80,
+    right: 250,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
 });
 
-/* const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     position: "relative",
@@ -677,7 +627,7 @@ const styleModal = StyleSheet.create({
   cards: {
     marginBottom: 20,
   },
-}); */
+});
 
 
 export default ShowPostsScreen;
