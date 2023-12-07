@@ -122,7 +122,7 @@ function ShowPostsScreen() {
   const handleLike= async (postId)=>{
     try {
       const url = "/likes";
-      const token = async () => await getToken();
+      /* const token = async () => await getToken();
       const headers = {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -133,16 +133,22 @@ function ShowPostsScreen() {
       formData.append("postId", postId);
       console.log(formData)
       const originalData = formData;
-
-      // Usando reduce para transformar el arreglo anidado en un objeto
       const transformedData = originalData._parts.reduce((acc, [key, value]) => {
         acc[key] = value;
         return acc;
       }, {});
 
-      console.log(transformedData);
+      console.log(transformedData); */
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      const body = {
+        userId: userId,
+        postId: postId,
+      };
+      console.log(body)
 
-      postData(url, transformedData, headers, (data) => {
+      postData(url, body, headers, (data) => {
         if (error || !data) {
           console.log("error al subir el like")
         } else {
