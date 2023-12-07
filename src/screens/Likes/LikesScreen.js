@@ -63,9 +63,7 @@ function ShowPostsScreen() {
   };
 
   const handleGetData = async () => {
-    const token = await getToken();
-    console.log("Token:", token);
-    await AsyncStorage.setItem("user_token", token);
+
     const userId = await getInfoToken2("user_id");
 
    /*  console.log("UserId:", userId); */
@@ -129,9 +127,10 @@ function ShowPostsScreen() {
   };
   
 
-  const handleDelete = async () => {
-     const id = getLikeByUserIdAndPostId() 
-    const url = `/posts/${id}`;
+  const handleDelete = async (postId) => {
+
+     const idLike = getLikeByUserIdAndPostId(postId) ;
+    const url = `/like/${idLike}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     }

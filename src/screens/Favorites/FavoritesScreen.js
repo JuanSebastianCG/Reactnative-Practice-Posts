@@ -58,9 +58,7 @@ function ShowPostsScreen() {
   };
 
   const handleGetData = async () => {
-/*     const token = await getToken();
-    console.log("Token:", token);
-    await AsyncStorage.setItem("user_token", token); */
+
     const userId = await getInfoToken2("user_id");
 
     const url = `/favorite/usersFavorites/${userId}`;
@@ -101,7 +99,7 @@ function ShowPostsScreen() {
   };
 
   const handleDelete = async (id) => {
-    const url = `/posts/${id}`;
+    const url = `/like/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
     }

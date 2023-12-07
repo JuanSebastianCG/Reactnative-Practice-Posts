@@ -180,16 +180,6 @@ function ShowPostsScreen() {
             
           ))}
         </ScrollView>
-        <CustomButton
-        text="Ver Favoritos"
-        onPress={setBottonLike(true)}
-        buttonStyle={styles.buttonContainer}
-      />
-      <CustomButton
-        text="Ver Likes"
-        onPress={setBottonLike(true)}
-        buttonStyle={styles.buttonContainer}
-      />
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate("CreatePostScreen")}>
