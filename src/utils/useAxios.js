@@ -26,6 +26,7 @@ export function usePostData() {
       try {
         setLoading(true);
         setError(null);
+        console.log(formData)
         const response = await axios.post(url, formData, { headers });
         setData(response);
         onComplete(response);
@@ -123,14 +124,15 @@ export function useUpdateData() {
   const updateData = useCallback(
     async (relativeUrl, body, headers, onComplete = () => {},basiEndpointIndex = 0) => {
       const url = `${basicEndpointApi[basiEndpointIndex]}${versionApi[basiEndpointIndex]}${relativeUrl}`;
-      console.log("url: ",url)
+
       try {
         setLoading(true);
         setError(null);
         const config = {
           headers,
+          data:body
         };
-        const response = await axios.put(url, body);
+        const response = await axios.put(url, {...config});
         console.log("este es el response",response)
         setData(response.data);
         onComplete(response.data);

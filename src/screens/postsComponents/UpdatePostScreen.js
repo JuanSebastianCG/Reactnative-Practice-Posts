@@ -18,7 +18,7 @@ import {
 } from "../../public/customComponent/Basic_FormComponents";
 import BasicStylesPage from "../../public/cssStyles/Basic_Style";
 import {
-  ImagePickerComponent,
+  MediaPickerComponent,
   ImagePhotoPickerComponent,
 } from "../../components/cameraAndGalery/CamaraGaleryPicker.js";
 import {
@@ -47,6 +47,8 @@ const [posts, setPosts] = useState([]);
   const goToShowPosts = () => navigation.navigate("ShowPostsScreen");
   const { getToken } = TokenUserManager();
   const{updateData, loadingUpdate, errorUpdate, dataUpdate } = useUpdateData();
+  const [lastImages, setLastImages] = useState([]);
+  const [allImages, setAllImages] = useState([]);
 
   //api
   const { postData,  error  } = usePostData();
@@ -80,20 +82,20 @@ const [posts, setPosts] = useState([]);
           return;
         }
         for (let i = 0; i < data.length; i++) {
-          /* add camp media to data */
-          /* add images */
           photos = data[i].photos.map((photo) => {
             return {
               uri: `${imageEndpointApi}/${photo}`,
             };
           });
-          /* add videos */
           videos = data[i].videos.map((video) => {
             return {
               uri: `${imageEndpointApi}/${video}`,
             };
           });
-          data[i].media = [...photos, ...videos];
+          setAllImages([...photos, ...videos])
+          
+          setLastImages([...photos, ...videos])
+          
         }
   
         
@@ -118,27 +120,32 @@ const [posts, setPosts] = useState([]);
 
 
 
-  /* const { BasicIconImagePicker } = ImagePickerComponent({
+  const { BasicIconMediaPicker } = MediaPickerComponent({
+
     onComplete: (image) => {
-      if (image)
-        
-      ({
+      console.log(image);
+      if (image) {
+        setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          media: [...PostDataDB.media, image],
         });
+        console.log(PostDataDB.media);
+        setAllImages([...allImages, image])
+      }
     },
-  }); */
+  });
+  
 
   const { BasicIconImagePhoto } = ImagePhotoPickerComponent({
     onComplete: (image) => {
       if (image)
         setPostDataDB({
           ...PostDataDB,
-          avatars: [...PostDataDB.avatars, image],
+          media: [...PostDataDB.media, image],
         });
+        setAllImages([...allImages, image])
     },
   });
-
   //modal and alert
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [successPost, setSuccess] = useState(false);
@@ -160,11 +167,12 @@ const [posts, setPosts] = useState([]);
     const headers = {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",
-       Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
+    
   
-
     const formData = new FormData();
+    formData.append("lastImages", lastImages)
     formData.append("title", PostDataDB.title);
     formData.append("subtitle", PostDataDB.subtitle);
     formData.append("description", PostDataDB.description);
@@ -177,9 +185,9 @@ const [posts, setPosts] = useState([]);
           uri: image.uri,
         });
       }
-      if (PostDataDB.media[index].uri.includes(".jpg")) {
+      if (PostDataDB.media[index].uri.includes(".jpeg")) {
         formData.append("photos", {
-          name: `image${index}.jpg`,
+          name: `image${index}.jpeg`,
           type: image.type,
           uri: image.uri,
         });
@@ -224,15 +232,15 @@ const [posts, setPosts] = useState([]);
               <View style={styles.imageContainer}>
                 
                   <CustomCarrousel
-                  data={PostDataDB.media}
+                  data={allImages}
                   renderItem={(index, focused) => {
                     return (
                       <View style={{ width: "100%", height: "100%" }}>
-                        {PostDataDB.media[index].uri.includes(".mp4") ? (
-                          <VideoPlayer uri_Video={PostDataDB.media[index].uri} />
+                        {allImages[index].uri.includes(".mp4") ? (
+                          <VideoPlayer uri_Video={allImages[index].uri} />
                         ) : (
                           <Image
-                            source={{ uri: PostDataDB.media[index].uri }}
+                            source={{ uri: allImages[index].uri }}
                             style={styleCard.avatarImage}
                           />
                         )}
@@ -242,7 +250,7 @@ const [posts, setPosts] = useState([]);
                 />
                 
               </View>
-              {/* <BasicIconImagePicker buttonStyle={styles.imgPiker} /> */}
+              <BasicIconMediaPicker buttonStyle={styles.imgPiker} /> 
               <BasicIconImagePhoto buttonStyle={styles.imgPhoto} />
             </View>
 

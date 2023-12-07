@@ -45,13 +45,14 @@ function ShowPostsScreen() {
   const [userId, setUserId] = useState("");
 
   const getUserId = async () => {
-    setUserId((await getInfoToken("_id")));
-    
+    const userIdFromToken =  await getInfoToken("user_id");
+    setUserId(userIdFromToken);
   };
   
 
   useEffect(() => {
     handleGetData();
+    getUserId()
     setIsDeleted(false);
   }, [isDeleted, data]);
 
@@ -93,6 +94,7 @@ function ShowPostsScreen() {
             data[i].media = [...photos, ...videos];
           }
           setPosts(data);
+          
       }
        
       },
@@ -119,7 +121,6 @@ function ShowPostsScreen() {
 
   const handleLike= async (postId)=>{
     try {
-      await getUserId()
       const url = "/likes";
       const token = async () => await getToken();
       const headers = {
@@ -128,12 +129,22 @@ function ShowPostsScreen() {
         Authorization: `Bearer ${token}`,
       };
       const formData = new FormData();
-      formData.append("user",userId);
-      formData.append("post", postId);
-    console.log(formData)
-      postData(url, formData, headers, (data) => {
+      formData.append("userId",userId);
+      formData.append("postId", postId);
+      console.log(formData)
+      const originalData = formData;
+
+      // Usando reduce para transformar el arreglo anidado en un objeto
+      const transformedData = originalData._parts.reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+
+      console.log(transformedData);
+
+      postData(url, transformedData, headers, (data) => {
         if (error || !data) {
-          console.log("error l subir el like")
+          console.log("error al subir el like")
         } else {
           console.log("success al registrar el like");
         }
@@ -211,7 +222,7 @@ function Card({ post, handleDelete, handleLike }) {
 
         <TouchableOpacity
           style={styleCard.likeButton}
-          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? console.log("error"): handleLike(post._id) }}>
+          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? console.log("no le gusto"): handleLike(post._id) }}>
           <Icon name={isLiked ? "heart" : "heart-outline"}
                 size={32}
                 color={isLiked ? "red" : "black"}/>
