@@ -6,7 +6,7 @@ import axios from "axios";
 
 //export const basicEndpointApi = ["https://apis-backend-dm.up.railway.app",""];
 //export const basicEndpointApi = ["http://192.168.20.27:3001",""];
-export const basicEndpointApi = ["http://192.168.1.62:3001"]
+export const basicEndpointApi = ["http://192.168.0.3:3001"]
 export const versionApi = ["/api/v1",""];
 export const imageEndpointApi = [basicEndpointApi[0]+versionApi[0]];
 //export const basicEndpointApi = "https://apis-backend-dm.up.railway.app";
@@ -27,7 +27,9 @@ export function usePostData() {
         setLoading(true);
         setError(null);
         console.log(formData)
+        console.log(url);
         const response = await axios.post(url, formData, { headers });
+        console.log("despues de axios")
         setData(response);
         onComplete(response);
       } catch (error) {

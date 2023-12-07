@@ -45,17 +45,16 @@ function ShowPostsScreen() {
   const [posts, setPosts] = useState([]);
   const { postData, errorPostLike } = usePostData();
 
-  const [userId, setUserId] = useState("");
+ /*  const [userId, setUserId] = useState(""); */
 
-  const getUserId = async () => {
+/*   const getUserId = async () => {
     const userIdFromToken =  await getInfoToken("user_id");
     setUserId(userIdFromToken);
-  };
+  }; */
   
 
   useEffect(() => {
     handleGetData();
-    getUserId()
     handleGetLikes()
     setIsDeleted(false);
   }, [/* isDeleted, data */]);
@@ -228,6 +227,7 @@ function ShowPostsScreen() {
     throw error;
   }
 }; */
+
 const getLikeByUserIdAndPostId = async (postId) => {
   const userId = await getInfoToken2("user_id");
   try {
@@ -243,9 +243,10 @@ const getLikeByUserIdAndPostId = async (postId) => {
   }
 };
 
-  const handleLike= async (postId)=>{
+  const handleLike = async (postId)=>{
+    const userId = await getInfoToken2("user_id");
     try {
-      const url = "/likes"
+      const url = "/like"
       const headers = {
         "Content-Type": "application/json",
       };
@@ -253,6 +254,7 @@ const getLikeByUserIdAndPostId = async (postId) => {
         userId: userId,
         postId: postId,
       };
+
       console.log(body)
 
       postData(url, body, headers, (data) => {

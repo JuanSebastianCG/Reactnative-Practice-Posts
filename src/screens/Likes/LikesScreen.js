@@ -125,15 +125,24 @@ function ShowPostsScreen() {
     );
   };
 
-  const getLikeByUserIdAndPostId = async (postId) => {
+  const handleGetIdLike = async (postId) => {
     const userId = await getInfoToken2("user_id");
+    console.log
     try {
-      const url = `/likes/user/${userId}/post/${postId}`;
+      const url = `/like/user/${userId}/post/${postId}`;
       const header = {
         Authorization: `Bearer ${await getToken()}`,
       };
-      const response = await getData(url, null, header);
-      return response.data;
+      let idLike = null
+      await  getData(
+        url,
+        (data) => {
+         console.log("data"+data._id)
+         idLike = data._id
+        },
+        header
+      );
+      return idLike;
     } catch (error) {
       console.error("Error al obtener el like:", error);
       throw error;
@@ -142,7 +151,7 @@ function ShowPostsScreen() {
   
 
   /* const handleDelete = async () => {
-     const id = getLikeByUserIdAndPostId() 
+     const id = handleGetIdLike() 
     const url = `/posts/${id}`;
     const header = {
       Authorization: `Bearer ${await getToken()}`,
@@ -156,8 +165,9 @@ function ShowPostsScreen() {
   }; */
 
   const handleDelete = async (postId) => {
-
-    const idLike = getLikeByUserIdAndPostId(postId) ;
+    
+    const idLike = await handleGetIdLike(postId) ;
+    console.log("like a eliminar" + idLike)
    const url = `/like/${idLike}`;
    const header = {
      Authorization: `Bearer ${await getToken()}`,
@@ -264,7 +274,7 @@ function Card({ post, handleDelete, handleLike }) {
 
         <TouchableOpacity
           style={styleCard.likeButton}
-          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? console.log("no le gusto"): handleLike(post._id) }}>
+          onPress={() => handleDelete(post._id)}>
           <Icon name={isLiked ? "heart" : "heart-outline"}
                 size={32}
                 color={isLiked ? "red" : "black"}/>
