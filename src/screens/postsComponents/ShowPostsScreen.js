@@ -121,24 +121,7 @@ function ShowPostsScreen() {
 
   const handleLike= async (postId)=>{
     try {
-      const url = "/likes";
-      /* const token = async () => await getToken();
-      const headers = {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      };
-      const formData = new FormData();
-      formData.append("userId",userId);
-      formData.append("postId", postId);
-      console.log(formData)
-      const originalData = formData;
-      const transformedData = originalData._parts.reduce((acc, [key, value]) => {
-        acc[key] = value;
-        return acc;
-      }, {});
-
-      console.log(transformedData); */
+      const url = "/likes"
       const headers = {
         "Content-Type": "application/json",
       };
@@ -200,7 +183,7 @@ function Card({ post, handleDelete, handleLike }) {
   return (
     <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
-        <Circle cx="200" cy="160" r="70" fill={BasicStylesPage.color2 + 90} />
+        <Circle cx="200" cy="160" r="120" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
         <CustomCarrousel
@@ -245,7 +228,7 @@ function Card({ post, handleDelete, handleLike }) {
           animation="slide"
           >
               
-          <View style={styleCard.cardHeader}>
+          <View style={styleModal.cardHeader}>
           <CustomCarrousel
           data={post.media}
           renderItem={(index, focused) => {
@@ -256,7 +239,7 @@ function Card({ post, handleDelete, handleLike }) {
                 ) : (
                   <Image
                     source={{ uri: post.media[index].uri }}
-                    style={styleCard.avatarImage}
+                    style={styleModal.avatarImage}
                   />
                 )}
               </View>
@@ -264,34 +247,34 @@ function Card({ post, handleDelete, handleLike }) {
           }}
         />
 
-          <View style={styleCard.titleHeader}>
-            <Text style={styleCard.title}>{post.title}</Text>
+          <View style={styleModal.titleHeader}>
+            <Text style={styleModal.title}>{post.title}</Text>
           </View>
           
         </View>
-        <View style={styleCard.cardBody}>
+        <View style={styleModal.cardBody}>
           <TouchableOpacity
-            style={styleCard.deleteButton}
+            style={styleModal.deleteButton}
             onPress={() => handleDelete(post._id)}>
             <Icon name="trash-can" size={40} />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styleCard.editButton}
+            style={styleModal.editButton}
             onPress={() =>{setModalVisible(false); navigation.navigate("UpdatePostScreen",{ id: post._id });} }>
             <Icon name="pencil" size={40} />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styleCard.likeButtonModal}
+            style={styleModal.likeButtonModal}
             onPress={() =>{ setLiked((isLiked) => !isLiked);  isLiked? console.log("error"): handleLike(post._id) }}>
             <Icon name={isLiked ? "heart" : "heart-outline"}
                   size={32}
                   color={isLiked ? "red" : "black"}/>
           </TouchableOpacity>
                 
-            <Text style={styleCard.subtitle}>{post.subtitle}</Text>
-            <Text style={styleCard.description}>{post.description}</Text>
+            <Text style={styleModal.subtitle}>{post.subtitle}</Text>
+            <Text style={styleModal.description}>{post.description}</Text>
                 <CustomButton text="salir" onPress={()=>setModalVisible(false)} buttonStyle={styles.button}></CustomButton>  
             </View>
             
@@ -303,7 +286,7 @@ function Card({ post, handleDelete, handleLike }) {
 
 const styleCard = StyleSheet.create({
   card: {
-    marginBottom: 10,
+    marginBottom: 10,   
     marginLeft: "2%",
     width: "96%",
     borderRadius: 10,
@@ -320,7 +303,148 @@ const styleCard = StyleSheet.create({
     borderTopWidth: 4,
     borderBottomColor: BasicStylesPage.color4 + 90,
     borderBottomWidth: 4,
-    height: 200,
+    height: 400,
+    
+  },
+  cardCircle: {
+    position: "absolute",
+    alignSelf: "center",
+  },
+  titleHeader: {
+    backgroundColor: BasicStylesPage.color6,
+    position: "absolute",
+    marginTop: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    alignItems: "flex-start",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: BasicStylesPage.color3,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: BasicStylesPage.color1,
+    fontStyle: "italic",
+  },
+  description: {
+    fontSize: 14,
+    color: BasicStylesPage.color5,
+  },
+  cardBody: {
+    padding: 10,
+    marginTop: 10,
+    height: 100,
+    borderBottomColor: BasicStylesPage.color2,
+    borderBottomWidth: 4,
+    borderLeftColor: BasicStylesPage.color2,
+    borderLeftWidth: 4,
+    borderRightColor: BasicStylesPage.color2,
+    borderRightWidth: 4,
+    borderRadius: 10,
+  },
+  
+  likeButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 250,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  moreButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 40,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginTop: 80,
+  },
+  
+  button: {
+    padding: 10,
+    marginTop: 8,
+    backgroundColor: BasicStylesPage.color4 + 95,
+  },
+  modalContainer:{
+    flex:1,
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+    width:200,
+    height:150,
+    marginLeft:100
+},
+});
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    position: "relative",
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 16,
+    right: 15,
+    width: 80,
+    height: 80,
+    backgroundColor: BasicStylesPage.color4 + 80,
+    borderRadius: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginBottom: 70,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    marginTop: 50,
+    paddingBottom: 150,
+  },
+  cards: {
+    marginBottom: 20,
+  },
+});
+
+
+
+const styleModal = StyleSheet.create({
+  card: {
+    marginBottom: 10,
+    marginLeft: "2%",
+    width: "96%",
+    borderRadius: 10,
+    backgroundColor: BasicStylesPage.color3 + 60,
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+  },
+  cardHeader: {
+    padding: 20,
+    flexDirection: "row",
+    borderTopColor: BasicStylesPage.color4 + 90,
+    borderTopWidth: 4,
+    borderBottomColor: BasicStylesPage.color4 + 90,
+    borderBottomWidth: 4,
+    height: 400,
   },
   cardCircle: {
     position: "absolute",
@@ -401,35 +525,10 @@ const styleCard = StyleSheet.create({
     zIndex: 1,
     marginBottom:70
   },
-  likeButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 250,
-    width: 60,
-    height: 60,
-    backgroundColor: BasicStylesPage.color4 + 95,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-  },
-  moreButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 40,
-    width: 60,
-    height: 60,
-    backgroundColor: BasicStylesPage.color4 + 95,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-    marginTop: 80,
-  },
   
   button: {
     padding: 10,
-    marginTop: 8,
+    marginTop: 30,
     backgroundColor: BasicStylesPage.color4 + 95,
   },
   modalContainer:{
@@ -438,43 +537,10 @@ const styleCard = StyleSheet.create({
     alignContent:"center",
     alignItems:"center",
     width:200,
-    height:150,
+    height:250,
     marginLeft:100
 },
 });
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    position: "relative",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 16,
-    right: 15,
-    width: 80,
-    height: 80,
-    backgroundColor: BasicStylesPage.color4 + 80,
-    borderRadius: 60,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-    marginBottom: 70,
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    marginTop: 50,
-    paddingBottom: 150,
-  },
-  cards: {
-    marginBottom: 20,
-  },
-});
 
 export default ShowPostsScreen;

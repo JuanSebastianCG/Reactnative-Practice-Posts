@@ -95,8 +95,10 @@ function WelcomeScreen() {
               <Card post={item} />
             </View>
           )}
-          width={300}
-          height={150}
+          width={320}
+          height={250}
+          autoplay={true}
+          autoplayInterval={3000}
         />
         <TouchableWithoutFeedback
           onPress={() => {
@@ -123,9 +125,6 @@ function WelcomeScreen() {
 function Card({ post }) {
   return (
     <View style={styleCard.card} key={post._id}>
-      <Svg width="200" height="250" style={styleCard.cardCircle}>
-        <Circle cx="200" cy="160" r="140" fill={BasicStylesPage.color2 + 90} />
-      </Svg>
       <View style={styleCard.cardHeader}>
       <CustomCarrousel
           data={post.media}
@@ -187,7 +186,7 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     alignItems: "center",
-    marginTop: "30%",
+    marginTop: "5%",
     zIndex: 2,
   },
 
@@ -199,10 +198,11 @@ const styles = StyleSheet.create({
 const styleCard = StyleSheet.create({
   card: {
     marginBottom: 10,
-    marginLeft: "2%",
+    marginLeft: "5%",
     width: "96%",
-    borderRadius: 10,
-    backgroundColor: BasicStylesPage.color3 + 60,
+    height:"30%",
+    borderRadius: 50,
+    backgroundColor: BasicStylesPage.color4 + 90,
   },
   avatarImage: {
     width: "100%",
@@ -225,38 +225,17 @@ const styleCard = StyleSheet.create({
   titleHeader: {
     backgroundColor: BasicStylesPage.color6,
     position: "absolute",
-    marginTop: 20,
-    paddingTop: 5,
+    marginTop: 10,
+    paddingTop: 10,
     paddingBottom: 5,
     paddingLeft: 15,
     paddingRight: 15,
     alignItems: "flex-start",
   },
   title: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     color: BasicStylesPage.color3,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: BasicStylesPage.color1,
-    fontStyle: "italic",
-  },
-  description: {
-    fontSize: 14,
-    color: BasicStylesPage.color5,
-  },
-  cardBody: {
-    padding: 10,
-    marginTop: 10,
-    height: 100,
-    borderBottomColor: BasicStylesPage.color2,
-    borderBottomWidth: 4,
-    borderLeftColor: BasicStylesPage.color2,
-    borderLeftWidth: 4,
-    borderRightColor: BasicStylesPage.color2,
-    borderRightWidth: 4,
-    borderRadius: 10,
   },
   
 });
