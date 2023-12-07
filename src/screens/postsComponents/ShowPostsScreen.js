@@ -33,7 +33,7 @@ import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer";
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
   const [isDeleted, setIsDeleted] = useState(false);
-  const { getToken, getInfoToken } = TokenUserManager();
+  const { getToken, getInfoToken, getInfoToken2 } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
@@ -198,8 +198,50 @@ function ShowPostsScreen() {
     );
   };
 
+  const handleDeleteLike = async (postId) => {
+    console.log("borrando like")
+    const idLike = getLikeByUserIdAndPostId(postId) ;
+   const url = `/like/${idLike}`;
+   const header = {
+     Authorization: `Bearer ${await getToken()}`,
+   }
+   deleteData(url, (data) => {
+     if (data) {
+       setPosts(posts.filter((post) => post._id !== id));
+       setIsDeleted(true);
+     }
+   },header);
+ };
 
 
+/*  const getLikeByUserIdAndPostId = async (postId) => {
+  const userId = await getInfoToken2("user_id");
+  try {
+    const url = `/likes/user/${userId}/post/${postId}`;
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    const response = await getData(url, null, header);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener el like:", error);
+    throw error;
+  }
+}; */
+const getLikeByUserIdAndPostId = async (postId) => {
+  const userId = await getInfoToken2("user_id");
+  try {
+    const url = `/likes/user/${userId}/post/${postId}`;
+    const header = {
+      Authorization: `Bearer ${await getToken()}`,
+    };
+    const response = await getData(url, null, header);
+    return response.data._id; // Asegúrate de ajustar la propiedad según la respuesta de tu API
+  } catch (error) {
+    console.error("Error al obtener el like:", error);
+    throw error;
+  }
+};
 
   const handleLike= async (postId)=>{
     try {
@@ -242,7 +284,7 @@ function ShowPostsScreen() {
 
           {posts.map((post, index) => (
             <View style={styles.cards} key={index}>
-              <Card post={post} handleDelete={handleDelete} handleLike={handleLike} />
+              <Card post={post} handleDelete={handleDelete} handleLike={handleLike} handleDeleteLike={handleDeleteLike}/>
             </View>
           ))}
         </ScrollView>
@@ -257,7 +299,7 @@ function ShowPostsScreen() {
   );
 }
 
-function Card({ post, handleDelete, handleLike }) {
+function Card({ post, handleDelete, handleLike, handleDeleteLike }) {
   const [isLiked, setLiked] = useState(false);
   const [modalVisible, setModalVisible] = useState([]);
   const navigation = useNavigation();
@@ -293,7 +335,7 @@ function Card({ post, handleDelete, handleLike }) {
 
         <TouchableOpacity
           style={styleCard.likeButton}
-          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? console.log("no le gusto"): handleLike(post._id) }}>
+          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? handleDeleteLike(post._id): handleLike(post._id) }}>
           <Icon name={isLiked ? "heart" : "heart-outline"}
                 size={32}
                 color={isLiked ? "red" : "black"}/>
@@ -349,7 +391,7 @@ function Card({ post, handleDelete, handleLike }) {
 
           <TouchableOpacity
             style={styleModal.likeButtonModal}
-            onPress={() =>{ setLiked((isLiked) => !isLiked);  isLiked? console.log("error"): handleLike(post._id) }}>
+            onPress={() =>{ setLiked((isLiked) => !isLiked);  isLiked? handleDeleteLike(post._id): handleLike(post._id) }}>
             <Icon name={isLiked ? "heart" : "heart-outline"}
                   size={32}
                   color={isLiked ? "red" : "black"}/>

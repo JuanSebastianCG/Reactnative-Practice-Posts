@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  Modal
 } from "react-native";
 
 import { Circle, Svg } from "react-native-svg";
@@ -14,6 +15,7 @@ import {
   useGetData,
   useDeleteData,
   imageEndpointApi,
+  usePostData,
 } from "../../utils/useAxios";
 import { TokenUserManager } from "../../utils/asyncStorage";
 import { CustomButton } from "../../public/customComponent/Basic_Components";
@@ -30,39 +32,49 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function ShowPostsScreen() {
   const { getData, loading, error, data } = useGetData();
   const [isDeleted, setIsDeleted] = useState(false);
-  const { getToken } = TokenUserManager();
+  const { getToken, getInfoToken, getInfoToken2 } = TokenUserManager();
   const [errorPost, setErrorPost] = useState(false);
-  const [buttonLike, setBottonLike] =useState(false);
-  const { getInfoToken } = TokenUserManager();
-  const { getInfoToken2 } = TokenUserManager();
-/*   const [userId, setIdUser] = useState(false); */
 
   const { deleteData, loadingDelete, errorDelete, dataDelete } =
     useDeleteData();
 
   const navigation = useNavigation();
   const gotToLogin = () => navigation.navigate("LoginScreen");
-
-
-  
   // Estado para la lista de posts
   const [posts, setPosts] = useState([]);
+  const { postData, errorPostLike } = usePostData();
 
+  const [userId, setUserId] = useState("");
 
+  const getUserId = async () => {
+    const userIdFromToken =  await getInfoToken("user_id");
+    setUserId(userIdFromToken);
+  };
+  
 
   useEffect(() => {
-   
     handleGetData();
+    getUserId()
     setIsDeleted(false);
   }, [/* isDeleted, data */]);
 
+/*   useEffect(() => {
+    getIdUser(); 
+     if(buttonLike==false){
+      handleGetData();
+    }else{
+      handleGetFavoriteData(userId);
+    } 
+     handleGetData(); 
+     setIsDeleted(false); 
+  }, [isDeleted, data]); */
 
   const handleError = () => {
     setErrorPost(false);
     gotToLogin();
   };
 
-  const handleGetData = async () => {
+   const handleGetData = async () => {
     const token = await getToken();
     console.log("Token:", token);
     await AsyncStorage.setItem("user_token", token);
@@ -129,7 +141,7 @@ function ShowPostsScreen() {
   };
   
 
-  const handleDelete = async () => {
+  /* const handleDelete = async () => {
      const id = getLikeByUserIdAndPostId() 
     const url = `/posts/${id}`;
     const header = {
@@ -141,28 +153,68 @@ function ShowPostsScreen() {
         setIsDeleted(true);
       }
     },header);
-  };
+  }; */
+
+  const handleDelete = async (postId) => {
+
+    const idLike = getLikeByUserIdAndPostId(postId) ;
+   const url = `/like/${idLike}`;
+   const header = {
+     Authorization: `Bearer ${await getToken()}`,
+   }
+   deleteData(url, (data) => {
+     if (data) {
+       setPosts(posts.filter((post) => post._id !== id));
+       setIsDeleted(true);
+     }
+   },header);
+ };
+
+
+
+  const handleLike= async (postId)=>{
+    try {
+      const url = "/likes"
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      const body = {
+        userId: userId,
+        postId: postId,
+      };
+      console.log(body)
+
+      postData(url, body, headers, (data) => {
+        if (error || !data) {
+          console.log("error al subir el like")
+        } else {
+          console.log("success al registrar el like");
+        }
+      });
+    } catch (error) {
+      console.error("Error al procesar el like:", error);
+    }
+
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           scrollIndicatorInsets={{ bottom: 300 }}>
           {/* {loading && <ActivityIndicator size="large" color={BasicStylesPage.color2} />} */}
-          {error && (
-            <CustomErrorAlert
-              isVisible={true}
-              message="¿estas logueado  0.0?  "
-              onConfirm={handleError}
-            />
-          )}
+
+          <CustomErrorAlert
+            isVisible={errorPost}
+            message="¿estas logueado  0.0?  "
+            onConfirm={handleError}
+          />
+
           {posts.map((post, index) => (
-            <View style={styles.cards}>
-              <Card key={index} post={post} handleDelete={handleDelete} />
+            <View style={styles.cards} key={index}>
+              <Card post={post} handleDelete={handleDelete} handleLike={handleLike} />
             </View>
-            
           ))}
         </ScrollView>
         <TouchableOpacity
@@ -170,39 +222,117 @@ function ShowPostsScreen() {
           onPress={() => navigation.navigate("CreatePostScreen")}>
           <Icon name="plus" size={60} />
         </TouchableOpacity>
-      </View>      
-          
+      </View>
     </SafeAreaView>
+    
   );
 }
 
-function Card({ post , handleDelete}) {
+function Card({ post, handleDelete, handleLike }) {
+  const [isLiked, setLiked] = useState(false);
+  const [modalVisible, setModalVisible] = useState([]);
+  const navigation = useNavigation();
+
   return (
     <View style={styleCard.card} key={post._id}>
       <Svg width="400" height="500" style={styleCard.cardCircle}>
-        <Circle cx="200" cy="160" r="140" fill="rgba(255, 136, 136, 0.1)" />
+        <Circle cx="200" cy="160" r="120" fill={BasicStylesPage.color2 + 90} />
       </Svg>
       <View style={styleCard.cardHeader}>
-        <CustomCarrousel data={post.avatars} width={330} height={190} />
+        <CustomCarrousel
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleCard.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
+        />
 
         <View style={styleCard.titleHeader}>
           <Text style={styleCard.title}>{post.title}</Text>
+          
         </View>
-      </View>
-      <View style={styleCard.cardBody}>
+
         <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => handleDelete(post._id)}>
-          <Icon name="plus" size={60} />
+          style={styleCard.likeButton}
+          onPress={() => {setLiked((isLiked) => !isLiked); isLiked? console.log("no le gusto"): handleLike(post._id) }}>
+          <Icon name={isLiked ? "heart" : "heart-outline"}
+                size={32}
+                color={isLiked ? "red" : "black"}/>
         </TouchableOpacity>
 
-        <Text style={styleCard.subtitle}>{post.subtitle}</Text>
-        <Text style={styleCard.description}>{post.description}</Text>
-        
+        <TouchableOpacity
+          style={styleCard.moreButton}
+          onPress={()=>setModalVisible(true)}>
+          <Text>ver mas</Text>    
+        </TouchableOpacity>
+
+        <Modal visible={modalVisible} 
+          onrequestClose={()=>setModalVisible(false)}
+          animation="slide"
+          >
+              
+          <View style={styleModal.cardHeader}>
+          <CustomCarrousel
+          data={post.media}
+          renderItem={(index, focused) => {
+            return (
+              <View style={{ width: "100%", height: "100%" }}>
+                {post.media[index].uri.includes(".mp4") ? (
+                  <VideoPlayer uri_Video={post.media[index].uri} />
+                ) : (
+                  <Image
+                    source={{ uri: post.media[index].uri }}
+                    style={styleModal.avatarImage}
+                  />
+                )}
+              </View>
+            );
+          }}
+        />
+
+          <View style={styleModal.titleHeader}>
+            <Text style={styleModal.title}>{post.title}</Text>
+          </View>
+          
+        </View>
+        <View style={styleModal.cardBody}>
+          <TouchableOpacity
+            style={styleModal.deleteButton}
+            onPress={() => handleDelete(post._id)}>
+            <Icon name="trash-can" size={40} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styleModal.editButton}
+            onPress={() =>{setModalVisible(false); navigation.navigate("UpdatePostScreen",{ id: post._id });} }>
+            <Icon name="pencil" size={40} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styleModal.likeButtonModal}
+            onPress={() =>{ setLiked((isLiked) => !isLiked);  isLiked? console.log("error"): handleLike(post._id) }}>
+            <Icon name={isLiked ? "heart" : "heart-outline"}
+                  size={32}
+                  color={isLiked ? "red" : "black"}/>
+          </TouchableOpacity>
+                
+            <Text style={styleModal.subtitle}>{post.subtitle}</Text>
+            <Text style={styleModal.description}>{post.description}</Text>
+                <CustomButton text="salir" onPress={()=>setModalVisible(false)} buttonStyle={styles.button}></CustomButton>  
+            </View>
+            
+        </Modal>
       </View>
-      {/* <View style={styleCard.cardFooter}>
-        <Text style={styleCard.description}>{post.avatar}</Text>
-      </View> */}
     </View>
   );
 }
@@ -304,6 +434,126 @@ const styles = StyleSheet.create({
   },
   cards: {
     marginBottom: 20,
+  },
+});
+
+
+const styleModal = StyleSheet.create({
+  card: {
+    marginBottom: 10,
+    marginLeft: "2%",
+    width: "96%",
+    borderRadius: 10,
+    backgroundColor: BasicStylesPage.color3 + 60,
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+  },
+  cardHeader: {
+    padding: 20,
+    flexDirection: "row",
+    borderTopColor: BasicStylesPage.color4 + 90,
+    borderTopWidth: 4,
+    borderBottomColor: BasicStylesPage.color4 + 90,
+    borderBottomWidth: 4,
+    height: 400,
+  },
+  cardBody: {
+    padding: 10,
+    marginTop: 10,
+    height: 100,
+    borderBottomColor: BasicStylesPage.color2,
+    borderBottomWidth: 4,
+    borderLeftColor: BasicStylesPage.color2,
+    borderLeftWidth: 4,
+    borderRightColor: BasicStylesPage.color2,
+    borderRightWidth: 4,
+    borderRadius: 10,
+  },
+  
+  cardCircle: {
+    position: "absolute",
+    alignSelf: "center",
+  },
+  titleHeader: {
+    backgroundColor: "#FF5733",
+    position: "absolute",
+    marginTop: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    alignItems: "flex-start", // Alinear el contenido del titleHeader al principio vertical
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFF",
+  },
+  subtitle: {
+    fontSize: 36,
+    color: "red",
+    fontStyle: "italic",
+    alignContent:"center"
+  },
+  description: {
+    fontSize: 24,
+    color: BasicStylesPage.color5,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+    /* backgroundColor: "#FF5733", */
+    height: 100,
+    borderBottomColor: "red",
+    borderBottomWidth: 4,
+    borderLeftColor: "red",
+    borderLeftWidth: 4,
+    borderRightColor: "red",
+    borderRightWidth: 4,
+    borderRadius: 10,
+  },
+  deleteButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 80,
+    width: 50,
+    height: 50,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginBottom: 70,
+  },
+  editButton: {
+    position: "absolute",
+    bottom: 10,
+    right: 15,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    marginBottom: 70,
+  },
+  likeButtonModal: {
+    position: "absolute",
+    bottom: 80,
+    right: 250,
+    width: 60,
+    height: 60,
+    backgroundColor: BasicStylesPage.color4 + 95,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
   },
 });
 
