@@ -56,7 +56,6 @@ function ShowPostsScreen() {
   useEffect(() => {
     handleGetData();
     getUserId()
-    handleGetLikes()
     setIsDeleted(false);
   }, [/* isDeleted, data */]);
 

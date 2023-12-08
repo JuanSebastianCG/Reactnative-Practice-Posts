@@ -40,6 +40,7 @@ import VideoPlayer from "../../components/cameraAndGalery/VideoPLayer.js";
 
 function UpdatePostScreen() {
     const route = useRoute();
+    
 const { id } = route.params;
 const { getData, loading, errorData, data } = useGetData();
 const [posts, setPosts] = useState([]);
@@ -61,7 +62,10 @@ const [posts, setPosts] = useState([]);
     subtitle: "",
     description: "",
     avatars: [],
-    media:[]
+    media:[],
+    photos:[],
+    videos:[],
+      
   });
 
   useEffect(() => {
@@ -94,8 +98,8 @@ const [posts, setPosts] = useState([]);
           });
           setAllImages([...photos, ...videos])
           
-          setLastImages([...photos, ...videos])
           
+          setLastImages([...photos, ...videos])
         }
   
         
@@ -107,7 +111,11 @@ const [posts, setPosts] = useState([]);
             subtitle: postEncontrado.subtitle || "",
             description: postEncontrado.description || "",
             media: postEncontrado.media || [],
+            photos:postEncontrado.photos || [],
+            videos:postEncontrado.videos || [],
         });
+        console.log(PostDataDB)
+        
         } else {
         console.log(`No se encontró ningún post con el id ${id}`);
         }
@@ -121,7 +129,7 @@ const [posts, setPosts] = useState([]);
 
 
   const { BasicIconMediaPicker } = MediaPickerComponent({
-
+    
     onComplete: (image) => {
       console.log(image);
       if (image) {
@@ -169,7 +177,7 @@ const [posts, setPosts] = useState([]);
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     };
-
+    
     const formData = new FormData();
     formData.append("id", id)
     formData.append("lastImages", lastImages)
@@ -194,17 +202,6 @@ const [posts, setPosts] = useState([]);
       }
     });
 
-   /*  const body = {
-      title: formData._parts[1][1],
-      subtitle: formData._parts[2][1],
-      description: formData._parts[3][1],
-      photos: formData._parts[4][1],
-      videos: formData._parts[5][1],
-      lastImages: formData._parts[0][1]
-    };
-    
-
-    console.log(body) */
     console.log(formData)
     updateData(url, formData, headers, (data) => {
       if (error || !data) {
